@@ -1,11 +1,40 @@
+/*
+Admin styling by : Petri van Niekerk, Dominic Dingena & Agung Udijana
+ */
+
 html, body {
 	margin: 0;
 	background-color: #191C1E;
-	font-family: 'Open Sans';
+	font-family: 'Open Sans', sans-serif;
 	font-weight: 400;
 	color:#fff;
 }
-ul{
+
+
+#general button{
+	background-color: white;
+	color: black;
+	margin-left: 155px;
+}
+
+
+.button1 {
+	font-weight: 300;
+	font-size: 15px;
+	color: black;
+	margin: 10px;
+	float: right;
+}
+
+.button2 {
+	font-weight: 300;
+	font-size: 15px;
+	color: black;
+	margin: 40px;
+	float: right;
+}
+
+ul {
 	list-style:none;
 }
 
@@ -15,62 +44,96 @@ ul{
 }
 
 #menu{
-	height:45px;
-	margin:0;
-	list-style:none;
-}
+	 height:45px;
+	 margin:0;
+	 list-style:none;
+ }
 #menu li{
 	height:35px;
 	float:left;
 	padding:5px 10px;
 	border-right:solid 1px #212C36;
 }
+
+#form{
+	height:450px;
+	width:450px;
+	margin:0;
+	list-style:none;
+}
+
+#form ul {
+	list-style:none;
+}
+
+
+#formwerkdagen {
+	list-style:none;
+}
+
+#formwerkdagen li{
+	height:25px;
+	float: left;
+	padding: 5px;
+}
+
+
 a, a:visited, a:active{
 	color:#fff;
 	text-decoration:none;
 }
 
-#general h1 {
+a.vrijetijd {
+	text-decoration: underline;
+}
+
+h1 {
 	font-weight: 300;
 	font-size: 40px;
-	font-family: 'Open Sans';
 	color: white;
+	border-bottom: 1px solid #ffffff2e;
+	padding: 15px;
 }
 
-#general h2 {
+h2 {
 	font-weight: 200;
-	font-size: 30px;
-	font-family: 'Open Sans';
+	font-size: 1.38em;
 	color: white;
+	padding: 0px;
+	margin-left: 20px;
 }
-
-
-#general table {
-	color: white;
-	background-color: #212C36;
-	line-height: 24px;
-	margin-left: 10px;
-	border-width: 10px;
-	height: 10px;
-	border-spacing: 10px;
-}
-
-#general button{
-	background-color: white;
-    color: black;
-    margin-left: 25px;
-}
-
 
 #general label {
-	border-spacing 5px;
-	padding 10px;
+	border-spacing:0px;
+	padding:10px;
 	display:inline-block;
 	width:200px;
-
 }
-#general{
-	width:800;
+
+#general {
 	margin:0 auto;
-	padding:50px;
+	padding:0px;
+	background-color: #212C36;
+	width:470px;
+	height: 575px;
+}
+
+#generalteam {
+	margin:0 auto;
+	padding:0px;
+	background-color: #212C36;
+	width:500px;
+	height: 275px;
+}
+
+#generalteam label {
+	border-spacing:0px;
+	padding:5px;
+	display:inline-block;
+	width:100px;
+	margin-left: 30px;
+}
+
+#members {
+	margin-left: 55px;
 }

@@ -25,18 +25,19 @@ unset($_SESSION['addSuccess']);
     <h2><?= $success ?> </h2>
 
     <form action="./add.php" method="post">
-        <table>
-            <tr>
-                <td><label for="name">Naam</label> </td>
-                <td> <input type="text" name="name"/></td>
-            </tr>
-            <tr>
-                <td><label for ="username">Jira gebruikersnaam</td>
-                <td><input type="text" name="username" /></td>
-            </tr>
-            <tr>
-                <td><label for ="team">Team</td>
-                <td><select name ="team">
+        <div id = "form">
+            <ul>
+            <li>
+                <span><label for="name">Naam</label> </span>
+                <span> <input type="text" name="name"/></span>
+            </li>
+            <li>
+                <span><label for ="username">Jira gebruikersnaam</span>
+                <span><input type="text" name="username" /></span>
+            </li>
+            <li>
+                <span><label for ="team">Team</span>
+                <span><select name ="team">
                     <option selected="selected">Voeg toe aan team</option>
                     <?php
                     // Iterating through the array that contains the teams which are passed on by the handler
@@ -47,16 +48,16 @@ unset($_SESSION['addSuccess']);
                     }
                     ?>
                 </select>
-                </td>
-            </tr>
+                </span>
+            </li>
 
-            <tr>
-                <td><label for ="destination">Bestemming</td>
-                <td><input type="text" name="destination"/></td>
-            </tr>
-            <tr>
-                <td><label for ="drinkPreference">Drankvoorkeur</td>
-                <td><select name="drinkPreference">
+            <li>
+                <span><label for ="destination">Bestemming</span>
+                <span><input type="text" name="destination"/></span>
+            </li>
+            <li>
+                <span><label for ="drinkPreference">Drankvoorkeur</span>
+                <span><select name="drinkPreference">
                     <option selected="selected">Kies een drankvoorkeur</option>
 
 
@@ -69,32 +70,27 @@ unset($_SESSION['addSuccess']);
                     }
                     ?>
                 </select>
-                </td>
-            </tr>
+                </span>
+            </li>
 
-            <tr>
-                <td><label for ="workingDays[]">Werkdagen</td>
-                <td>
+                <li>
+                    <span><label for="workingDays[]">Werkdagen</span>
+
+                        <ul id="formwerkdagen">
                     <?php
-                    foreach($workingDays as $day => $dayNL){
-                        echo "<input type='checkbox' name='workingDays[]' value='$day' checked>$dayNL<br>";
+                    foreach ($workingDays as $day => $dayNL) {
+                        echo "<li><input type='checkbox' name='workingDays[]' value='$day' checked>$dayNL</li>";
                     }
-                    ?>
-                </td>
-            </tr>
-        </table>
+                    ?> </ul>
+                    </li>
+                <li>  <button class="button1" submit">Maak teamlid aan</button></li>
 
-        <br>
-        <br>
+            </ul>
 
-        <button type="submit" name="addMemberButton">Maak teamlid aan</button>
+        </div>
 
     </form>
 
-
 </div>
-
 </body>
-
-
 </html>

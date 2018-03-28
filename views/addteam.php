@@ -15,24 +15,17 @@ unset($_SESSION['addSuccess']);
 
 ?>
 
-<div id="general">
+<div id="generalteam">
 
     <h1>Nieuw team</h1>
 
     <h2><?= $success ?> </h2>
     <form action="./add.php" method="post">
-        <table>
-            <tr>
-                <td><label for="name">Team naam</label> </td>
-                <td> <input type="text" name="name"/></td>
-            </tr>
-        </table>
 
-        <br>
-        <br>
+                <label for="name">Team naam</label>
+               <input type="text" name="name"/>
 
-        <button type="submit" name="addTeam">Maak team aan</button>
-
+        <button type="submit" class="button2" >Maak team aan</button>
     </form>
 
 

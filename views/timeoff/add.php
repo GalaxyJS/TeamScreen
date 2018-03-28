@@ -5,8 +5,8 @@
 <link rel="stylesheet" type="text/css" href="../../assets/jquery.datetimepicker.min.css"/ >
 
 <div id="general">
-    <h2>Voeg vrije tijd toe voor:</h2>
-    <h3><?= $member->getName() ?></h3>
+    <h1>Vrije tijd</h1>
+    <h2><?= $member->getName() ?></h2>
 
     <form action="add.php" method="post">
         <input type="hidden" name="id" id="id" value="<?= $_GET['id'] ?>" />
@@ -20,7 +20,7 @@
             <input class="datetimepicker" type="text" id="end" name="end" readonly/>
         </div>
 
-        <button name="addTimeOffButton" type="submit">Voeg toe</button>
+        <button name="addTimeOffButton" type="submit" class="button2">Voeg toe</button>
     </form>
 </div>
 
