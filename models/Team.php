@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class Team
+ * @author Dominic
+ */
 class Team {
 
     private $id;

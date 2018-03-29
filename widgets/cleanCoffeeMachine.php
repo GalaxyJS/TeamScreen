@@ -4,7 +4,6 @@
     to clean the coffee machine
     @authors: Paul
 -->
-
 <?php
 require_once('handlers/CacheJSON.php');
 $CLEANER_FILE_PATH = "cleaner";

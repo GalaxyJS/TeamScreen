@@ -1,4 +1,8 @@
 <?php
+/**
+ * Class Member
+ * @author Dominic
+ */
 
 class Member {
     public $username;

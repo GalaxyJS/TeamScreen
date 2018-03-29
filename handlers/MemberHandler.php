@@ -19,7 +19,6 @@ class MemberHandler extends Handler {
      */
     protected function factory(array $row) : Member {
         $member = new Member();
-
         $member->setId($row['id']);
         $member->setName($row['name']);
         $member->setUsername($row['username']);

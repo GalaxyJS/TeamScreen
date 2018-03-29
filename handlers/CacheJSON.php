@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class CacheJSON
+ * @author Dominic
+ */
 class CacheJSON {
     private $file;
 
