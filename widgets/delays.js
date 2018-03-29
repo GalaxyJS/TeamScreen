@@ -39,8 +39,7 @@ class TrafficWidget{
             }
         };
         this.service.getDistanceMatrix(param, function(response){
-            var result = response.rows[0].elements[0];
-            if (result.status == 'OK') callback(item, response, widget);
+           callback(item, response, widget);
         });
     }
 
@@ -67,51 +66,68 @@ class TrafficWidget{
      */
     updateDOM(item, response, widget){
         var result = response.rows[0].elements[0];
-        var diff = result.duration_in_traffic.value - result.duration.value;
-        var diffInMinutes = Math.round(diff/60);
 
-        var listItem = document.createElement('div');
-        listItem.className = "traffic-item";
+        // Valid address
+        if (result.status == 'OK') {
+            var diff = result.duration_in_traffic.value - result.duration.value;
+            var diffInMinutes = Math.round(diff / 60);
 
-        var img = document.createElement('img');
-        img.src = item.avatar;
-        img.className = "avatar";
-        listItem.appendChild(img);
+            var listItem = document.createElement('div');
+            listItem.className = "traffic-item";
 
-        var nameSpan = document.createElement('span');
-        nameSpan.innerText = item.name;
-        nameSpan.className = "name";
-        listItem.appendChild(nameSpan);
+            var img = document.createElement('img');
+            img.src = item.avatar;
+            img.className = "avatar";
+            listItem.appendChild(img);
+
+            var nameSpan = document.createElement('span');
+            nameSpan.innerText = item.name;
+            nameSpan.className = "name";
+            listItem.appendChild(nameSpan);
 
 
-        var statusSpan = document.createElement('span');
-        statusSpan.className = "status";
+            var statusSpan = document.createElement('span');
+            statusSpan.className = "status";
 
-        var delaySpan = document.createElement('span');
-        delaySpan.innerText = diffInMinutes + ' min. ';
-        delaySpan.className = "status-delay";
-        statusSpan.appendChild(delaySpan);
+            var delaySpan = document.createElement('span');
+            delaySpan.innerText = diffInMinutes + ' min. ';
+            delaySpan.className = "status-delay";
+            statusSpan.appendChild(delaySpan);
 
-        var statusIcon = document.createElement('img');
-        statusIcon.className = "status-icon";
-        if(diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
-            statusSpan.className = "status ok";
-            statusIcon.src = "widgets/greenSmiley.png";
-        } else if (diffInMinutes > TRAFFIC_MIN_BAD_DELAY_MINS) {
+            var statusIcon = document.createElement('img');
+            statusIcon.className = "status-icon";
+            if (diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
+                statusSpan.className = "status ok";
+                statusIcon.src = "widgets/greenSmiley.png";
+            } else if (diffInMinutes > TRAFFIC_MIN_BAD_DELAY_MINS) {
+                statusSpan.className = "status bad";
+                statusIcon.src = "widgets/redSmiley.png";
+            } else {
+                statusSpan.className = "status moderate";
+                statusIcon.src = "widgets/orangeSmiley.png";
+            }
+            statusSpan.appendChild(statusIcon);
+            listItem.appendChild(statusSpan);
+
+        // Invalid address
+        } else{
+            var listItem = document.createElement('div');
+            listItem.className = "traffic-item";
+
+            var img = document.createElement('img');
+            img.src = item.avatar;
+            img.className = "avatar";
+            listItem.appendChild(img);
+
+            var nameSpan = document.createElement('span');
+            nameSpan.innerText = item.name;
+            nameSpan.className = "name";
+            listItem.appendChild(nameSpan);
+
+            var statusSpan = document.createElement('span');
             statusSpan.className = "status bad";
-            statusIcon.src = "widgets/redSmiley.png";
-        } else {
-            statusSpan.className = "status moderate";
-            statusIcon.src = "widgets/orangeSmiley.png";
-        }
-        statusSpan.appendChild(statusIcon);
-
-
-        listItem.appendChild(statusSpan);
-
-        var index = diffInMinutes * 100;
-        while (index in widget.elements){
-            ++index;
+            statusSpan.innerText = "invalid address";
+            listItem.appendChild(statusSpan);
         }
 
         widget.elements[item.name] = listItem;
