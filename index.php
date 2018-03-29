@@ -73,12 +73,12 @@ session_start();
             <?php if (!empty($teamId)) { ?>
              <select name="boardSelector" id="boardSelector">
                  <option value="">Kies een team</option>
-                 <?php foreach ($teams as $team) { ?>
-                     <option value="<?= $team->getId() ?>" <?php if ($team->getId() == $teamId) {
-                         echo "selected";
-                     } ?> > <?= $team->getLabel() ?></option>
+                 <?php foreach ($teams as $team) {
+                    echo "<option value='{$team->getId()}'>{$team->getLabel()}";
+                    echo '</option>';
+                 }?>
             </select>
-            <?php }} ?>
+            <?php } ?>
         </span>
     </div>
 </div>
@@ -96,9 +96,9 @@ if (empty($_GET['teamid'])) {
 ?>
 
 <div id="board">
-    <?php //include('widgets/teamDrinks.php'); ?>
+    <?php include('widgets/teamDrinks.php'); ?>
     <?php include('widgets/cleanCoffeeMachine.php'); ?>
-    <?php //include('widgets/timeOff.php'); ?>
+    <?php include('widgets/timeOff.php'); ?>
     <?php //include('widgets/delays.php'); ?>
     <?php //include('widgets/scrumboard.php'); ?>
 </div>
