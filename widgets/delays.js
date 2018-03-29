@@ -39,7 +39,8 @@ class TrafficWidget{
             }
         };
         this.service.getDistanceMatrix(param, function(response){
-            callback(item, response, widget);
+            var result = response.rows[0].elements[0];
+            if (result.status == 'OK') callback(item, response, widget);
         });
     }
 
