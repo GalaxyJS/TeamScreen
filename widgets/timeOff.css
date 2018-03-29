@@ -1,0 +1,61 @@
+#timeOff {
+    overflow: hidden;
+}
+
+#timeOff-list {
+    background-color: #212C36;
+    color: #FFFFFF;
+    padding:20px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.timeOff-box {
+    display: inline-block;
+    margin-top: -5px;
+}
+
+.timeOff-item {
+    margin-bottom: 5px;
+    padding: 8px;
+    color: #FFFFFF;
+    background-color: #45505A;
+    border-radius: 4px;
+    height: 40px;
+}
+
+
+
+.timeOff-content {
+    vertical-align: middle;
+}
+
+.timeOff-item span {
+    line-height: 24px;
+    margin-left: 10px;
+}
+.timeOff-item img.userimg {
+    border-radius: 50%;
+    border: 2px solid;
+    margin-bottom: 10px;
+}
+
+.timeOff-avatar {
+    float: left;
+}
+
+.timeOff-name {
+    float:left;
+    clear:left;
+}
+
+.timeOff-date {
+    float:left;
+    clear:left;
+}
+
+.memberInfo {
+
+
+}
+

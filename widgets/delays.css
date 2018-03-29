@@ -2,6 +2,8 @@
     background-color: #212C36;
     color: #FFFFFF;
     padding:20px;
+    height:330px;
+    overflow:hidden;
 }
 #traffic-list h2 {
     margin: 0 0 25px 0;
