@@ -10,7 +10,6 @@
 
 $timeOffItems = &$timeOffNextTwoWeeks;
 
-$islandIcon = '&#127958';
 $calendarIcon = '&#128197';
 $clockIcon = '&#128336';
 $workDayEnd = 17;
@@ -51,7 +50,7 @@ function dateString($startDate, $endDate) : string
 ?>
 
 <div id="timeOff" class="widgetBoxSmall">
-    <h2><?= $islandIcon; ?> Vrije dagen</h2>
+    <h2><img src="widgets/beach.png"> Vrije dagen</h2>
 
     <div id="timeOff-list">
         <?php foreach ($timeOffItems as $unit) : ?>
