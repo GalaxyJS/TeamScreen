@@ -99,12 +99,6 @@ h1 img {
 }
 
 
-#mainscreen img {
-    margin-left: 400px;
-    height: 500px;
-    padding: 50px;
-    
-}
 
 
 #general h2 {
@@ -116,14 +110,23 @@ h1 img {
 }
 
 
-#welcometitle {
+
+#welcome {
+    margin: 0 auto;
     font-weight: 400;
     font-size: 2.38em;
     color: white;
-    margin-left: 525px;
     width: 40%;
     padding: 50px;
+    text-align: center;
 }
+
+#welcome img {
+    width: 100%;
+}
+
+
+
 
 h2 img {
 	height: 75px;
@@ -250,4 +253,9 @@ h2 img {
 
 #messageblock {
     height: 40px;
+}
+
+
+#titelmain {
+    border-bottom: none;
 }

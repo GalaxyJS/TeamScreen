@@ -40,7 +40,8 @@ unset($_SESSION['addSuccess']);
             <li>
                 <span><label for ="team">Team</span>
                 <span><select name ="team">
-                    <option selected="selected">Voeg toe aan team</option>
+                    <!-- op advies van Tim het volgende uitgecommentarieerd, zodat er al standaard een team gekozen is (het eerste team in de lijst)
+                    <option selected="selected">Voeg toe aan team</option> -->
                     <?php
                     // Iterating through the array that contains the teams which are passed on by the handler
                     foreach($teams as $team){
@@ -60,9 +61,8 @@ unset($_SESSION['addSuccess']);
             <li>
                 <span><label for ="drinkPreference">Drankvoorkeur</span>
                 <span><select name="drinkPreference">
-                    <option selected="selected">Kies een drankvoorkeur</option>
-
-
+                    <!-- op advies van Tim "Kies een voorkeur" vervangen door "Geen voorkeur", zodat er al standaard een team gekozen is (het eerste team in de lijst) -->
+                    <option selected="selected">Geen voorkeur</option>
                     <?php
                     // Iterating through the array that contains the drink preferences which are passed on by the handler
                     foreach($drinkPreferences as $item => $itemNL){
