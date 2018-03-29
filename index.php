@@ -12,12 +12,13 @@ $teamHandler = new TeamHandler($conn);
 $timeOffHandler = new TimeOffHandler($conn);
 $teams = $teamHandler->getAll();
 
-if (isset($_GET['teammid'])) {
+if (isset($_GET['teamid'])) {
     $teamId = (int)$_GET['teamid'];
     $allMembers = $memberHandler->getAll();
 
     $teamMembers = $memberHandler->filterByTeam($allMembers, $teamId);
     $presentAllMembers = $memberHandler->filterPresent($allMembers, $teamId);
+    echo '1';
     $presentTeamMembers = $memberHandler->filterPresent($teamMembers);
     $presentCoffeeMachineUsers = $memberHandler->filterUsesCoffeeMachine($presentAllMembers);
 
@@ -72,12 +73,13 @@ session_start();
             <?php if (!empty($teamId)) { ?>
              <select name="boardSelector" id="boardSelector">
                  <option value="">Kies een team</option>
-                 <?php foreach ($teams as $team) { ?>
-                     <option value="<?= $team->getId() ?>" <?php if ($team->getId() == $teamId) {
-                         echo "selected";
-                     } ?> > <?= $team->getLabel() ?></option>
+                 <?php foreach ($teams as $team) {
+                     echo "<option value='{$team->getId()}'";
+                     if ($team->getId() == $teamId) echo ' selected';
+                     echo ">{$team->getLabel()}</option>";
+                 } ?>
             </select>
-            <?php }} ?>
+            <?php } ?>
         </span>
     </div>
 </div>
