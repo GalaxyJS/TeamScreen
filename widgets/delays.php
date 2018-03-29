@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="widgets/delays.css">
 <div id="vertragingen" class="widgetBoxSmall">
-    <h2>Vertragingen</h2>
+    <h2><img src="widgets/rocket.png">Vertragingen</h2>
     <div id="traffic-list" class="scrollable"> </div>
 </div>
 
