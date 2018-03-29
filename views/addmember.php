@@ -14,30 +14,34 @@ $workingDays = ['Monday' => 'Maandag', 'Tuesday' => 'Dinsdag', 'Wednesday' => 'W
 to prevent this notification : "Notice: session_start(): A session had already been started" */
 // session_start();
 
-$success = isset($_SESSION['addSuccess']) ? $_SESSION['addSuccess'] : '';
+$success = isset($_SESSION['addSuccess']) ? $_SESSION['addSuccess'] : "";
 unset($_SESSION['addSuccess']);
 ?>
 
 <div id="general">
 
-    <h1>Nieuw teamlid</h1>
+    <h1><img src = "../../views/newmember.png"> Nieuw lid</h1>
 
-    <h2><?= $success ?> </h2>
+    <div id = "messageblock">
+    <h2><div id="message"><?= $success ?> </div></h2>
+    </div>
 
     <form action="./add.php" method="post">
-        <table>
-            <tr>
-                <td><label for="name">Naam</label> </td>
-                <td> <input type="text" name="name"/></td>
-            </tr>
-            <tr>
-                <td><label for ="username">Jira gebruikersnaam</td>
-                <td><input type="text" name="username" /></td>
-            </tr>
-            <tr>
-                <td><label for ="team">Team</td>
-                <td><select name ="team">
-                    <option selected="selected">Voeg toe aan team</option>
+        <div id = "form">
+            <ul>
+            <li>
+                <span><label for="name">Naam</label> </span>
+                <span> <input type="text" name="name"/></span>
+            </li>
+            <li>
+                <span><label for ="username">Jira gebruikersnaam</span>
+                <span><input type="text" name="username" /></span>
+            </li>
+            <li>
+                <span><label for ="team">Team</span>
+                <span><select name ="team">
+                    <!-- op advies van Tim het volgende uitgecommentarieerd, zodat er al standaard een team gekozen is (het eerste team in de lijst)
+                    <option selected="selected">Voeg toe aan team</option> -->
                     <?php
                     // Iterating through the array that contains the teams which are passed on by the handler
                     foreach($teams as $team){
@@ -47,19 +51,18 @@ unset($_SESSION['addSuccess']);
                     }
                     ?>
                 </select>
-                </td>
-            </tr>
+                </span>
+            </li>
 
-            <tr>
-                <td><label for ="destination">Bestemming</td>
-                <td><input type="text" name="destination"/></td>
-            </tr>
-            <tr>
-                <td><label for ="drinkPreference">Drankvoorkeur</td>
-                <td><select name="drinkPreference">
-                    <option selected="selected">Kies een drankvoorkeur</option>
-
-
+            <li>
+                <span><label for ="destination">Bestemming</span>
+                <span><input type="text" name="destination"/></span>
+            </li>
+            <li>
+                <span><label for ="drinkPreference">Drankvoorkeur</span>
+                <span><select name="drinkPreference">
+                    <!-- op advies van Tim "Kies een voorkeur" vervangen door "Geen voorkeur", zodat er al standaard een team gekozen is (het eerste team in de lijst) -->
+                    <option selected="selected">Geen voorkeur</option>
                     <?php
                     // Iterating through the array that contains the drink preferences which are passed on by the handler
                     foreach($drinkPreferences as $item => $itemNL){
@@ -69,32 +72,40 @@ unset($_SESSION['addSuccess']);
                     }
                     ?>
                 </select>
-                </td>
-            </tr>
+                </span>
+            </li>
 
-            <tr>
-                <td><label for ="workingDays[]">Werkdagen</td>
-                <td>
+                <li>
+                    <span><label for="workingDays[]">Werkdagen</span>
+
+                        <ul id="formwerkdagen">
                     <?php
-                    foreach($workingDays as $day => $dayNL){
-                        echo "<input type='checkbox' name='workingDays[]' value='$day' checked>$dayNL<br>";
+                    foreach ($workingDays as $day => $dayNL) {
+                        echo "<li><input type='checkbox' name='workingDays[]' value='$day' checked>$dayNL</li>";
                     }
-                    ?>
-                </td>
-            </tr>
-        </table>
+                    ?> </ul>
+                    </li>
+                <li>  <button class="button1" submit">Maak teamlid aan</button></li>
 
-        <br>
-        <br>
+            </ul>
 
-        <button type="submit" name="addMemberButton">Maak teamlid aan</button>
+        </div>
 
     </form>
 
-
 </div>
 
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    //When the page has loaded.
+    $( document ).ready(function(){
+        $('#message').fadeIn('slow', function(){
+            $('#message').delay(4000).fadeOut();
+        });
+    });
+</script>
+
+
 </body>
-
-
 </html>

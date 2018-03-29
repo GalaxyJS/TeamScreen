@@ -104,10 +104,12 @@ h2 {
     margin:0;
     font-size: 1.38em;
     padding:10px;
-    border-bottom: 1px solid #ffffff2e;
+
     font-weight: 300;
 }
 h2 img{
     height: 25px;
     vertical-align: middle;
+    margin: 0px 5px 0px 5px;
+
 }
