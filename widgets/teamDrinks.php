@@ -23,9 +23,8 @@
          */
         $datetime = new DateTime();
         // Test different datetimes
-        //$datetime=date_create("2018-03-28 16:59:00");
-        //$date = $datetime->format('d/m/Y');
-        $time = $datetime->format('H:i:s');
+        $datetime=date_create("2018-03-29 8:15:00");
+        $time = $datetime->format('H:i:s');        //$date = $datetime->format('d/m/Y');
 
         /** Only refresh during office hours (between 09:00 and 17:00)  */
         $officeHours = (int) $time >= 9 && (int) $time < 17;
@@ -54,13 +53,33 @@
         }
 
         /** Are team members present? */
-        if(empty($presentTeamMembers)) {
-            echo '<img src="widgets/void.jpg">Er is niemand aanwezig om koffie te halen...';
-        }
-        else{
+        if(!empty($presentTeamMembers) && isset($_SESSION['teams'][$teamId]['waiterId'])){
             $waiter = $presentTeamMembers[$_SESSION['teams'][$teamId]['waiterId']];
             echo '<img src="http://tim.mybit.nl/jiraproxy.php/secure/useravatar?size=large&ownerId=' . $waiter->getUsername() . '">';
             echo '<span class="name">' . $waiter->getName() . '</span>, het is jouw beurt om koffie te halen voor:';
+        }
+        else{
+            $img_html = '<img src="widgets/void.jpg">';
+            if(empty($presentTeamMembers)){
+                // no one of the team is present on a specific day
+                echo $img_html . 'Er is op dit moment niemand beschikbaar.';
+            }
+            else{
+                //$_SESSION['teams'][$teamId]['waiterId'] == NULL ; application started outside office hours
+                if ($officeHours == 1) {
+                    // Sanity check
+                    echo $img_html . '[No waiter during office hours: code should not run here!]';
+                }
+                else{
+                    if ($officeHours = (int)$time < 9) {
+                        echo $img_html . 'Er is nog niemand beschikbaar.<br/>Verwachte teamleden voor vandaag:';
+                    }
+                    else{
+                        // De applicatie wordt gestart na vijven
+                        echo $img_html . 'Er is niemand meer beschikbaar.<br/>Aanwezig waren vandaag:';
+                    }
+                }
+            }
         }
         ?>
     </div>
