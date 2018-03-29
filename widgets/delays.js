@@ -1,12 +1,15 @@
 console.log(teamMembers);
+/**
+ * Constants
+ * @type {number}
+ */
 TRAFFIC_MAX_OK_DELAY_MINS = 5;
 TRAFFIC_MIN_BAD_DELAY_MINS = 15;
 
 /**
  * TRAFFIC WIDGET
  *
- * Author: Dominic
- * Review: Carina
+ * Authors: Dominic Dingena & Carina Boom
  */
 class TrafficWidget{
     /**
@@ -31,7 +34,7 @@ class TrafficWidget{
         var param = {
             origins: ['Hilversum'],
             destinations: [item.destination],
-            travelMode: 'DRIVING',
+            travelMode: 'DRIVING', //Default is DRIVING; for other modes, a paid Premium Google API is needed.
             drivingOptions: {
                 departureTime: new Date()
             }
@@ -89,30 +92,17 @@ class TrafficWidget{
         delaySpan.className = "status-delay";
         statusSpan.appendChild(delaySpan);
 
-        // var iconSpan = document.createElement('span');
-        // iconSpan.className = "status-icon";
-        // if(diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
-        //     statusSpan.className = "status ok";
-        //     iconSpan.innerText = "☺";
-        // }
-        // else{
-        //     statusSpan.className = "status bad";
-        //     iconSpan.innerText = "☹";
-        // }
-        //
-        // statusSpan.appendChild(iconSpan);
-
         var statusIcon = document.createElement('img');
         statusIcon.className = "status-icon";
         if(diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
             statusSpan.className = "status ok";
-            statusIcon.src = "/widgets/greenSmiley.png";
+            statusIcon.src = "widgets/greenSmiley.png";
         } else if (diffInMinutes > TRAFFIC_MIN_BAD_DELAY_MINS) {
             statusSpan.className = "status bad";
-            statusIcon.src = "/widgets/redSmiley.png";
+            statusIcon.src = "widgets/redSmiley.png";
         } else {
             statusSpan.className = "status moderate";
-            statusIcon.src = "/widgets/redSmiley.png";
+            statusIcon.src = "widgets/orangeSmiley.png";
         }
         statusSpan.appendChild(statusIcon);
 

@@ -1,5 +1,6 @@
-/*
-Admin styling by : Petri van Niekerk, Dominic Dingena & Agung Udijana
+/**
+ * Admin styling by : Petri van Niekerk, Dominic Dingena & Agung Udijana
+ * Review by: Carina Boom
  */
 
 html, body {
@@ -9,7 +10,6 @@ html, body {
 	font-weight: 400;
 	color:#fff;
 }
-
 
 h1 {
 	font-weight: 200;
@@ -24,7 +24,6 @@ h1 {
 	color: black;
 	margin-left: 155px;
 }
-
 
 .button1 {
 	font-weight: 300;
@@ -55,7 +54,8 @@ ul {
 	 height:45px;
 	 margin:0;
 	 list-style:none;
- }
+}
+
 #menu li{
 	height:35px;
 	float:left;
@@ -74,32 +74,25 @@ ul {
 	list-style:none;
 }
 
-
-#formwerkdagen {
+#form-working-days {
 	list-style:none;
 }
 
-#formwerkdagen li{
+#form-working-days li{
 	height:25px;
 	float: left;
 	padding: 5px;
 }
-
 
 a, a:visited, a:active{
 	color:#fff;
 	text-decoration:none;
 }
 
-
-
 h1 img {
 	height: 42px;
 	vertical-align: bottom;
 }
-
-
-
 
 #general h2 {
 	font-weight: 200;
@@ -108,8 +101,6 @@ h1 img {
 	padding: 0px;
 	margin-left: 20px;
 }
-
-
 
 #welcome {
     margin: 0 auto;
@@ -124,9 +115,6 @@ h1 img {
 #welcome img {
     width: 100%;
 }
-
-
-
 
 h2 img {
 	height: 75px;
@@ -213,6 +201,10 @@ h2 img {
 	float: right;
 }
 
+.memberlist .icon img {
+	height: 15px;
+
+}
 
 #members {
 	list-style: none;
@@ -235,6 +227,7 @@ h2 img {
 	float: left;
 	margin-right: 20px;
 }
+
 #member-list {
 	height: 460px;
 	overflow: hidden;
@@ -246,16 +239,10 @@ h2 img {
     height:1000px;
 }
 
-.memberlist .icon img {
-	height: 15px;
-
-}
-
-#messageblock {
+#message-block {
     height: 40px;
 }
 
-
-#titelmain {
+#title-main {
     border-bottom: none;
 }

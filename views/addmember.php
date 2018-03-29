@@ -22,7 +22,7 @@ unset($_SESSION['addSuccess']);
 
     <h1><img src = "../../views/newmember.png"> Nieuw lid</h1>
 
-    <div id = "messageblock">
+    <div id = "message-block">
     <h2><div id="message"><?= $success ?> </div></h2>
     </div>
 
@@ -78,7 +78,7 @@ unset($_SESSION['addSuccess']);
                 <li>
                     <span><label for="workingDays[]">Werkdagen</span>
 
-                        <ul id="formwerkdagen">
+                        <ul id="form-working-days">
                     <?php
                     foreach ($workingDays as $day => $dayNL) {
                         echo "<li><input type='checkbox' name='workingDays[]' value='$day' checked>$dayNL</li>";

@@ -3,7 +3,7 @@
 <div id="general">
     <h1><img src = "/teamscreen/views/member/configtransparent.png"> Ledenconfiguratie</h1>
 
-    <div id = "messageblock">
+    <div id = "message-block">
     <span><div id="message"><h2><?= $_SESSION['message'] ?? '' ?></h2></div></span>
     <?php unset ($_SESSION['message']); ?>
     </div>

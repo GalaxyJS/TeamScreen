@@ -20,7 +20,7 @@
     <li><a href="member/list.php">Configureer een lid</a></li>
 </ul>
 
-    <div id="welcome"><h1 id="titelmain">Welcome to the Dashboard</h1>
+    <div id="welcome"><h1 id="title-main">Welcome to the Dashboard</h1>
 
         <img src="dashboard.png"></div>
 
