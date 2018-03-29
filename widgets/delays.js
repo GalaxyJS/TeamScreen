@@ -1,4 +1,3 @@
-console.log(teamMembers);
 /**
  * Constants
  * @type {number}
@@ -120,8 +119,6 @@ class TrafficWidget{
             var sorted= Object.keys(widget.elements)
                     .sort()
                     .map(function(k) { return widget.elements[k] });
-            console.log(sorted);
-
             for (var el in sorted){
                 widget.listbox.appendChild(sorted[el]);
             }
