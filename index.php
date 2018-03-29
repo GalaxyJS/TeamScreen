@@ -1,6 +1,5 @@
 <?php
 require_once('handlers/Database.php');
-require_once('handlers/Cache.php');
 require_once('handlers/MemberHandler.php');
 require_once('handlers/TeamHandler.php');
 require_once('handlers/TimeOffHandler.php');
