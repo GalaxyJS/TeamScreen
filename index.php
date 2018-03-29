@@ -20,19 +20,11 @@ if($teamId){
     $allMembers = $memberHandler->getAll();
     $teamMembers = $memberHandler->getByTeam($teamId);
 
-
-    // Deprecated
-//    $teamMembers = $memberHandler->getByTeam($teamId);
-//    $presentAllMembers = $memberHandler->getPresent();
-//    $presentTeamMembers = $memberHandler->getPresentByTeam($teamId);
-
     $teamMembers = $memberHandler->filterByTeam($allMembers, $teamId);
     $presentAllMembers = $memberHandler->filterPresent($allMembers, $teamId);
     $presentTeamMembers = $memberHandler->filterPresent($teamMembers);
     $presentCoffeeMachineUsers = $memberHandler->filterUsesCoffeeMachine($presentAllMembers);
 
-//    $timeOffThisWeek = $timeOffHandler->getByTeamThisWeek($teamId);
-//    $timeOffNextWeek = $timeOffHandler->getByTeamNextWeek($teamId);
     $timeOffNextTwoWeeks = $timeOffHandler->getByTeamNextTwoWeeks($teamId);
 
     if(!isset($_SESSION['teams'][$teamId])){
@@ -104,7 +96,7 @@ if(empty($_GET['teamid'])){
     <?php include('widgets/teamDrinks.php'); ?>
     <?php include('widgets/cleanCoffeeMachine.php'); ?>
     <?php include('widgets/timeOff.php'); ?>
-    <?php include('widgets/delays.php'); ?>
+    <?php //include('widgets/delays.php'); ?>
     <?php include('widgets/scrumboard.php'); ?>
 </div>
 </body>
