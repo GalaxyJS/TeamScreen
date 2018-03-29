@@ -42,7 +42,8 @@ class MemberHandler extends Handler {
            and m.working_days LIKE concat("%", lower(dayname(now())), "%") as \'present\'
            from member m
            left join time_off t on m.id =  t.member_id
-           group by m.id, m.name, m.username, m.destination, m.drink_preference, m.working_days, m.team_id, present';
+           group by m.id, present
+           order by present DESC';
         $sth = $this->dbh->prepare($query);
         $sth->execute();
         $rows = $sth->fetchAll();

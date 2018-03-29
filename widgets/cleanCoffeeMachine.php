@@ -6,61 +6,37 @@
 -->
 
 <?php
-$CLEANER_FILE_PATH = "/tmp/cleaner";
-
-function fetchCleanerInfo(){
-    $json = file_get_contents($CLEANER_FILE_PATH);
-    return json_decode($json);
-}
-
-function storeCleanerInfo($data){
-    $json = json_encode($data);
-    file_put_contents($CLEANER_FILE_PATH, $json);
-}
-
-$cache = new Cache();
+require_once('handlers/CacheJSON.php');
+$CLEANER_FILE_PATH = "cleaner";
+$cache = new CacheJSON($CLEANER_FILE_PATH);
 $currentDay = date('d', time());
 
-function isRefreshNeeded(): bool
+function isRefreshNeeded($cache): bool
 {
-    global $cache;
     global $currentDay;
     $refresh = false;
-    if ($cache->fetch('timeCleanCoffeeMachine') !== false) {
-        $sameDayCheck = $currentDay === $cache->fetch('timeCleanCoffeeMachine');
-        if (!$sameDayCheck) {
+    $data = $cache->fetch();
+    if (!empty($data->timeCleanCoffeeMachine)) {
+        if ($currentDay !== $data->timeCleanCoffeeMachine) {
             $refresh = true;
         }
     }
-// deprecated
-//    if (isset($_SESSION['timeCleanCoffeeMachine'])) {
-//        $sameDayCheck = $currentDay === $_SESSION['timeCleanCoffeeMachine'];
-//        if (!$sameDayCheck) {
-//            $refresh = true;
-//        }
-//    }
-    if ($cache->fetch('coffeeCleanerId') == false) {
+    if(empty($data->coffeeCleanerId)) {
         $refresh = true;
     }
-// depracated
-//    if (!isset($_SESSION['coffeeCleanerId'])) {
-//        $refresh = true;
-//    }
     return $refresh;
 }
 
-function setRandomCleaner($presentCoffeeMachineUsers)
+function setRandomCleaner($presentCoffeeMachineUsers, $cache)
 {
     global $currentDay;
-    global $cache;
     $randomIndex = array_rand($presentCoffeeMachineUsers, 1);
     $randomMemberId = $presentCoffeeMachineUsers[$randomIndex]->getId();
-    $cache->store('coffeeCleanerId', $randomMemberId);
-    $cache->store('timeCleanCoffeeMachine', $currentDay);
+    $data = [];
+    $data['coffeeCleanerId'] =  $randomMemberId;
+    $data['timeCleanCoffeeMachine'] =  $currentDay;
+    $cache->store($data);
 
-// deprecated
-//    $_SESSION['coffeeCleanerId'] = $randomMemberId;
-//    $_SESSION['timeCleanCoffeeMachine'] = $currentDay;
 }
 
 ?>
@@ -77,11 +53,13 @@ function setRandomCleaner($presentCoffeeMachineUsers)
         echo '<div id="cleanerTxt">Er is op dit moment niemand beschikbaar.</div>';
         // Users available
     } else {
-        $refresh = isRefreshNeeded();
+        $refresh = isRefreshNeeded($cache);
         if ($refresh) {
-            setRandomCleaner($presentCoffeeMachineUsers);
+            setRandomCleaner($presentCoffeeMachineUsers, $cache);
         }
-        $cleaner = $allMembers[$cache->fetch('coffeeCleanerId')];
+
+        $data = $cache->fetch();
+        $cleaner = $allMembers[$data->coffeeCleanerId];
         // deprecated
         //$cleaner = $allMembers[$_SESSION['coffeeCleanerId']];
         ?>
