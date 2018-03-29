@@ -6,6 +6,18 @@
 -->
 
 <?php
+$CLEANER_FILE_PATH = "/tmp/cleaner";
+
+function fetchCleanerInfo(){
+    $json = file_get_contents($CLEANER_FILE_PATH);
+    return json_decode($json);
+}
+
+function storeCleanerInfo($data){
+    $json = json_encode($data);
+    file_put_contents($CLEANER_FILE_PATH, $json);
+}
+
 $cache = new Cache();
 $currentDay = date('d', time());
 
