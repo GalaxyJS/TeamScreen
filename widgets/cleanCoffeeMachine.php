@@ -32,9 +32,9 @@ function setRandomCleaner($presentCoffeeMachineUsers, $cache)
     global $currentDay;
     $randomIndex = array_rand($presentCoffeeMachineUsers, 1);
     $randomMemberId = $presentCoffeeMachineUsers[$randomIndex]->getId();
-    $data = [];
-    $data['coffeeCleanerId'] =  $randomMemberId;
-    $data['timeCleanCoffeeMachine'] =  $currentDay;
+    $data = new stdClass;
+    $data->coffeeCleanerId =  $randomMemberId;
+    $data->timeCleanCoffeeMachine =  $currentDay;
     $cache->store($data);
 
 }
