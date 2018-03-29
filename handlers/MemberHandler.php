@@ -27,8 +27,9 @@ class MemberHandler extends Handler {
         $member->setDrinkPreference($row['drink_preference']);
         $member->setWorkingDays($row['working_days']);
         $member->setTeamId($row['team_id']);
-        $member->setPresent((bool) $row['present']);
-
+        if(isset($row['present'])){
+            $member->setPresent((bool) $row['present']);
+        }
         return $member;
     }
 

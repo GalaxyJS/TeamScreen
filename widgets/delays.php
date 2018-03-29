@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="widgets/delays.css">
 <div id="vertragingen" class="widgetBoxSmall">
     <h2>Vertragingen</h2>
-    <div id="traffic-list"> </div>
+    <div id="traffic-list" class="scrollable"> </div>
 </div>
 
 <script src="widgets/delays.js"></script>

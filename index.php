@@ -1,5 +1,6 @@
 <?php
 require_once('handlers/Database.php');
+require_once('handlers/Cache.php');
 require_once('handlers/MemberHandler.php');
 require_once('handlers/TeamHandler.php');
 require_once('handlers/TimeOffHandler.php');
@@ -11,31 +12,24 @@ $teamHandler = new TeamHandler($conn);
 $timeOffHandler = new TimeOffHandler($conn);
 $teams = $teamHandler->getAll();
 
-$teamId = (int) $_GET['teamid'];
-if($teamId){
+if (isset($_GET['teammid'])) {
+    $teamId = (int)$_GET['teamid'];
     $allMembers = $memberHandler->getAll();
-
-
-    // Deprecated
-//    $teamMembers = $memberHandler->getByTeam($teamId);
-//    $presentAllMembers = $memberHandler->getPresent();
-//    $presentTeamMembers = $memberHandler->getPresentByTeam($teamId);
 
     $teamMembers = $memberHandler->filterByTeam($allMembers, $teamId);
     $presentAllMembers = $memberHandler->filterPresent($allMembers, $teamId);
     $presentTeamMembers = $memberHandler->filterPresent($teamMembers);
     $presentCoffeeMachineUsers = $memberHandler->filterUsesCoffeeMachine($presentAllMembers);
 
-    $timeOffThisWeek = $timeOffHandler->getByTeamThisWeek($teamId);
-    $timeOffNextWeek = $timeOffHandler->getByTeamNextWeek($teamId);
+    $timeOffNextTwoWeeks = $timeOffHandler->getByTeamNextTwoWeeks($teamId);
 
     $javascriptTeamMembers = [];
-    foreach ($teamMembers as $teamMember){
+    foreach ($teamMembers as $teamMember) {
         $javascriptTeamMembers[] = $teamMember;
     }
 }
 
-setlocale(LC_TIME, 'nld_nld' );
+setlocale(LC_TIME, 'nld_nld');
 $date = strftime('%e %B %Y', time());
 
 // 15 minutes refresh
@@ -56,40 +50,45 @@ session_start();
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
-         var allMembers = JSON.parse('<?= json_encode($allMembers)?>');
-         var teamMembers = JSON.parse('<?= json_encode($javascriptTeamMembers) ?>');
-       </script>
+        <?php if(!empty($teamId)) { ?>
+        var allMembers = JSON.parse('<?= json_encode($allMembers)?>');
+        var teamMembers = JSON.parse('<?= json_encode($javascriptTeamMembers) ?>');
+        <?php } ?>
+    </script>
     <script src="main.js"></script>
     <script src="time.js"></script>
     <title>Board</title>
 </head>
 <body onload="startTime()">
 
-<div id="header" >
-    <div id="dateTime" class="headerline" >
+<div id="header">
+    <div id="dateTime" class="headerline">
         <span id="date" class="headerBox">&#128197 <?php echo $date; ?></span>
         <span class="headerBox">&#128336</span>
         <span id="clock" class="headerBox"></span></div>
     <div id="bordHeader" class="headerline">
-        <span id="name"  class="headerBox" "fat"><strong>John Doe</strong></span>
+        <span id="name" class="headerBox" "fat"><strong>John Doe</strong></span>
         <span class="headerBox" "fat">|</span>
         <span class="headerBox">
+            <?php if (!empty($teamId)) { ?>
              <select name="boardSelector" id="boardSelector">
-                  <option value="">Kies een team</option>
-<?php foreach($teams as $team){ ?>
-  <option value="<?= $team->getId()?>" <?php if($team->getId() == $_GET['teamid']){echo "selected";}?> > <?= $team->getLabel() ?></option>
-<?php } ?>
+                 <option value="">Kies een team</option>
+                 <?php foreach ($teams as $team) { ?>
+                     <option value="<?= $team->getId() ?>" <?php if ($team->getId() == $teamId) {
+                         echo "selected";
+                     } ?> > <?= $team->getLabel() ?></option>
             </select>
+            <?php }} ?>
         </span>
     </div>
 </div>
 
 <?php
-if(empty($_GET['teamid'])){
+if (empty($_GET['teamid'])) {
     echo '<div id="select-a-team"><h1>Kies een team:</h1>';
     echo '<ul id="teams">';
-    foreach($teams as $team){
-        echo '<li><a href="?teamid=' . $team->getId() . '">'. $team->getLabel() . '</a></li>';
+    foreach ($teams as $team) {
+        echo '<li><a href="?teamid=' . $team->getId() . '">' . $team->getLabel() . '</a></li>';
     }
     echo '</ul></div>';
     die();
@@ -99,7 +98,7 @@ if(empty($_GET['teamid'])){
 <div id="board">
     <?php include('widgets/teamDrinks.php'); ?>
     <?php include('widgets/cleanCoffeeMachine.php'); ?>
-    <?php include('widgets/daysOff.php'); ?>
+    <?php include('widgets/timeOff.php'); ?>
     <?php include('widgets/delays.php'); ?>
     <?php include('widgets/scrumboard.php'); ?>
 </div>

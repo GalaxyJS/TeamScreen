@@ -109,17 +109,21 @@ unset($_SESSION['editSuccess']);
 <script>
     function clicked(e)
     {
-        if(!confirm('Weet je zeker dat je dit lid wilt verwijderen?'))e.preventDefault();
-        var form = document.createElement('form');
-        document.body.appendChild(form);
-        form.method = 'post';
-        form.action = 'delete.php';
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'id';
-        input.value = <?= $member->getId() ?>;
-        form.appendChild(input);
-        form.submit();
+        if(!confirm('Weet je zeker dat je dit lid wilt verwijderen?')) {
+            e.preventDefault();
+        }
+        else {
+            var form = document.createElement('form');
+            document.body.appendChild(form);
+            form.method = 'post';
+            form.action = 'delete.php';
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = <?= $member->getId() ?>;
+            form.appendChild(input);
+            form.submit();
+        }
     }
 </script>
 
