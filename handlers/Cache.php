@@ -10,7 +10,7 @@ class Cache {
      * @return mixed the stored variable on success; false on failure
      */
     public function fetch($key){
-        if(isset$_SESSION[$key]){
+        if(isset($_SESSION[$key])){
             return $_SESSION[$key];
         }
         return false;
