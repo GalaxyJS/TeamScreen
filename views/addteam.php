@@ -18,7 +18,7 @@ unset($_SESSION['addSuccess']);
 
     <h1><img src="../../views/newteam.png"> Nieuw team</h1>
 
-    <div id="messageblock">
+    <div id="message-block">
         <h2>
             <div id="message"><?= $success ?> </div>
         </h2>

@@ -22,7 +22,7 @@ unset($_SESSION['editSuccess']);
 
     <h1><img src="../../views/member/edit.png">  Wijzig teamlid</h1>
 
-    <div id = "messageblock">
+    <div id = "message-block">
         <h2><div id="message"><?= $success ?></div></h2>
     </div>
 
@@ -76,7 +76,7 @@ unset($_SESSION['editSuccess']);
 
             <li>
                 <span><label for="workingDays[]">Werkdagen</span> <span>
-                     <ul id="formwerkdagen">
+                     <ul id="form-working-days">
                     <?php
                     foreach ($workingDays as $day => $dayNL) {
                         echo "<li><input type='checkbox' name='workingDays[]' value='$day'";
