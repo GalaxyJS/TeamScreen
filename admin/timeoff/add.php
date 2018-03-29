@@ -54,8 +54,8 @@ elseif($_SERVER['REQUEST_METHOD'] === 'POST'){
     checkExists($member);
 
     $timeOff = new TimeOff();
-    $timeOff->setStartTime($_POST['start']);
-    $timeOff->setEndTime($_POST['end']);
+    $timeOff->setStartTime($_POST['start'] . ':00');
+    $timeOff->setEndTime($_POST['end'] . ':00');
     $timeOff->setMemberId($member->getId());
     if(!$timeOffHandler->add($timeOff)){
         die("Fatal error");

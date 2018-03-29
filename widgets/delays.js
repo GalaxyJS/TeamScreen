@@ -1,5 +1,6 @@
 console.log(teamMembers);
-TRAFFIC_MAX_OK_DELAY_MINS = 9;
+TRAFFIC_MAX_OK_DELAY_MINS = 5;
+TRAFFIC_MIN_BAD_DELAY_MINS = 15;
 
 /**
  * TRAFFIC WIDGET
@@ -84,21 +85,38 @@ class TrafficWidget{
         statusSpan.className = "status";
 
         var delaySpan = document.createElement('span');
-        delaySpan.innerText = diffInMinutes + ' min.';
+        delaySpan.innerText = diffInMinutes + ' min. ';
         delaySpan.className = "status-delay";
         statusSpan.appendChild(delaySpan);
 
-        var iconSpan = document.createElement('span');
-        iconSpan.className = "status-icon";
+        // var iconSpan = document.createElement('span');
+        // iconSpan.className = "status-icon";
+        // if(diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
+        //     statusSpan.className = "status ok";
+        //     iconSpan.innerText = "☺";
+        // }
+        // else{
+        //     statusSpan.className = "status bad";
+        //     iconSpan.innerText = "☹";
+        // }
+        //
+        // statusSpan.appendChild(iconSpan);
+
+        var statusIcon = document.createElement('img');
+        statusIcon.className = "status-icon";
         if(diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
             statusSpan.className = "status ok";
-            iconSpan.innerText = "☺";
-        }
-        else{
+            statusIcon.src = "/widgets/greenSmiley.png";
+        } else if (diffInMinutes > TRAFFIC_MIN_BAD_DELAY_MINS) {
             statusSpan.className = "status bad";
-            iconSpan.innerText = "☹";
+            statusIcon.src = "/widgets/redSmiley.png";
+        } else {
+            statusSpan.className = "status moderate";
+            statusIcon.src = "/widgets/redSmiley.png";
         }
-        statusSpan.appendChild(iconSpan);
+        statusSpan.appendChild(statusIcon);
+
+
         listItem.appendChild(statusSpan);
 
         var index = diffInMinutes * 100;
