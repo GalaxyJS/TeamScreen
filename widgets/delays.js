@@ -1,11 +1,14 @@
 console.log(teamMembers);
-TRAFFIC_MAX_OK_DELAY_MINS = 9;
+/** Constants */
+TRAFFIC_MAX_OK_DELAY_MINS = 5; //Delays of below 5 minutes are ok.
+TRAFFIC_MIN_BAD_DELAY_MINS = 15; //Delays of 15 minutes or more are bad.
+ORIGIN_LOCATION = 'Kees Postemalaan 6, Hilversum'; //Address of MyBit
+TRAVEL_MODE = 'DRIVING'; //Default travel-mode is Driving; others require a Premium Google API to work.
 
 /**
  * TRAFFIC WIDGET
  *
- * Author: Dominic
- * Review: Carina
+ * Author: Dominic & Carina
  */
 class TrafficWidget{
     /**
@@ -28,9 +31,9 @@ class TrafficWidget{
      */
     getTrafficInformation(item, callback, widget){
         var param = {
-            origins: ['Hilversum'],
+            origins: [ORIGIN_LOCATION],
             destinations: [item.destination],
-            travelMode: 'DRIVING',
+            travelMode: TRAVEL_MODE,
             drivingOptions: {
                 departureTime: new Date()
             }
@@ -88,15 +91,20 @@ class TrafficWidget{
         delaySpan.className = "status-delay";
         statusSpan.appendChild(delaySpan);
 
-        var iconSpan = document.createElement('span');
-        iconSpan.className = "status-icon";
+        var statusIcon = document.createElement('img');
+        statusIcon.className = "status-icon";
         if(diffInMinutes < TRAFFIC_MAX_OK_DELAY_MINS) {
             statusSpan.className = "status ok";
-            iconSpan.innerText = "☺";
-        }
-        else{
+            // statusIcon.innerText = "☺";
+            statusIcon.src = "/widgets/greenSmiley.png";
+        } else if (diffInMinutes > TRAFFIC_MIN_BAD_DELAY_MINS) {
             statusSpan.className = "status bad";
-            iconSpan.innerText = "☹";
+            // statusIcon.innerText = "☹";
+            statusIcon.src = "/widgets/redSmiley.png";
+        } else {
+            statusSpan.className = "status moderate";
+            // iconSpan.innerText = "☹";
+            statusIcon.src = "/widgets/redSmiley.png";
         }
         statusSpan.appendChild(iconSpan);
         listItem.appendChild(statusSpan);
