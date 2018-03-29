@@ -102,7 +102,7 @@ class TrafficWidget{
             statusIcon.src = "widgets/redSmiley.png";
         } else {
             statusSpan.className = "status moderate";
-            statusIcon.src = "widgets/redSmiley.png";
+            statusIcon.src = "widgets/orangeSmiley.png";
         }
         statusSpan.appendChild(statusIcon);
 

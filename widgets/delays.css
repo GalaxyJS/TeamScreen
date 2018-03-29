@@ -38,6 +38,9 @@
 .traffic-item .status.bad {
     color: #D0021B;
 }
+.traffic-item .status.moderate {
+    color: #d05e1e;
+}
 .traffic-item .delay {
     float: right;
     font-size: 12px;
