@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Test Emiel</title>
+    <title>Test Emiel</title>
 </head>
 <body>
 
@@ -16,13 +16,30 @@ require_once('handlers/Database.php');
 require_once('handlers/MemberHandler.php');
 require_once('handlers/TeamHandler.php');
 
-$team = new Team(1, 'testteam'); 
-$member = new Member(1, 'user01', 'klaas', $team); 
+$team = new Team(1, 'testteam');
+$member = new Member(1, 'user01', 'klaas', $team);
 
 // echo 'Naam: ' . $member->getName() ;
 // echo '<br/><br/>';
 // print_r($team);
 
+$datetime = new DateTime();
+$datetime = date_create("2018-03-28 16:59:00");
+
+echo date_format($datetime,"d/m/Y H:i:s") . '<br>';
+
+$date = $datetime->format('d/m/Y');
+$time = $datetime->format('H:i:s');
+echo $date, ' | ', $time , '<br>';
+
+echo 'Vóór negenen? ';
+echo ((int) $time < 9 ? 'Ja' : 'Nee') . '<br>';
+echo 'Na vijven? ';
+echo ((int) $time >= 17 ? 'Ja' : 'Nee') . '<br>';
+
+echo 'kantooruren? ';
+echo ((int) $time >= 9 && (int) $time < 17 ? 'Ja' : 'Nee') . '<br>';
+echo (int) $time >= 9 && (int) $time < 17 ;
 
 echo '<p/>';
 
