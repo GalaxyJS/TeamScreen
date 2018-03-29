@@ -1,4 +1,7 @@
 <?php
+
+phpinfo();
+die();
 /**
  * Created by PhpStorm.
  * User: carina_boom

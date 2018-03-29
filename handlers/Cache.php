@@ -10,7 +10,10 @@ class Cache {
      * @return mixed the stored variable on success; false on failure
      */
     public function fetch($key){
-        return $_SESSION[$key];
+        if(isset$_SESSION[$key]){
+            return $_SESSION[$key];
+        }
+        return false;
 //        return apcu_fetch($key);
     }
 
@@ -26,10 +29,9 @@ class Cache {
 
     /**
      * @param $key the key to delete
-     * @return bool true on success; false on failure
      */
-    public function delete($key) : bool{
-        unset($_SESSION[$key]);
-        return apcu_delete($key);
+    public function delete($key) {
+        if(isset($_SESSION[$key])) unset($_SESSION[$key]);
+//        return apcu_delete($key);
     }
 }
