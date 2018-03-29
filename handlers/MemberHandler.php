@@ -192,7 +192,7 @@ class MemberHandler extends Handler {
         $sth->execute();
         $rows = $sth->fetchAll();
         return $this->rowsToObjects($rows);
-    }
+    }   
 
     /**
      * Get teammembers that are not present NOW.
@@ -202,10 +202,11 @@ class MemberHandler extends Handler {
     public function getPresentByTeam(int $id) : array {
         $query = 'select m.id, m.name, m.username, m.destination, m.drink_preference, m.working_days, m.team_id
             from member m
-            inner join time_off t on m.id =  t.member_id
-            where NOW() not between t.start_time and t.end_time
+            left join time_off t on m.id =  t.member_id
+            where 
+            (t.start_time is NULL or (NOW() not between t.start_time and t.end_time))
             and m.working_days LIKE concat("%", lower(dayname(now())), "%")
-            and team_id=:team_id
+            and team_id = :team_id
             group by m.id, m.name, m.username, m.destination, m.drink_preference, m.working_days, m.team_id';
         $sth = $this->dbh->prepare($query);
         $sth->bindParam('team_id', $id);

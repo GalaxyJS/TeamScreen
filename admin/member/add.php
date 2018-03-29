@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
     }
     $teams = $teamHandler->getAll();
 
-    $addSuccess ='';
+    $addSuccess ="";
 
     require_once('../../views/addmember.php');
     die();
