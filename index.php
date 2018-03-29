@@ -99,7 +99,7 @@ if (empty($_GET['teamid'])) {
     <?php include('widgets/teamDrinks.php'); ?>
     <?php include('widgets/cleanCoffeeMachine.php'); ?>
     <?php include('widgets/timeOff.php'); ?>
-    <?php //include('widgets/delays.php'); ?>
+    <?php include('widgets/delays.php'); ?>
     <?php include('widgets/scrumboard.php'); ?>
 </div>
 </body>
