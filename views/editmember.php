@@ -20,9 +20,11 @@ unset($_SESSION['editSuccess']);
 
 <div id="general">
 
-    <h1>Wijzig teamlid</h1>
+    <h1><img src="../../views/member/edit.png">  Wijzig teamlid</h1>
 
-    <h2><?= $success ?></h2>
+    <div id = "messageblock">
+        <h2><div id="message"><?= $success ?></div></h2>
+    </div>
 
     <form action="./edit.php" method="post">
 
@@ -99,6 +101,8 @@ unset($_SESSION['editSuccess']);
 
 </html>
 
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
 <!-- added by AU. 21.03.2018 - Delete confirmation -->
 <script>
     function clicked(e) {
@@ -118,6 +122,17 @@ unset($_SESSION['editSuccess']);
             form.submit();
         }
     }
+
+
+    //When the page has loaded.
+    $( document ).ready(function(){
+        $('#message').fadeIn('slow', function(){
+            $('#message').delay(4000).fadeOut();
+        });
+    });
+
+
+
 </script>
 
 

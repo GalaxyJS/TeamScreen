@@ -14,15 +14,17 @@ $workingDays = ['Monday' => 'Maandag', 'Tuesday' => 'Dinsdag', 'Wednesday' => 'W
 to prevent this notification : "Notice: session_start(): A session had already been started" */
 // session_start();
 
-$success = isset($_SESSION['addSuccess']) ? $_SESSION['addSuccess'] : '';
+$success = isset($_SESSION['addSuccess']) ? $_SESSION['addSuccess'] : "";
 unset($_SESSION['addSuccess']);
 ?>
 
 <div id="general">
 
-    <h1>Nieuw teamlid</h1>
+    <h1><img src = "../../views/newmember.png"> Nieuw lid</h1>
 
-    <h2><?= $success ?> </h2>
+    <div id = "messageblock">
+    <h2><div id="message"><?= $success ?> </div></h2>
+    </div>
 
     <form action="./add.php" method="post">
         <div id = "form">
@@ -92,5 +94,18 @@ unset($_SESSION['addSuccess']);
     </form>
 
 </div>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    //When the page has loaded.
+    $( document ).ready(function(){
+        $('#message').fadeIn('slow', function(){
+            $('#message').delay(4000).fadeOut();
+        });
+    });
+</script>
+
+
 </body>
 </html>

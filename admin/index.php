@@ -19,8 +19,10 @@
     <li><a href="member/add.php">Voeg een lid toe</a></li>
     <li><a href="member/list.php">Configureer een lid</a></li>
 </ul>
-    <div id="general">
-        <p>Welcome to the Dashboard.</p>
-    </div>
+
+        <div id ="welcometitle" >Welcome to the Dashboard</div>
+
+    <div id ="mainscreen"> <img src ="dashboard.png"></div>
+
 </div>
 
