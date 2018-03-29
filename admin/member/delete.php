@@ -6,7 +6,7 @@ require_once('../../handlers/MemberHandler.php');
 /**
  * CONTROLLER: DELETE A MEMBER
  *
- * Authors: Dominic Dingena & Carina Boom
+ * Authors: Dominic Dingena & Carina Boom & Agung Udijana
  */
 
 /**

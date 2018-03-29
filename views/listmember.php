@@ -1,13 +1,13 @@
 <div id="general">
-    <h2>Kies een lid:</h2>
+    <h1>Kies een lid:</h1>
 
-    <table id="members">
+    <ul>
         <?php foreach($members as $member){ ?>
-            <tr>
-                <td><a href="edit.php?id=<?= $member->getId() ?>"><?= $member->getName() ?></a></td>
-                <td><a href="edit.php?id=<?= $member->getId() ?>">wijzig</a></td>
-                <td><a>verlof</a></td>
-            </tr>
+            <li>
+                <span><a href="edit.php?id=<?= $member->getId() ?>"><?= $member->getName() ?></a></span>
+                <span><a href="edit.php?id=<?= $member->getId() ?>">wijzig</a></span>
+                <span><a>verlof</a></span>
+            </li>
         <?php } ?>
-    </table>
+    </ul>
 </div>
