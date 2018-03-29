@@ -6,8 +6,8 @@
 -->
 
 <?php
-$currentDay = date('d', time());
 $cache = new Cache();
+$currentDay = date('d', time());
 
 function isRefreshNeeded(): bool
 {
@@ -43,8 +43,8 @@ function setRandomCleaner($presentCoffeeMachineUsers)
     global $cache;
     $randomIndex = array_rand($presentCoffeeMachineUsers, 1);
     $randomMemberId = $presentCoffeeMachineUsers[$randomIndex]->getId();
-    $cache->store('coffeeCleanerId',$randomMemberId);
-    $cache->store('timeCleanCoffeeMachine',$currentDay);
+    $cache->store('coffeeCleanerId', $randomMemberId);
+    $cache->store('timeCleanCoffeeMachine', $currentDay);
 
 // deprecated
 //    $_SESSION['coffeeCleanerId'] = $randomMemberId;
@@ -63,7 +63,7 @@ function setRandomCleaner($presentCoffeeMachineUsers)
     // No users available
     if (empty($presentCoffeeMachineUsers)) {
         echo '<div id="cleanerTxt">Er is op dit moment niemand beschikbaar.</div>';
-    // Users available
+        // Users available
     } else {
         $refresh = isRefreshNeeded();
         if ($refresh) {

@@ -12,7 +12,7 @@ $teamHandler = new TeamHandler($conn);
 $timeOffHandler = new TimeOffHandler($conn);
 $teams = $teamHandler->getAll();
 
-if (isset($_GET['teammid'])) {
+if (isset($_GET['teamid'])) {
     $teamId = (int)$_GET['teamid'];
     $allMembers = $memberHandler->getAll();
 
@@ -96,11 +96,11 @@ if (empty($_GET['teamid'])) {
 ?>
 
 <div id="board">
-    <?php include('widgets/teamDrinks.php'); ?>
+    <?php //include('widgets/teamDrinks.php'); ?>
     <?php include('widgets/cleanCoffeeMachine.php'); ?>
-    <?php include('widgets/timeOff.php'); ?>
-    <?php include('widgets/delays.php'); ?>
-    <?php include('widgets/scrumboard.php'); ?>
+    <?php //include('widgets/timeOff.php'); ?>
+    <?php //include('widgets/delays.php'); ?>
+    <?php //include('widgets/scrumboard.php'); ?>
 </div>
 </body>
 </html>
