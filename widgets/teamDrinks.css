@@ -36,22 +36,22 @@
     padding: 0;
 }
 
-#current-getter {
+#current-waiter {
     margin: 20px;
     height: 60px;
 }
 
-#current-getter span.name {
+#current-waiter span.name {
     font-weight: 700;
 }
 
-#current-getter img {
+#current-waiter img {
     width: 60px;
     border-radius: 50%;
     float: left;
     margin-right: 20px;
 }
 #drink-list {
-    height: 260px;
+    height: 278px;
     overflow: hidden;
 }

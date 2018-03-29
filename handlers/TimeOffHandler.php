@@ -76,9 +76,9 @@ class TimeOffHandler extends Handler {
         $query = 'select *
             from member m
             inner join time_off t on m.id = t.member_id
-            where (t.start_time between NOW() and :this_saturday)
+            where ((t.start_time between NOW() and :this_saturday)
             or (t.end_time between NOW() and :this_saturday)
-            or (NOW() between t.start_time and t.end_time)
+            or (NOW() between t.start_time and t.end_time))
             and m.working_days LIKE concat("%", lower(dayname(now())), "%")
             and team_id = :team_id';
         $sth = $this->dbh->prepare($query);
@@ -110,9 +110,9 @@ class TimeOffHandler extends Handler {
         $query = 'select *
             from member m
             inner join time_off t on m.id = t.member_id
-            where (t.start_time between :next_sunday and :next_saturday)
+            where ((t.start_time between :next_sunday and :next_saturday)
             or (t.end_time between :next_sunday and :next_saturday)
-            or (:next_wednesday between t.start_time and t.end_time)
+            or (:next_wednesday between t.start_time and t.end_time))
             and m.working_days LIKE concat("%", lower(dayname(now())), "%")
             and team_id = :team_id';
         $sth = $this->dbh->prepare($query);
@@ -124,6 +124,36 @@ class TimeOffHandler extends Handler {
         $rows = $sth->fetchAll();
         return $this->rowsToObjects($rows);
     }
+
+    /**
+     * Retrieve a team's time off next week from the database
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getByTeamNextTwoWeeks(int $id){
+        $dt = new DateTime();
+        // advance 2 weeks
+        $dt->modify('next saturday');
+        $dt->modify('next saturday');
+        $end = $dt->format('Y-m-d h:m:s');
+
+        $query = 'select *
+            from member m
+            inner join time_off t on m.id = t.member_id
+            where ((t.start_time between NOW() and :end)
+            or (t.end_time between NOW() and :end)
+            or (NOW() between t.start_time and t.end_time))
+            and m.working_days LIKE concat("%", lower(dayname(now())), "%")
+            and team_id = :team_id';
+        $sth = $this->dbh->prepare($query);
+        $sth->bindValue('team_id', $id);
+        $sth->bindValue('end', $end);
+        $sth->execute();
+        $rows = $sth->fetchAll();
+        return $this->rowsToObjects($rows);
+    }
+
 
 
 }

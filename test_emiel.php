@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Test Emiel</title>
+    <title>Test Emiel</title>
 </head>
 <body>
 
@@ -16,17 +16,30 @@ require_once('handlers/Database.php');
 require_once('handlers/MemberHandler.php');
 require_once('handlers/TeamHandler.php');
 
-define("SEPARATOR", ',');
-
-$team = new Team(1, 'testteam'); 
-$member = new Member(1, 'user01', 'klaas', $team); 
+$team = new Team(1, 'testteam');
+$member = new Member(1, 'user01', 'klaas', $team);
 
 // echo 'Naam: ' . $member->getName() ;
 // echo '<br/><br/>';
 // print_r($team);
 
+$datetime = new DateTime();
+$datetime = date_create("2018-03-28 16:59:00");
 
-echo implode(SEPARATOR, array("Monday", "Tuesday", "Wednesday", "Thursday"));
+echo date_format($datetime,"d/m/Y H:i:s") . '<br>';
+
+$date = $datetime->format('d/m/Y');
+$time = $datetime->format('H:i:s');
+echo $date, ' | ', $time , '<br>';
+
+echo 'Vóór negenen? ';
+echo ((int) $time < 9 ? 'Ja' : 'Nee') . '<br>';
+echo 'Na vijven? ';
+echo ((int) $time >= 17 ? 'Ja' : 'Nee') . '<br>';
+
+echo 'kantooruren? ';
+echo ((int) $time >= 9 && (int) $time < 17 ? 'Ja' : 'Nee') . '<br>';
+echo (int) $time >= 9 && (int) $time < 17 ;
 
 echo '<p/>';
 
@@ -39,25 +52,45 @@ $array = json_decode( $json, true );
 var_dump($array);
 
 foreach($array as $item) {
-    //echo $item['filename'];
     echo $item.'<br/>';
-    echo $item['a'];
 }
 
+echo '<p/>';
 
 $db = new Database();
 $conn = $db->getConnection();
 $memberHandler = new MemberHandler($conn);
-$teamHandler = new TeamHandler($conn);
-$teams = $teamHandler->getAll();
-if(empty($_GET['teamid'])){
-    echo '<div id="select-a-team"><h1>Kies een team:</h1>';
-    echo '<ul id="teams">';
-    foreach($teams as $team){
-        echo '<li><a href="?teamid=' . $team->getId() . '">'. $team->getLabel() . '</a></li>';
+$teamMembers = $memberHandler->getByTeam((int) 1);
+
+
+//var_dump($teamMembers[0]);
+$presentTeamMember = null;
+
+for($i = 0; $i < sizeof($teamMembers); $i++){
+
+//foreach($teamMembers as $teamMember) {
+
+    echo $teamMembers[$i]->getName().'<br/>';
+
+    $workingDays = $teamMembers[$i]->getWorkingDays();
+    //echo $workingDays .'<br/>';
+
+    foreach(explode(",", $workingDays) as $workingDay) {
+
+        $day = date('l', time());
+
+        if(strcmp($workingDay, strtolower($day)) == 0){
+            echo $teamMembers[$i]->getName().'<br/>';
+            $presentTeamMembers[$i] = $teamMembers[$i];
+            //array_push($presentTeamMember, $teamMembers[$i]);
+        }
     }
-    echo '</ul></div>';
-    die();
+}
+
+echo '<p/>';
+if(isset($presentTeamMembers[0])) {
+    var_dump($presentTeamMember);
+    echo $presentTeamMembers[0]->getName();
 }
 
 
@@ -65,3 +98,4 @@ if(empty($_GET['teamid'])){
 
 </body>
 </html>
+}
