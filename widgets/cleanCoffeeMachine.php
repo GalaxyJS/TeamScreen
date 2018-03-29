@@ -7,29 +7,48 @@
 
 <?php
 $currentDay = date('d', time());
+$cache = new Cache();
+
 function isRefreshNeeded(): bool
 {
+    global $cache;
     global $currentDay;
     $refresh = false;
-    if (isset($_SESSION['timeCleanCoffeeMachine'])) {
-        $sameDayCheck = $currentDay === $_SESSION['timeCleanCoffeeMachine'];
+    if ($cache->fetch('timeCleanCoffeeMachine') !== false) {
+        $sameDayCheck = $currentDay === $cache->fetch('timeCleanCoffeeMachine');
         if (!$sameDayCheck) {
             $refresh = true;
         }
     }
-    if (!isset($_SESSION['coffeeCleanerId'])) {
+// deprecated
+//    if (isset($_SESSION['timeCleanCoffeeMachine'])) {
+//        $sameDayCheck = $currentDay === $_SESSION['timeCleanCoffeeMachine'];
+//        if (!$sameDayCheck) {
+//            $refresh = true;
+//        }
+//    }
+    if ($cache->fetch('coffeeCleanerId') == false) {
         $refresh = true;
     }
+// depracated
+//    if (!isset($_SESSION['coffeeCleanerId'])) {
+//        $refresh = true;
+//    }
     return $refresh;
 }
 
 function setRandomCleaner($presentCoffeeMachineUsers)
 {
     global $currentDay;
+    global $cache;
     $randomIndex = array_rand($presentCoffeeMachineUsers, 1);
     $randomMemberId = $presentCoffeeMachineUsers[$randomIndex]->getId();
-    $_SESSION['coffeeCleanerId'] = $randomMemberId;
-    $_SESSION['timeCleanCoffeeMachine'] = $currentDay;
+    $cache->store('coffeeCleanerId',$randomMemberId);
+    $cache->store('timeCleanCoffeeMachine',$currentDay);
+
+// deprecated
+//    $_SESSION['coffeeCleanerId'] = $randomMemberId;
+//    $_SESSION['timeCleanCoffeeMachine'] = $currentDay;
 }
 
 ?>
@@ -50,7 +69,9 @@ function setRandomCleaner($presentCoffeeMachineUsers)
         if ($refresh) {
             setRandomCleaner($presentCoffeeMachineUsers);
         }
-        $cleaner = $allMembers[$_SESSION['coffeeCleanerId']];
+        $cleaner = $allMembers[$cache->fetch('coffeeCleanerId')];
+        // deprecated
+        //$cleaner = $allMembers[$_SESSION['coffeeCleanerId']];
         ?>
         <div id="cleanerAvatar">
             <img src="http://tim.mybit.nl/jiraproxy.php/secure/useravatar?ownerId=<?= $cleaner->getUsername() ?>"/>
