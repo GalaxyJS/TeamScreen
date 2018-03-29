@@ -95,3 +95,7 @@ h2 {
     border-bottom: 1px solid #ffffff2e;
     font-weight: 300;
 }
+h2 img{
+    height: 25px;
+    vertical-align: middle;
+}

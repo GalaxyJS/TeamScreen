@@ -35,7 +35,6 @@ $date = strftime('%e %B %Y', time());
 // 15 minutes refresh
 $refreshrate = 900;
 session_start();
-
 ?>
 
 <!doctype html>
@@ -74,9 +73,10 @@ session_start();
              <select name="boardSelector" id="boardSelector">
                  <option value="">Kies een team</option>
                  <?php foreach ($teams as $team) {
-                    echo "<option value='{$team->getId()}'>{$team->getLabel()}";
-                    echo '</option>';
-                 }?>
+                     echo "<option value='{$team->getId()}'";
+                     if ($team->getId() == $teamId) echo ' selected';
+                     echo ">{$team->getLabel()}</option>";
+                 } ?>
             </select>
             <?php } ?>
         </span>
@@ -100,7 +100,7 @@ if (empty($_GET['teamid'])) {
     <?php include('widgets/cleanCoffeeMachine.php'); ?>
     <?php include('widgets/timeOff.php'); ?>
     <?php //include('widgets/delays.php'); ?>
-    <?php //include('widgets/scrumboard.php'); ?>
+    <?php include('widgets/scrumboard.php'); ?>
 </div>
 </body>
 </html>
