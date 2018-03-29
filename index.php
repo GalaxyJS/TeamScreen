@@ -18,7 +18,6 @@ if (isset($_GET['teamid'])) {
 
     $teamMembers = $memberHandler->filterByTeam($allMembers, $teamId);
     $presentAllMembers = $memberHandler->filterPresent($allMembers, $teamId);
-    echo '1';
     $presentTeamMembers = $memberHandler->filterPresent($teamMembers);
     $presentCoffeeMachineUsers = $memberHandler->filterUsesCoffeeMachine($presentAllMembers);
 
