@@ -37,10 +37,12 @@
                     /** Previous refresh has occurred. Check the interval in seconds since last refresh */
                     $timePassed = time() - $_SESSION['teams'][$teamId]['timeTeamDrinks'];
                     if (time() - $_SESSION['teams'][$teamId]['timeTeamDrinks'] < INTERVAL_GET_COFFEE){
-                        if(!isset($presentTeamMembers[$_SESSION['teams'][$teamId]['waiterId']])){
-                            // *bugfix* Selected waiter has since the last refresh been removed the list of
-                            // present team members; time off data may have been update to include today.
-                            $refresh = true;
+                        if(isset($_SESSION['teams'][$teamId]['waiterId'])) {
+                            if (!isset($presentTeamMembers[$_SESSION['teams'][$teamId]['waiterId']])) {
+                                // *bugfix* Selected waiter has since the last refresh been removed the list of
+                                // present team members; time off data may have been update to include today.
+                                $refresh = true;
+                            }
                         }
                     }
                     else{
