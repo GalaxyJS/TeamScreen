@@ -2,9 +2,9 @@ AuthType Basic
 AuthName "Team Screen Administration"
 
 # xampp on windows
-#AuthUserFile ../htdocs/teamscreen/config/.htpasswd
+AuthUserFile ../htdocs/teamscreen/config/.htpasswd
 
 # linux
-AuthUserFile /etc/apache2/.htpasswd
+#AuthUserFile /etc/apache2/.htpasswd
 
 Require valid-user
