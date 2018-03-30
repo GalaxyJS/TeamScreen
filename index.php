@@ -65,7 +65,7 @@ session_start();
         <span class="headerBox">&#128336</span>
         <span id="clock" class="headerBox"></span></div>
     <div id="bordHeader" class="headerline">
-        <span id="name" class="headerBox" "fat"><strong>John Doe</strong></span>
+        <span id="name" class="headerBox" "fat"><strong>TeamScreen</strong></span>
         <span class="headerBox" "fat">|</span>
         <span class="headerBox">
             <?php if (!empty($teamId)) { ?>
