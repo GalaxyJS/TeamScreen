@@ -8,8 +8,8 @@
 to prevent this notification : "Notice: session_start(): A session had already been started" */
 // session_start();
 
-$success = isset($_SESSION['addSuccess']) ? $_SESSION['addSuccess'] : '';
-unset($_SESSION['addSuccess']);
+$success = isset($_SESSION['addValidAddress']) ? $_SESSION['addValidAddress'] : '';
+unset($_SESSION['addValidAddress']);
 
 
 ?>

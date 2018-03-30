@@ -11,8 +11,8 @@ $drinkPreferences = ['coffee' => 'koffie', 'tea' => 'thee', 'water' => ' water']
 $workingDays = ['Monday' => 'Maandag', 'Tuesday' => 'Dinsdag', 'Wednesday' => 'Woensdag', 'Thursday' => 'Donderdag', 'Friday' => 'Vrijdag'];
 
 session_start();
-$success = isset($_SESSION['addSuccess']) ? $_SESSION['addSuccess'] : '';
-unset($_SESSION['addSuccess']);
+$success = isset($_SESSION['addValidAddress']) ? $_SESSION['addValidAddress'] : '';
+unset($_SESSION['addValidAddress']);
 ?>
 
 <div id="general">

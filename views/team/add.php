@@ -6,13 +6,13 @@
 
 session_start();
 // TODO shorthand?
-if(isset($_SESSION['addSuccess'])) {
-    $success = $_SESSION['addSuccess'];
+if(isset($_SESSION['addValidAddress'])) {
+    $success = $_SESSION['addValidAddress'];
 }
 else {
     $success ='';
 }
-unset($_SESSION['addSuccess']);
+unset($_SESSION['addValidAddress']);
 
 
 

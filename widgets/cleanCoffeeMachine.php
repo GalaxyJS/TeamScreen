@@ -6,21 +6,23 @@
 -->
 <?php
 require_once('handlers/CacheJSON.php');
+require_once('models/Cleaner.php');
 $CLEANER_FILE_PATH = "cleaner";
 $cache = new CacheJSON($CLEANER_FILE_PATH);
 $currentDay = date('d', time());
 
 function isRefreshNeeded($cache): bool
 {
+    // TODO global not ok.
     global $currentDay;
     $refresh = false;
-    $data = $cache->fetch();
-    if (!empty($data->timeCleanCoffeeMachine)) {
-        if ($currentDay !== $data->timeCleanCoffeeMachine) {
+    $cleaner = $cache->fetch();
+    if (!empty($cleaner->lastUpdated)) {
+        if ($currentDay !== $cleaner->lastUpdated) {
             $refresh = true;
         }
     }
-    if(empty($data->coffeeCleanerId)) {
+    if(empty($cleaner->lastUpdated)) {
         $refresh = true;
     }
     return $refresh;
@@ -31,10 +33,10 @@ function setRandomCleaner($presentCoffeeMachineUsers, $cache)
     global $currentDay;
     $randomIndex = array_rand($presentCoffeeMachineUsers, 1);
     $randomMemberId = $presentCoffeeMachineUsers[$randomIndex]->getId();
-    $data = new stdClass;
-    $data->coffeeCleanerId =  $randomMemberId;
-    $data->timeCleanCoffeeMachine =  $currentDay;
-    $cache->store($data);
+    $cleaner = new Cleaner();
+    $cleaner->member_id=  $randomMemberId;
+    $cleaner->lastUpdated=  $currentDay;
+    $cache->store($cleaner);
 
 }
 
@@ -56,17 +58,14 @@ function setRandomCleaner($presentCoffeeMachineUsers, $cache)
         if ($refresh) {
             setRandomCleaner($presentCoffeeMachineUsers, $cache);
         }
-
-        $data = $cache->fetch();
-        $cleaner = $allMembers[$data->coffeeCleanerId];
-        // deprecated
-        //$cleaner = $allMembers[$_SESSION['coffeeCleanerId']];
+        $cleaner = $cache->fetch();
+        $member = $allMembers[$cleaner->member_id];
         ?>
         <div id="cleanerAvatar">
-            <img src="http://tim.mybit.nl/jiraproxy.php/secure/useravatar?ownerId=<?= $cleaner->getUsername() ?>"/>
+            <img src="http://tim.mybit.nl/jiraproxy.php/secure/useravatar?ownerId=<?= $member->getUsername() ?>"/>
         </div>
         <div id="cleanerTxt">
-            <span class="fat"><?= $cleaner->getName() ?></span>, jij gaat vandaag het koffieapparaat schoonmaken!
+            <span class="fat"><?= $member->getName() ?></span>, jij gaat vandaag het koffieapparaat schoonmaken!
         </div>
     <?php } ?>
 </div>

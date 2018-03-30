@@ -28,7 +28,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($teamHandler->add($team)){
         session_start();
-        $_SESSION['addSuccess'] = "Team succesvol toegevoegd";
+        $_SESSION['addValidAddress'] = "Team succesvol toegevoegd";
 
         // TODO redirect
         header('Location: '. './add.php');
