@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
 
     $editSuccess ='';
 
-    // TODO
     $member = $memberHandler->get($id);
     if(!$member) die("Member not found.");
 
