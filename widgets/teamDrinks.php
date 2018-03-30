@@ -56,11 +56,13 @@
             // Determine a waiter ONCE outside office hours
             $refresh = !isset($_SESSION['timeTeamDrinks']);
         }
+        // TODO remove
+        $refresh = true;
 
         /** Randomly appoint the new waiter */
         if($refresh){
             foreach($teams as $team) {
-                $presTeamMembers = $memberHandler->getPresentByTeam($team->getId());
+                $presTeamMembers = $teamMembers;
                 if(!empty($presTeamMembers)) {
                     $randomPresentTeamMember = $presTeamMembers[array_rand($presTeamMembers, 1)];
                     $_SESSION['teams'][$team->getId()]['waiterId'] = $randomPresentTeamMember->getId();

@@ -57,7 +57,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($memberHandler->add($member)){
             session_start();
-            $_SESSION['addSuccess'] = "Lid succesvol toegevoegd";
+            $_SESSION['addValidAddress'] = "Lid succesvol toegevoegd";
 
         //Redirect to add.php
         header('Location: add.php');
