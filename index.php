@@ -84,7 +84,10 @@ session_start();
 
 <?php
 if (empty($_GET['teamid'])) {
-    echo '<div id="select-a-team"><h1>Kies een team:</h1>';
+    echo '<div id="select-a-team">';
+    echo '<h1>Admin</h1>';
+    echo '<a href="admin/">Klik hier voor het dashboard.</a>';
+    echo '<h1>Kies een team:</h1>';
     echo '<ul id="teams">';
     foreach ($teams as $team) {
         echo '<li><a href="?teamid=' . $team->getId() . '">' . $team->getLabel() . '</a></li>';

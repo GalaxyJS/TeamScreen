@@ -145,9 +145,9 @@ h2 img {
     width: 470px;
     height: 600px;
     border-radius: 5px;
-    -webkit-box-shadow: 3px 14px 89px 6px rgba(105,101,105,1);
-    -moz-box-shadow: 3px 14px 89px 6px rgba(105,101,105,1);
-    box-shadow: 3px 14px 89px 6px rgba(105,101,105,1);
+    -webkit-box-shadow: -4px -4px 2px 0px rgba(0,0,0,0.36);
+    -moz-box-shadow: -4px -4px 2px 0px rgba(0,0,0,0.36);
+    box-shadow: -4px -4px 2px 0px rgba(0,0,0,0.36);
 }
 
 #general h1 {
@@ -165,9 +165,9 @@ h2 img {
 	width:400px;
 	height: 275px;
     border-radius: 5px;
-    -webkit-box-shadow: 3px 14px 89px 6px rgba(105,101,105,1);
-    -moz-box-shadow: 3px 14px 89px 6px rgba(105,101,105,1);
-    box-shadow: 3px 14px 89px 6px rgba(105,101,105,1);
+	-webkit-box-shadow: -4px -4px 2px 0px rgba(0,0,0,0.36);
+	-moz-box-shadow: -4px -4px 2px 0px rgba(0,0,0,0.36);
+	box-shadow: -4px -4px 2px 0px rgba(0,0,0,0.36);
 }
 
 #generalteam label {
