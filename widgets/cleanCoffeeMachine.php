@@ -11,19 +11,21 @@ $CLEANER_FILE_PATH = "cleaner";
 $cache = new CacheJSON($CLEANER_FILE_PATH);
 $currentDay = date('d', time());
 
-function isRefreshNeeded($cache): bool
+function isRefreshNeeded($cache, $presentCoffeeMachineUsers): bool
 {
-    // TODO global not ok.
     global $currentDay;
     $cleaner = $cache->fetch();
+    // a cleaner is set
+    if(empty($cleaner)){
+        return true;
+    }
+
     if (!empty($cleaner->lastUpdated)) {
         if ($currentDay !== $cleaner->lastUpdated) {
             return true;
         }
     }
-    if(empty($cleaner->lastUpdated)) {
-        return true;
-    }
+    // set cleaner is not present
     if(empty($presentCoffeeMachineUsers[$cleaner->member_id])){
         return true;
     }
@@ -56,7 +58,7 @@ function setRandomCleaner($presentCoffeeMachineUsers, $cache)
         echo '<div id="cleanerTxt">Er is op dit moment niemand beschikbaar.</div>';
         // Users available
     } else {
-        $refresh = isRefreshNeeded($cache);
+        $refresh = isRefreshNeeded($cache, $presentCoffeeMachineUsers);
         if ($refresh) {
             setRandomCleaner($presentCoffeeMachineUsers, $cache);
         }
