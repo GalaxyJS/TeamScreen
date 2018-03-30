@@ -1,7 +1,7 @@
 <!-- authors : Dominic Dingena & Agung Udijana -->
 
 <div id="general">
-    <h1><img src = "/teamscreen/views/member/configtransparent.png"> Ledenconfiguratie</h1>
+    <h1><img src = "../../views/member/configtransparent.png"> Ledenconfiguratie</h1>
 
     <div id = "message-block">
     <span><div id="message"><h2><?= $_SESSION['message'] ?? '' ?></h2></div></span>
