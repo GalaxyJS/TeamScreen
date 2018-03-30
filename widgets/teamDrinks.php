@@ -32,8 +32,20 @@
         $refresh = false;
         if ($officeHours == 1) {
             if (isset($_SESSION['timeTeamDrinks'])) {
-                $refresh = (time() - $_SESSION['timeTeamDrinks']) >= 3600;
-            } /** Session variable is not set. */
+                /** Previous refresh has occurred. Check the interval in seconds since last refresh */
+                if (time() - $_SESSION['timeTeamDrinks'] < 3600){
+                    if(!isset($presentTeamMembers[$_SESSION['teams'][$teamId]['waiterId']])){
+                        // *bugfix* Selected waiter has since the last refresh been removed the list of
+                        // present team members; time off data may have been update to include today.
+                        $refresh = true;
+                    }
+                }
+                else{
+                    // Interval > 1 hour: refresh!
+                    $refresh = true;
+                }
+            }
+            /** Session variable is not set. */
             else {
                 $_SESSION['timeTeamDrinks'] = time();
                 $refresh = true;
