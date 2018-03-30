@@ -14,7 +14,9 @@
 
     <div id="current-waiter">
 
-        <?php const INTERVAL_GET_COFFEE = 60 * 60;
+        <?php
+
+        const INTERVAL_GET_COFFEE = 60 * 60;
 
         /**
          * Check if waiters need to be refreshed.
@@ -79,13 +81,10 @@
             }
         }
 
-
         // array with current possible drink preferences
         $drinkPreferences = ['coffee' => 'koffie', 'tea' => 'thee', 'water' => ' water'];
 
-
         /** Randomly appoint the new waiter */
-
         if(checkRefreshNeeded($teamId, $presentTeamMembers)){
             setWaiter($teamId, $teamMembers);
         }
