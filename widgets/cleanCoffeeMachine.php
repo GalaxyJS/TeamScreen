@@ -15,17 +15,19 @@ function isRefreshNeeded($cache): bool
 {
     // TODO global not ok.
     global $currentDay;
-    $refresh = false;
     $cleaner = $cache->fetch();
     if (!empty($cleaner->lastUpdated)) {
         if ($currentDay !== $cleaner->lastUpdated) {
-            $refresh = true;
+            return true;
         }
     }
     if(empty($cleaner->lastUpdated)) {
-        $refresh = true;
+        return true;
     }
-    return $refresh;
+    if(empty($presentCoffeeMachineUsers[$cleaner->member_id])){
+        return true;
+    }
+    return false;
 }
 
 function setRandomCleaner($presentCoffeeMachineUsers, $cache)
