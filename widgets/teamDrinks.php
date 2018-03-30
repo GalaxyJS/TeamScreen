@@ -43,7 +43,6 @@
             if(!isset($_SESSION['teams'][$teamId]['timeTeamDrinks'])){
                 return true;
             }
-            $timePassed = time() - $_SESSION['teams'][$teamId]['timeTeamDrinks'];
             if (time() - $_SESSION['teams'][$teamId]['timeTeamDrinks'] > INTERVAL_GET_COFFEE){
                 return true;
             }
