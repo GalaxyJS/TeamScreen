@@ -14,18 +14,29 @@
 
     <div id="current-waiter">
 
-        <?php
+        <?php const INTERVAL_GET_COFFEE = 60 * 60;
 
         /**
          * Check if waiters need to be refreshed.
          * @return bool true if needed; false if not
          */
-        function checkRefreshNeeded(){
+        function checkRefreshNeeded($teamId, $presentTeamMembers){
             $refresh = false;
-            if ($officeHours == 1) {
-                if (isset($_SESSION['timeTeamDrinks'])) {
+            /** Only refresh during office hours (between 09:00 and 17:00)  */
+            /**
+             * Determine if a new 'waiter' needs to be appointed.
+             * Default refresh rate 3600 = 1 hour.
+             */
+            $datetime = new DateTime();
+            // Test different datetimes
+            //$datetime=date_create("2018-03-29 8:15:00");
+            $time = $datetime->format('H:i:s');        //$date = $datetime->format('d/m/Y');
+            $officeHours = (int) $time >= 9 && (int) $time < 17;
+            if ($officeHours) {
+                if (isset($_SESSION['teams'][$teamId]['timeTeamDrinks'])) {
                     /** Previous refresh has occurred. Check the interval in seconds since last refresh */
-                    if (time() - $_SESSION['timeTeamDrinks'] < 3600){
+                    $timePassed = time() - $_SESSION['teams'][$teamId]['timeTeamDrinks'];
+                    if (time() - $_SESSION['teams'][$teamId]['timeTeamDrinks'] < INTERVAL_GET_COFFEE){
                         if(!isset($presentTeamMembers[$_SESSION['teams'][$teamId]['waiterId']])){
                             // *bugfix* Selected waiter has since the last refresh been removed the list of
                             // present team members; time off data may have been update to include today.
@@ -39,14 +50,14 @@
                 }
                 /** Session variable is not set. */
                 else {
-                    $_SESSION['timeTeamDrinks'] = time();
+                    $_SESSION['teams'][$teamId]['timeTeamDrinks'] = time();
                     $refresh = true;
                 }
             }
             // outside office hours
             else{
                 // Determine a waiter ONCE outside office hours
-                $refresh = !isset($_SESSION['timeTeamDrinks']);
+                $refresh = !isset($_SESSION['teams'][$teamId]['timeTeamDrinks']);
             }
             return $refresh;
         }
@@ -56,37 +67,25 @@
          * @param $teams
          * @param $teamMembers
          */
-        function setWaiters($teams, $teamMembers)
+        function setWaiter($teamId, $teamMembers)
         {
-            foreach ($teams as $team) {
-                $presTeamMembers = $teamMembers;
-                if (!empty($presTeamMembers)) {
-                    $randomPresentTeamMember = $presTeamMembers[array_rand($presTeamMembers, 1)];
-                    $_SESSION['teams'][$team->getId()]['waiterId'] = $randomPresentTeamMember->getId();
-                }
+            $presTeamMembers = $teamMembers;
+            if (!empty($presTeamMembers)) {
+                $randomPresentTeamMember = $presTeamMembers[array_rand($presTeamMembers, 1)];
+                $_SESSION['teams'][$teamId]['waiterId'] = $randomPresentTeamMember->getId();
+                $_SESSION['teams'][$teamId]['timeTeamDrinks'] = time();
             }
-            $_SESSION['timeTeamDrinks'] = time();
         }
 
 
         // array with current possible drink preferences
         $drinkPreferences = ['coffee' => 'koffie', 'tea' => 'thee', 'water' => ' water'];
-        /**
-         * Determine if a new 'waiter' needs to be appointed.
-         * Default refresh rate 3600 = 1 hour.
-         */
-        $datetime = new DateTime();
-        // Test different datetimes
-        //$datetime=date_create("2018-03-29 8:15:00");
-        $time = $datetime->format('H:i:s');        //$date = $datetime->format('d/m/Y');
 
-        /** Only refresh during office hours (between 09:00 and 17:00)  */
-        $officeHours = (int) $time >= 9 && (int) $time < 17;
 
         /** Randomly appoint the new waiter */
 
-        if(checkRefreshNeeded()){
-            setWaiters($teams, $teamMembers);
+        if(checkRefreshNeeded($teamId, $presentTeamMembers)){
+            setWaiter($teamId, $teamMembers);
         }
 
         /** Are team members present? */

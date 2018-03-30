@@ -32,7 +32,7 @@ setlocale(LC_TIME, 'nld_nld');
 $date = strftime('%e %B %Y', time());
 
 // 15 minutes refresh
-$refreshrate = 900;
+$refreshrate = 15 * 60;
 session_start();
 ?>
 
