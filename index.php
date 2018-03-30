@@ -23,7 +23,7 @@ if (isset($_GET['teamid'])) {
     $timeOffNextTwoWeeks = $timeOffHandler->getByTeamNextTwoWeeks($teamId);
 
     $javascriptTeamMembers = [];
-    foreach ($teamMembers as $teamMember) {
+    foreach ($presentTeamMembers as $teamMember) {
         $javascriptTeamMembers[] = $teamMember;
     }
 }
