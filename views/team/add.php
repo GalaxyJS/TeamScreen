@@ -1,47 +1,56 @@
 <?php require_once('../header.php');
 
 
-    /* authors : Agung & Dominic
-    22 March 2018 */
+/* authors : Agung & Dominic
+22 March 2018 */
 
-session_start();
-// TODO shorthand?
-if(isset($_SESSION['addValidAddress'])) {
-    $success = $_SESSION['addValidAddress'];
-}
-else {
-    $success ='';
-}
+/* AU. 27 March 2018. outcommented - because now there is already a session_start() call in the header.php that is included in this view,
+to prevent this notification : "Notice: session_start(): A session had already been started" */
+// session_start();
+
+$success = isset($_SESSION['addValidAddress']) ? $_SESSION['addValidAddress'] : '';
 unset($_SESSION['addValidAddress']);
-
 
 
 ?>
 
-<div id="general">
+<div id="generalteam">
 
-    <h1>Nieuw team</h1>
+    <h1><img src="../../views/newteam.png"> Nieuw team</h1>
 
-    <h2><?= $success ?> </h2>
+    <div id="message-block">
+        <h2>
+            <div id="message"><?= $success ?> </div>
+        </h2>
+    </div>
+
+
     <form action="./add.php" method="post">
-        <table>
-            <tr>
-                <td><label for="name">Team naam</label> </td>
-                <td> <input type="text" name="name"/></td>
-            </tr>
-        </table>
 
-        <br>
-        <br>
+        <label for="name">Team naam</label>
+        <input type="text" name="name"/>
 
-        <button type="submit" name="addTeam">Maak team aan</button>
-
+        <button type="submit" class="button2">Maak team aan</button>
     </form>
 
 
 </div>
 
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    //When the page has loaded.
+    $(document).ready(function () {
+        $('#message').fadeIn('slow', function () {
+            $('#message').delay(4000).fadeOut();
+        });
+    });
+</script>
+
+
 </body>
 
 
 </html>
+
+

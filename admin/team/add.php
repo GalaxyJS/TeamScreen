@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
     $teamHandler = new TeamHandler($conn);
     $addSuccess ='';
 
-    require_once('../../views/addteam.php');
+    require_once('../../views/team/add.php');
     die();
 }
 
@@ -30,7 +30,6 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
         session_start();
         $_SESSION['addValidAddress'] = "Team succesvol toegevoegd";
 
-        // TODO redirect
         header('Location: '. './add.php');
         die();
     }

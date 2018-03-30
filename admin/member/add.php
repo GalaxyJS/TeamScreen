@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
 
     $addSuccess ="";
 
-    require_once('../../views/addmember.php');
+    require_once('../../views/member/add.php');
     die();
 }
 

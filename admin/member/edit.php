@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
 
     $teams = $teamHandler->getAll();
 
-    require_once('../../views/editmember.php');
+    require_once('../../views/member/edit.php');
 }
 
 /**
