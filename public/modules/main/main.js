@@ -16,10 +16,16 @@ view.init([
     }
   },
   {
-    class: 'main-content'
+    class: 'main-content',
+    children: {
+      class: 'container-row',
+      module: {
+        url: 'modules/widgets/scrum-board.js'
+      }
+    }
   }
 ]);
 
-apiService.getActiveSprint(122).then(function (data) {
-  debugger;
-});
+// apiService.getActiveSprint(122).then(function (data) {
+  // debugger;
+// });

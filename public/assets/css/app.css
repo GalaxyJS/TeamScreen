@@ -16,67 +16,160 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-  display: block;
+    display: block;
 }
 
 body {
-  line-height: 1;
+    line-height: 1;
 }
 
 ol, ul {
-  list-style: none;
+    list-style: none;
 }
 
 blockquote, q {
-  quotes: none;
+    quotes: none;
 }
 
 blockquote:before, blockquote:after,
 q:before, q:after {
-  content: '';
-  content: none;
+    content: '';
+    content: none;
 }
 
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 /*------------------ End of CSS Reset V2.0 -------------------*/
 @import url('https://fonts.googleapis.com/css?family=Kalam:300,400,700');
 
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
 body {
-  font-family: 'Kalam', cursive;
-  position: relative;
-  background-color: #191c1f;
-  min-height: 100%;
-  color: #fff;
+    font-family: 'Kalam', cursive;
+    position: relative;
+    background-color: #191c1f;
+    min-height: 100%;
+    color: #fff;
 }
 
 .top-bar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #222d35;
-  height: 50px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
-  padding: 0 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #212c36;
+    height: 50px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
+    padding: 0 15px;
 }
 
 .clock {
-  display: block;
+    display: block;
+}
+
+.main-content {
+    display: block;
+    max-width: 100%;
+}
+
+.container-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1 0 auto;
+}
+
+.container-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+}
+
+.widget {
+    box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
+    min-width: calc(20% - 30px);
+    background-color: #212c36;
+    margin: 15px;
+}
+
+.widget > h2 {
+    padding: 15px 20px;
+}
+
+.widget > .content {
+    padding: 0 20px 20px;
+}
+
+.widget.full-width {
+    width: 100%;
+}
+
+/*------------------- Widgets ------------------------*/
+
+.scrum-board {
+
+}
+
+.scrum-board .column {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    margin: 0 5px;
+}
+
+.scrum-board .column > h3 {
+    background-color: rgba(255, 255, 255, .2);
+    border-radius: 4px;
+    padding: 15px;
+    display: block;
+}
+
+.scrum-board .column:first-of-type {
+    margin-left: 0;
+}
+
+.scrum-board .column:last-of-type {
+    margin-right: 0;
+}
+
+.column.to-do > h3 {
+    background-color: #8e44ad;
+}
+
+.column.in-development > h3 {
+    background-color: #3498db;
+}
+
+.column.review > h3 {
+    background-color: #16a085;
+}
+
+.column.ready-for-qa > h3 {
+    background-color: #e74c3c;
+}
+
+.column.qa > h3 {
+    background-color: #f39c12;
+}
+
+.column.done > h3 {
+    background-color: #9d931d;
 }
 
 /*------------------- Loaders ------------------------*/

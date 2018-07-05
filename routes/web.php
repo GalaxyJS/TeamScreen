@@ -18,4 +18,6 @@ $router->get('/', function () use ($router) {
 $router->get('/api/teams/', ['uses' => 'TeamsController@getAll']);
 $router->post('/api/teams/', ['uses' => 'TeamsController@create']);
 
-$router->get('/api/board/{board_id}/active-sprint', ['uses' => 'BoardController@getActiveSprint']);
+$router->get('/api/boards/{board_id}/active-sprint', ['uses' => 'BoardController@getActiveSprint']);
+$router->get('/api/boards/{board_id}/configuration', ['uses' => 'BoardController@getBoardConfiguration']);
+$router->get('/api/boards/{board_id}/sprints/{sprint_id}/issues', ['uses' => 'BoardController@getSprintIssues']);
