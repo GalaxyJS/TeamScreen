@@ -1,11 +1,40 @@
 /** @type Galaxy.Scope*/
 const view = Scope.import('galaxy/view');
-const apiService = Scope.import('services/api.js');
+const router = Scope.import('galaxy/router');
 
-Scope.data.currentTime = new Date().toLocaleTimeString();
-setInterval(function () {
-  Scope.data.currentTime = new Date().toLocaleTimeString();
-}, 500);
+Scope.data.routes = [
+  {
+    id: 'scrum-board',
+    module: {
+      id: 'scrum-board',
+      url: 'modules/widgets/scrum-board.js'
+    }
+  },
+  {
+    id: 'admin',
+    module: {
+      id: 'admin',
+      url: 'modules/admin/dashboard.js'
+    }
+  }
+];
+Scope.data.activeModule = null;
+
+router.init({
+  '/': function () {
+    router.navigate('scrum-board');
+  },
+  '/:moduleId*': function (params) {
+    const nav = Scope.data.routes.filter(function (item) {
+      return item.id === params.moduleId;
+    })[0];
+
+    if (nav) {
+      Scope.data.activeModule = nav.module;
+    }
+    console.log('hash change', params.moduleId);
+  }
+});
 
 view.config.cleanContainer = true;
 view.init([
@@ -17,15 +46,8 @@ view.init([
   },
   {
     class: 'main-content',
-    children: {
-      class: 'container-row',
-      module: {
-        url: 'modules/widgets/scrum-board.js'
-      }
-    }
+
+    module: '<>data.activeModule'
+
   }
 ]);
-
-// apiService.getActiveSprint(122).then(function (data) {
-  // debugger;
-// });

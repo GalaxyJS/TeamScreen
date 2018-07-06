@@ -1,111 +1,43 @@
 /** @type Galaxy.Scope*/
 const view = Scope.import('galaxy/view');
+const apiService = Scope.import('services/api.js');
 
-Scope.data.columns = [
-  {
-    "name": "To Do",
-    "statuses": [
-      {
-        "id": "10009",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10009"
-      },
-      {
-        "id": "10105",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10105"
-      },
-      {
-        "id": "1",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/1"
-      },
-      {
-        "id": "10004",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10004"
-      },
-      {
-        "id": "4",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/4"
-      },
-      {
-        "id": "10000",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10000"
-      },
-      {
-        "id": "10104",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10104"
-      },
-      {
-        "id": "10804",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10804"
-      }
-    ]
-  },
-  {
-    "name": "In Dev",
-    "statuses": [
-      {
-        "id": "10007",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10007"
-      },
-      {
-        "id": "10904",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10904"
-      }
-    ]
-  },
-  {
-    "name": "Review",
-    "statuses": [
-      {
-        "id": "10106",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10106"
-      }
-    ]
-  },
-  {
-    "name": "Ready for QA",
-    "statuses": [
-      {
-        "id": "10404",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10404"
-      }
-    ]
-  },
-  {
-    "name": "QA",
-    "statuses": [
-      {
-        "id": "10003",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10003"
-      },
-      {
-        "id": "10405",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10405"
-      }
-    ]
-  },
-  {
-    "name": "Done",
-    "statuses": [
-      {
-        "id": "10010",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10010"
-      },
-      {
-        "id": "10006",
-        "self": "https://jira.local.mybit.nl/rest/api/2/status/10006"
-      }
-    ]
-  }
-];
+const statusesTypes = {};
+Scope.data.columns = [];
+Scope.data.issues = [];
+
+apiService.getBoardConfiguration(122).then(function (data) {
+  Scope.data.columns = data.columnConfig.columns;
+  Scope.data.columns.forEach(function (item) {
+    statusesTypes[item.name] = item.statuses.map(function (status) {
+      return status.id;
+    });
+  });
+});
+
+apiService.getSprintIssues(836).then(function (data) {
+  Scope.data.issues = data.issues;
+});
+
+Scope.data.activeSprint = {
+  "id": 836,
+  "self": "https://jira.local.mybit.nl/rest/agile/1.0/sprint/836",
+  "state": "active",
+  "name": "3Dimerce 2018 - Sprint 14",
+  "startDate": "2018-07-02T09:50:41.750+02:00",
+  "endDate": "2018-07-20T09:50:00.000+02:00",
+  "originBoardId": 122,
+  "goal": "Bert vertalingen, LEO afronding zitmeubelen, Portal Reorder Choices & FBX viewer, Add JIRA to scrumboard"
+};
 
 detectTypeOfColumn.watch = ['column'];
 
 const toDoClasses = ['to do', 'To Do', 'ToDo', 'Todo'];
 const devClasses = ['In Development', 'In development', 'in development', 'In Dev'];
-const reviewClasses = ['In Review', 'Review', 'review'];
+const reviewClasses = ['In Review', 'Review', 'review', 'Code Review'];
 const readyForQAClasses = ['Ready For QA', 'Ready for QA', 'Ready For Q&A'];
 const qaClasses = ['QA', 'Q&A'];
-const doneClasses = ['Done', 'done','Done/Accept/Closed'];
+const doneClasses = ['Done', 'done', 'Done/Accept/Closed'];
 
 function detectTypeOfColumn(column) {
   const name = column.name;
@@ -120,7 +52,7 @@ function detectTypeOfColumn(column) {
   }
 
   if (reviewClasses.indexOf(name) !== -1) {
-    result.push('in-development');
+    result.push('review');
   }
 
   if (readyForQAClasses.indexOf(name) !== -1) {
@@ -138,9 +70,23 @@ function detectTypeOfColumn(column) {
   return result;
 }
 
-view.init([
-  {
-    class: 'widget full-width scrum-board',
+getColumnIssues.watch = ['data.issues.changes', 'column']
+
+function getColumnIssues(issuesArrayChange, column) {
+  const typeIds = statusesTypes[column.name];
+  if (issuesArrayChange.params.length) {
+    issuesArrayChange.params = issuesArrayChange.original.filter(function (issue) {
+      return typeIds.indexOf(issue.fields.status.id) !== -1;
+    })
+  }
+
+  return issuesArrayChange;
+}
+
+view.init({
+  class: 'container-row ',
+  children: {
+    class: 'widget width-full scrum-board',
     children: [
       {
         tag: 'h2',
@@ -151,26 +97,94 @@ view.init([
         children: {
           tag: 'section',
           class: detectTypeOfColumn,
+
           $for: {
             data: '<>data.columns.changes',
             as: 'column'
+          },
+
+          inputs: {
+            colName: '<>column.name'
+          },
+
+          animations: {
+            enter: {
+              sequence: 'columns',
+              from: {
+                y: 50,
+                opacity: 0
+              },
+              // to: {
+              //   scale: 1,
+              //   opacity: 1
+              // },
+              position: '-=.3',
+              duration: .5
+            }
           },
 
           children: [
             {
               tag: 'h3',
               text: '<>column.name'
+
             },
             {
-              tag: '',
-              $for: {
-                data: '<>columns.statuses',
-                as: 'column'
+              tag: 'div',
+              class: 'task',
+
+              animations: {
+                enter: {
+                  parent: 'columns',
+                  sequence: 'tasks',
+                  from: {
+                    scale: .5,
+                    opacity: 0
+                  },
+                  to: {
+                    scale: 1,
+                    opacity: 1
+                  },
+                  position: '-=.2',
+                  duration: .3
+                }
               },
+
+              $for: {
+                data: getColumnIssues,
+                as: 'issue'
+              },
+
+              children: [
+                {
+                  tag: 'h4',
+                  text: '<>issue.key'
+                },
+                {
+                  tag: 'p',
+                  text: '<>issue.fields.summary'
+                },
+                {
+                  class: 'icon',
+                  tag: 'img',
+                  animations: {
+                    enter: {
+                      parent: 'columns',
+                      sequence: 'icons',
+                      from: {
+                        scale: 0
+                      },
+                      duration: .3
+                    }
+                  },
+                  $if: '<>issue.fields.assignee',
+                  src: '<>issue.fields.assignee.avatarUrls.48x48'
+                }
+              ]
             }
           ]
         }
       }
     ]
   }
-]);
+});

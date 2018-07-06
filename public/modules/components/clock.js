@@ -7,9 +7,13 @@ setInterval(function () {
 }, 500);
 
 view.config.cleanContainer = true;
-view.init([
-  {
-    class: 'clock',
-    text: '<>data.currentTime'
-  }
-]);
+view.init({
+  class: 'clock',
+  children: [
+    '<i class="far fa-clock"></i>',
+    {
+      tag: 'span',
+      text: '<>data.currentTime'
+    }
+  ]
+});

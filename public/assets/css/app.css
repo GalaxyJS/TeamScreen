@@ -21,6 +21,7 @@ time, mark, audio, video {
     border: 0;
     font-size: 100%;
     font: inherit;
+    font-family: 'Source Sans Pro', sans-serif;
     vertical-align: baseline;
 }
 
@@ -54,18 +55,29 @@ table {
 }
 
 /*------------------ End of CSS Reset V2.0 -------------------*/
-@import url('https://fonts.googleapis.com/css?family=Kalam:300,400,700');
 
 *, *:before, *:after {
     box-sizing: border-box;
 }
 
+h1, h2, h3, h4 {
+    font-weight: bold;
+}
+
+html {
+    height: 100%;
+}
+
 body {
-    font-family: 'Kalam', cursive;
-    position: relative;
     background-color: #191c1f;
-    min-height: 100%;
     color: #fff;
+    font-size: 17px;
+    min-height: 100%;
+    position: relative;
+}
+
+button, input, textarea, select {
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .top-bar {
@@ -80,30 +92,39 @@ body {
 }
 
 .clock {
-    display: block;
+    display: inline-block;
+}
+
+.clock > i {
+    margin-right: 10px;
 }
 
 .main-content {
     display: block;
-    max-width: 100%;
+    width: 100%;
+    top: 50px;
+    height: calc(100% - 50px);
+    position: absolute;
 }
 
 .container-row {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     flex: 1 0 auto;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 
 .container-column {
     display: flex;
     flex-direction: column;
     flex: 1 0 auto;
+    overflow: hidden;
 }
 
 .widget {
     box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
-    min-width: calc(20% - 30px);
+    min-width: 20%;
     background-color: #212c36;
     margin: 15px;
 }
@@ -113,11 +134,72 @@ body {
 }
 
 .widget > .content {
-    padding: 0 20px 20px;
+    padding: 0 20px;
 }
 
-.widget.full-width {
+.widget > .content:first-child {
+    padding-top: 20px;
+}
+
+.widget > .content:last-child {
+    padding-bottom: 20px;
+}
+
+.widget.width-full {
     width: 100%;
+}
+
+.widget.width-half {
+    width: 50%;
+}
+
+.widget.width-25 {
+    width: 25%;
+}
+
+.widget.width-75 {
+    width: 75%;
+}
+
+.widget.fill {
+    height: calc(100%);
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, .3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.form {
+    overflow: hidden;
+    display: block;
+    width: 800px;
+    margin: 60px auto;
+    background-color: #212c36;
+    border-radius: 5px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .5);
+}
+
+.form > .content {
+    display: flex;
+    flex-direction: column;
+}
+
+.field {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.field > span {
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 /*------------------- Widgets ------------------------*/
@@ -127,10 +209,12 @@ body {
 }
 
 .scrum-board .column {
+    max-width: 300px;
     display: flex;
     flex: 1 0 auto;
     flex-direction: column;
     margin: 0 5px;
+    overflow: hidden;
 }
 
 .scrum-board .column > h3 {
@@ -170,6 +254,120 @@ body {
 
 .column.done > h3 {
     background-color: #9d931d;
+}
+
+.scrum-board .task {
+    margin: 10px 0 0;
+    background-color: #45505a;
+    border-radius: 6px;
+    display: block;
+    padding: 10px 15px;
+    font-size: 15px;
+}
+
+.task > p {
+    line-height: 1.2em;
+    padding: 5px 0 0;
+    display: inline-block;
+    width: calc(100% - 40px);
+}
+
+.task > .icon {
+    display: inline-block;
+    height: 30px;
+    margin: 0 -2px 0 12px;
+    width: 30px;
+    vertical-align: top;
+    overflow: hidden;
+    border-radius: 14px;
+}
+
+/*------------------- Elements -----------------------*/
+
+button {
+    background-color: rgba(255, 255, 255, .2);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 20px;
+    outline: none;
+    padding: 10px 15px;
+    transition: all 100ms linear;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, .35);
+}
+
+button:active {
+    transform: scale(1.01);
+    background-color: #4389cc;
+    box-shadow: 0 0 8px 1px #4389cc;
+
+}
+
+input {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    color: #000;
+    display: block;
+    font-weight: bold;
+    line-height: 20px;
+    outline: none;
+    padding: 8px 15px;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #4389cc;
+}
+
+.toggle-group {
+    display: inline-block;
+    margin: 0 auto;
+    overflow: hidden;
+    background-color: transparent;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.toggle-group > label {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    overflow: hidden;
+}
+
+.toggle-group > label > span {
+    border: 2px solid #fff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: inline-block;
+}
+
+.toggle-group > label:first-child span {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.toggle-group > label:last-child span {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.toggle-group input {
+    position: absolute;
+    visibility: hidden;
+}
+
+.toggle-group input:checked + span {
+    background-color: #fff;
+    color: #191c1f;
 }
 
 /*------------------- Loaders ------------------------*/
