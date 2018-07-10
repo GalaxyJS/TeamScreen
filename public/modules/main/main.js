@@ -46,8 +46,6 @@ view.init([
   },
   {
     class: 'main-content',
-
     module: '<>data.activeModule'
-
   }
 ]);

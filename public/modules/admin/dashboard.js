@@ -118,13 +118,27 @@ view.init([
   {
     class: 'overlay',
     $if: '<>data.activeModule',
-    // animations: {
-    //   leave: {
-    //     duration: .3
-    //   }
-    // },
-    // children: {
-      module: '<>data.activeModule'
-    // }
+    animations: {
+      enter: {
+        from: {
+          opacity: 0
+        },
+        duration: .3
+      },
+      leave: {
+        to: {
+          opacity: 0
+        },
+        duration: .2
+      }
+    },
+
+    on: {
+      keydown: function (event) {
+        if (event.keyCode === 27) router.navigateFromHere('/');
+      }
+    },
+
+    module: '<>data.activeModule'
   }
 ]);

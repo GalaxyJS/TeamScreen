@@ -12,10 +12,10 @@ view.init({
     },
     leave: {
       to: {
-        scale: .5,
+        scale: .8,
         opacity: 0
       },
-      duration: .2
+      duration: .1
     }
   },
   children: [
