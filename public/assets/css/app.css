@@ -186,12 +186,17 @@ button, input, textarea, select {
 }
 
 .form > h2:first-of-type {
-  padding: 10px 15px;
+  padding: 15px 15px 25px;
+  font-size: 1.2em;
 }
 
 .form > .content {
   display: flex;
   flex-direction: column;
+}
+
+.form > footer {
+  padding: 20px 15px 15px;
 }
 
 .field {
@@ -201,10 +206,15 @@ button, input, textarea, select {
 }
 
 .field > span {
-  padding: 10px 0 0px;
+  padding: 10px 0 0;
   font-size: 14px;
   color: rgba(255, 255, 255, .8);
   font-weight: bold;
+}
+
+.field > .values {
+  display: flex;
+  justify-content: space-between;
 }
 
 /*------------------- Widgets ------------------------*/
@@ -287,6 +297,55 @@ button, input, textarea, select {
   border-radius: 14px;
 }
 
+.checkbox {
+  display: inline-block;
+  padding: 8px 0;
+  margin: 0 15px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  position: relative;
+  text-align: right;
+}
+
+.checkbox:first-of-type {
+  margin-left: 0;
+}
+
+.checkbox:last-of-type {
+  margin-right: 0;
+}
+
+.checkbox > input {
+  display: inline-block;
+  margin: 6px 10px 6px 5px;
+  width: 9px;
+  height: 9px;
+  vertical-align: middle;
+  position: relative;
+  float: left;
+}
+
+.checkbox > input:after {
+  background-color: #aaa;
+  border: 2px solid #aaa;
+  border-radius: 4px;
+  content: ' ';
+  display: inline-block;
+  height: 18px;
+  margin: -5px;
+  position: absolute;
+  width: 18px;
+  z-index: 10;
+}
+
+.checkbox > input:checked:after {
+  content: ' ';
+  background-color: #4389cc;
+  border-color: rgba(255, 255, 255, .8);
+  box-shadow: 0 0 3px 1px #4389cc;
+}
+
 /*------------------- Elements -----------------------*/
 
 button {
@@ -322,60 +381,19 @@ input, select, textarea {
   font-weight: bold;
   line-height: 20px;
   outline: none;
-  padding: 8px 5px;
-  margin: 0 -5px;
+  padding: 8px 1px;
+  margin: 0 -1px;
   font-size: 16px;
   background-color: rgba(255, 255, 255, .0);
   transition: all 100ms linear;
 }
 
+option {
+  color: #000;
+}
+
 input:focus, select:focus, textarea:focus {
   border-color: #4389cc;
-}
-
-.toggle-group {
-  display: inline-block;
-  margin: 0 auto;
-  overflow: hidden;
-  background-color: transparent;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.toggle-group > label {
-  display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  overflow: hidden;
-}
-
-.toggle-group > label > span {
-  border: 2px solid #fff;
-  border-radius: 6px;
-  padding: 8px 12px;
-  display: inline-block;
-}
-
-.toggle-group > label:first-child span {
-  border-right: none;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.toggle-group > label:last-child span {
-  border-left: none;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.toggle-group input {
-  position: absolute;
-  visibility: hidden;
-}
-
-.toggle-group input:checked + span {
-  background-color: #fff;
-  color: #191c1f;
 }
 
 /*------------------- Loaders ------------------------*/

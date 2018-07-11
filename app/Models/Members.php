@@ -18,6 +18,9 @@ class Members extends Model {
 
   public static $rules = [
     // Validation rules
+    'name' => 'required',
+    'username' => 'required|email',
+    'team_id' => 'required'
   ];
 
   // Relationships
@@ -27,5 +30,13 @@ class Members extends Model {
 
   public function agendas () {
     return $this->hasMany('App\Models\Agendas', 'member_id');
+  }
+
+  public function getWorkingDaysAttribute ($value) {
+    return explode(',', $value);
+  }
+
+  public function setWorkingDaysAttribute ($value) {
+    $this->attributes['working_days'] = implode(',', $value);
   }
 }

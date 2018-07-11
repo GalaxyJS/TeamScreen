@@ -7,7 +7,7 @@ Scope.data.routes = [
   {
     id: 'new-member',
     module: {
-      url: 'modules/admin/new-member.js'
+      url: 'modules/admin/member-form.js'
     }
   }
 ];
@@ -19,7 +19,7 @@ router.init({
   },
   '/new-member': function () {
     Scope.data.activeModule = {
-      url: 'modules/admin/new-member.js'
+      url: 'modules/admin/member-form.js'
     };
   }
 });
