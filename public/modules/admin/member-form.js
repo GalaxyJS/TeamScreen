@@ -1,11 +1,15 @@
 const view = Scope.import('galaxy/view');
-
 const router = Scope.parentScope.import('galaxy/router');
+const apiService = Scope.import('services/api.js');
+
+apiService.getAllTeams().then(function (teams) {
+  Scope.data.teams = teams;
+});
 
 Scope.data.form = {
   name: null,
   username: null,
-  team: null,
+  team_id: null,
   destination: null,
   drink_preference: 'tea',
   working_days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
@@ -18,26 +22,9 @@ view.init({
   on: {
     submit: function (event) {
       event.preventDefault();
-      fetch('/api/members', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: JSON.stringify(Scope.data.form)
-      }).then(function (response) {
-        if (response.status !== 200) {
-          throw response;
-        }
-
-        response.json().then(function (data) {
-          console.info('Member successful', data);
-          router.navigateFromHere('/');
-        });
-      }).catch(function (error) {
-        console.error(error);
-        error.json().then(function (content) {
-          console.error(JSON.stringify(content, null, ' '));
-        });
+      apiService.saveMember(Scope.data.form).then(function (data) {
+        console.info('Member successful', data);
+        router.navigateFromHere('/');
       });
     }
   },
@@ -77,7 +64,13 @@ view.init({
               tag: 'input',
               name: 'name',
               required: 'true',
-              value: '<>data.form.name'
+              value: '<>data.form.name',
+
+              lifecycle: {
+                postInsert: function () {
+                  this.node.focus();
+                }
+              },
             }
           ]
         },
@@ -91,7 +84,6 @@ view.init({
             },
             {
               tag: 'input',
-              type: 'email',
               name: 'username',
               value: '<>data.form.username',
               required: 'true'
@@ -109,11 +101,24 @@ view.init({
             {
               tag: 'select',
               name: 'team_id',
+              selected: '<>data.form.team_id',
               children: [
                 {
                   tag: 'option',
                   value: '',
                   text: 'None'
+                },
+
+                {
+                  tag: 'option',
+
+                  $for: {
+                    data: '<>data.teams.changes',
+                    as: 'team'
+                  },
+
+                  value: '<>team.id',
+                  text: '<>team.name'
                 }
               ]
             }

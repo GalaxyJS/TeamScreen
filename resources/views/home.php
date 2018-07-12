@@ -17,7 +17,7 @@
       function run() {
         Galaxy.boot({
           // The path to your main module file
-          url: 'modules/main/main.js',
+          url: 'modules/pages/main.js',
           // The container element for your app
           element: document.querySelector('body')
         }).then(function (module) {

@@ -11,6 +11,13 @@ Scope.data.routes = [
     }
   },
   {
+    id: 'overview',
+    module: {
+      id: 'overview',
+      url: 'modules/pages/overview.js'
+    }
+  },
+  {
     id: 'admin',
     module: {
       id: 'admin',

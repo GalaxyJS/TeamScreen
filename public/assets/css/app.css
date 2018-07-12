@@ -112,6 +112,7 @@ button, input, textarea, select {
   flex-direction: row;
   flex: 1 0 auto;
   justify-content: flex-start;
+  align-items: flex-start;
   overflow: hidden;
 }
 
@@ -130,11 +131,12 @@ button, input, textarea, select {
 }
 
 .widget > h2 {
-  padding: 15px 20px;
+  padding: 20px 20px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
 }
 
 .widget > .content {
-  padding: 0 20px;
+  padding: 10px 20px;
 }
 
 .widget > .content:first-child {
@@ -145,23 +147,23 @@ button, input, textarea, select {
   padding-bottom: 20px;
 }
 
-.widget.width-full {
+.width-full {
   width: 100%;
 }
 
-.widget.width-half {
+.width-half {
   width: 50%;
 }
 
-.widget.width-25 {
+.width-25 {
   width: 25%;
 }
 
-.widget.width-75 {
+.width-75 {
   width: 75%;
 }
 
-.widget.fill {
+.fill {
   height: calc(100%);
 }
 
@@ -173,6 +175,25 @@ button, input, textarea, select {
   width: 100%;
   height: 100%;
   z-index: 100;
+}
+
+.overlay:after {
+  color: rgba(255, 255, 255, .8);
+  content: '\f00d';
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Font Awesome 5 Free';
+  font-size: 30px;
+  font-weight: 900;
+  height: 40px;
+  line-height: 40px;
+  margin: 30px;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  vertical-align: middle;
+  width: 40px;
 }
 
 .form {
@@ -297,6 +318,109 @@ button, input, textarea, select {
   border-radius: 14px;
 }
 
+.module {
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
+.overview {
+  justify-content: space-around;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+/*------------------- Elements -----------------------*/
+
+button {
+  background-color: rgba(255, 255, 255, .2);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 20px;
+  outline: none;
+  padding: 10px 15px;
+  transition: all 100ms linear;
+  font-size: 14px;
+  min-width: 10px;
+}
+
+button > i.fas {
+  margin: 0;
+  font-size: 18px;
+  height: 20px;
+  width: 20px;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, .35);
+}
+
+button:active {
+  transform: scale(1.01);
+  background-color: #4389cc;
+  box-shadow: 0 0 8px 1px #4389cc;
+}
+
+
+
+input, select, textarea {
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, .18);
+  color: #fff;
+  display: block;
+  font-weight: bold;
+  line-height: 20px;
+  outline: none;
+  padding: 8px 1px;
+  margin: 0 -1px;
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, .0);
+  transition: all 100ms linear;
+}
+
+option {
+  color: #000;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #4389cc;
+}
+
+table {
+  width: 100%;
+  font-size: 14px;
+}
+
+table td {
+  padding: 10px 5px;
+  line-height: 20px;
+  vertical-align: middle;
+}
+
+td > img {
+  display: block;
+  margin: -6px 5px;
+  width: 32px;
+  height: 32px;
+}
+
+td > button {
+  padding: 5px;
+  margin: -5px 5px;
+}
+
+table tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, .1);
+}
+
 .checkbox {
   display: inline-block;
   padding: 8px 0;
@@ -344,56 +468,6 @@ button, input, textarea, select {
   background-color: #4389cc;
   border-color: rgba(255, 255, 255, .8);
   box-shadow: 0 0 3px 1px #4389cc;
-}
-
-/*------------------- Elements -----------------------*/
-
-button {
-  background-color: rgba(255, 255, 255, .2);
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  cursor: pointer;
-  font-weight: bold;
-  line-height: 20px;
-  outline: none;
-  padding: 10px 15px;
-  transition: all 100ms linear;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: rgba(255, 255, 255, .35);
-}
-
-button:active {
-  transform: scale(1.01);
-  background-color: #4389cc;
-  box-shadow: 0 0 8px 1px #4389cc;
-
-}
-
-input, select, textarea {
-  border: none;
-  border-bottom: 2px solid rgba(255, 255, 255, .18);
-  color: #fff;
-  display: block;
-  font-weight: bold;
-  line-height: 20px;
-  outline: none;
-  padding: 8px 1px;
-  margin: 0 -1px;
-  font-size: 16px;
-  background-color: rgba(255, 255, 255, .0);
-  transition: all 100ms linear;
-}
-
-option {
-  color: #000;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: #4389cc;
 }
 
 /*------------------- Loaders ------------------------*/

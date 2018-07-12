@@ -21,10 +21,14 @@ $router->get('/tim', function () use ($router) {
 
 $router->get('/api/teams/', ['uses' => 'TeamsController@getAll']);
 $router->post('/api/teams/', ['uses' => 'TeamsController@create']);
+$router->delete('/api/teams/{id}', ['uses' => 'TeamsController@delete']);
+
+$router->get('/api/members/', ['uses' => 'MembersController@getAll']);
+$router->post('/api/members/', ['uses' => 'MembersController@create']);
+$router->delete('/api/members/{id}', ['uses' => 'MembersController@delete']);
 
 $router->get('/api/boards', ['uses' => 'BoardController@getAll']);
 $router->get('/api/boards/{board_id}/active-sprint', ['uses' => 'BoardController@getActiveSprint']);
 $router->get('/api/boards/{board_id}/configuration', ['uses' => 'BoardController@getBoardConfiguration']);
 $router->get('/api/sprints/{sprint_id}/issues', ['uses' => 'BoardController@getSprintIssues']);
 
-$router->post('/api/members/', ['uses' => 'MembersController@create']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MembersController extends Controller {
   /**
@@ -15,7 +16,7 @@ class MembersController extends Controller {
   }
 
   public function getAll () {
-    return \App\Models\Teams::all();
+    return \App\Models\Members::all();
   }
 
   public function create (Request $request) {
@@ -30,6 +31,24 @@ class MembersController extends Controller {
     return [
       'code' => 200,
       'message' => 'New member is created successfully',
+      'data' => $member
+    ];
+  }
+
+  public function delete ($id) {
+    if (!isset($id)) {
+      return response('', 400)->json([
+        'message' => 'member id is required',
+      ]);
+    }
+
+    $member = \App\Models\Members::find($id);
+
+    $member->delete();
+
+    return [
+      'code' => 200,
+      'message' => 'Member is deleted successfully',
       'data' => $member
     ];
   }

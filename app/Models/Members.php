@@ -19,7 +19,7 @@ class Members extends Model {
   public static $rules = [
     // Validation rules
     'name' => 'required',
-    'username' => 'required|email',
+    'username' => 'required',
     'team_id' => 'required'
   ];
 

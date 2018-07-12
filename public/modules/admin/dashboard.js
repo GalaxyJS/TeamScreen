@@ -3,6 +3,28 @@ const view = Scope.import('galaxy/view');
 const router = Scope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 
+const rowEnterAnimation = {
+  sequence: 'row-animation',
+  from: {
+    y: -15,
+    opacity: 0
+  },
+  to: {
+    y: 0,
+    opacity: 1
+  },
+  position: '-=.15',
+  duration: .2
+};
+
+const rowLeaveAnimation = {
+  to: {
+    scale: .9,
+    opacity: 0
+  },
+  duration: .2
+};
+
 Scope.data.routes = [
   {
     id: 'new-member',
@@ -12,18 +34,48 @@ Scope.data.routes = [
   }
 ];
 Scope.data.activeModule = null;
+Scope.data.activeModuleInputs = {
+  busy: false
+};
+
+Scope.data.teams = [];
+Scope.data.members = [];
+
+function fetchTeams() {
+  apiService.getAllTeams().then(function (teams) {
+    Scope.data.teams = teams;
+  });
+}
+
+function fetchMembers() {
+  apiService.getAllMembers().then(function (members) {
+    Scope.data.members = members;
+  });
+}
+
+function fetchAllData() {
+  fetchTeams();
+  fetchMembers();
+}
 
 router.init({
   '/': function () {
     Scope.data.activeModule = null;
+
+    fetchAllData();
   },
   '/new-member': function () {
     Scope.data.activeModule = {
       url: 'modules/admin/member-form.js'
     };
+  },
+  '/new-team': function () {
+    Scope.data.activeModule = {
+      url: 'modules/admin/team-form.js'
+    };
   }
 });
-console.log(Scope);
+
 view.init([
   {
     class: 'container-row',
@@ -53,42 +105,81 @@ view.init([
           {
             class: 'content container-row',
             children: [
-              // {
-              //   class: 'toggle-group',
-              //   children: [
-              //     {
-              //       tag: 'label',
-              //       children: [
-              //         {
-              //           tag: 'input',
-              //           name: 'page',
-              //           type: 'radio',
-              //           value: 'members'
-              //         },
-              //         {
-              //           tag: 'span',
-              //           text: 'Members'
-              //         }
-              //
-              //       ]
-              //     },
-              //     {
-              //       tag: 'label',
-              //       children: [
-              //         {
-              //           tag: 'input',
-              //           name: 'page',
-              //           type: 'radio',
-              //           value: 'groups'
-              //         },
-              //         {
-              //           tag: 'span',
-              //           text: 'Groups'
-              //         }
-              //       ]
-              //     }
-              //   ]
-              // }
+              {
+                tag: 'table',
+                children: {
+                  tag: 'tr',
+
+                  animations: {
+                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'members' })
+                  },
+
+                  $for: {
+                    data: '<>data.members.changes',
+                    as: 'member',
+                    trackBy: function (item) {
+                      return item.id;
+                    }
+                  },
+
+                  children: [
+                    {
+                      tag: 'td',
+                      children: {
+                        tag: 'img',
+                        src: [
+                          'member.username',
+                          function (username) {
+                            return 'https://jira.local.mybit.nl/secure/useravatar?size=medium&ownerId=' + username;
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      tag: 'td',
+                      text: '<>member.name'
+                    },
+                    {
+                      tag: 'td',
+                      class: 'text-bold',
+                      text: '<>member.username'
+                    },
+
+                    {
+                      tag: 'td',
+                      children: [
+                        {
+                          tag: 'button',
+                          children: {
+                            tag: 'i',
+                            class: 'fas fa-edit'
+                          }
+                        },
+                        {
+                          tag: 'button',
+                          inputs: {
+                            memberId: '<>member.id'
+                          },
+                          children: {
+                            tag: 'i',
+                            class: 'fas fa-trash-alt'
+                          },
+
+                          on: {
+                            click: function () {
+                              if (confirm('Are you sure of deleting of this member?')) {
+                                apiService.deleteMember(this.inputs.memberId).then(function () {
+                                  fetchMembers();
+                                });
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
             ]
           }
         ]
@@ -98,18 +189,74 @@ view.init([
         children: [
           {
             tag: 'h2',
-            text: 'Groups'
+            text: 'Teams'
           },
           {
             class: 'content',
             children: {
               tag: 'button',
-              text: 'New Group'
+              text: 'New Team',
+
+              on: {
+                click: function () {
+                  router.navigateFromHere('new-team');
+                }
+              }
             }
           },
           {
-            class: 'content'
+            class: 'content',
+            children: [
+              {
+                tag: 'table',
+                children: {
+                  tag: 'tr',
 
+                  animations: {
+                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'teams' }),
+                    leave: rowLeaveAnimation
+                  },
+
+                  $for: {
+                    data: '<>data.teams.changes',
+                    as: 'team',
+                    trackBy: function (item) {
+                      return item.id;
+                    }
+                  },
+
+                  children: [
+                    {
+                      tag: 'td',
+                      text: '<>team.name'
+                    },
+                    {
+                      tag: 'td',
+                      children: {
+                        tag: 'button',
+                        inputs: {
+                          teamId: '<>team.id'
+                        },
+                        children: {
+                          tag: 'i',
+                          class: 'fas fa-trash-alt'
+                        },
+
+                        on: {
+                          click: function () {
+                            if (confirm('Are you sure of deleting of this team?')) {
+                              apiService.deleteTeam(this.inputs.teamId).then(function () {
+                                fetchTeams();
+                              });
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         ]
       }
@@ -135,10 +282,18 @@ view.init([
 
     on: {
       keydown: function (event) {
-        if (event.keyCode === 27) router.navigateFromHere('/');
+        if (event.keyCode === 27) {
+          router.navigateFromHere('/');
+        }
+      },
+      click: function (event) {
+        if (this.node === event.target) {
+          router.navigateFromHere('/');
+        }
       }
     },
 
-    module: '<>data.activeModule'
+    module: '<>data.activeModule',
+    children: {}
   }
 ]);

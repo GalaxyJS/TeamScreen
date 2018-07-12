@@ -3007,31 +3007,6 @@ Galaxy.View = /** @class */(function (G) {
   /**
    *
    * @param {Galaxy.View.ViewNode} node
-   * @param property
-   * @returns {Function}
-   */
-  View.createPropertySetter = function (node, property) {
-    if (!property.name) {
-      throw new Error('createPropertySetter: property.name is mandatory in order to create property setter');
-    }
-
-    return function (value, oldValue) {
-      if (value instanceof Promise) {
-        const asyncCall = function (asyncValue) {
-          node.node[property.name] = asyncValue;
-          node.notifyObserver(property.name, asyncValue, oldValue);
-        };
-        value.then(asyncCall).catch(asyncCall);
-      } else {
-        node.node[property.name] = value;
-        node.notifyObserver(property.name, value, oldValue);
-      }
-    };
-  };
-
-  /**
-   *
-   * @param {Galaxy.View.ViewNode} node
    * @param {string} attributeName
    * @param property
    * @returns {Function}
@@ -3991,9 +3966,9 @@ Galaxy.View = /** @class */(function (G) {
 
       /** @type {Galaxy.View.ViewNode} */
       const node = this;
-      const parentNode = node.parent;
-      const parentCache = parentNode.cache;
-      const parentSchema = parentNode.schema;
+      const parent = node.parent;
+      const parentCache = parent.cache;
+      const parentSchema = parent.schema;
       let newTrackMap = [];
 
       // Truncate on reset or actions that does not change the array length
@@ -4004,7 +3979,7 @@ Galaxy.View = /** @class */(function (G) {
         });
       }
 
-      const waitStepDone = registerWaitStep(parentCache.$for);
+      const waitStepDone = registerWaitStep(parentCache.$for, parent);
       let leaveProcess = null;
       if (config.trackBy instanceof Function) {
         newTrackMap = changes.params.map(function (item, i) {
@@ -4053,7 +4028,9 @@ Galaxy.View = /** @class */(function (G) {
           config.trackMap = newTrackMap;
         }
       } else if (changes.type === 'reset') {
-        leaveProcess = createLeaveProcess(node, config.nodes, config, function () {
+        const nodes = config.nodes.slice(0);
+        config.nodes = [];
+        leaveProcess = createLeaveProcess(node, nodes, config, function () {
           changes = Object.assign({}, changes);
           changes.type = 'push';
           waitStepDone();
@@ -4096,7 +4073,7 @@ Galaxy.View = /** @class */(function (G) {
    * @param $forData
    * @returns {Function}
    */
-  function registerWaitStep($forData) {
+  function registerWaitStep($forData, parent) {
     let destroyDone;
     const waitForDestroy = new Promise(function (resolve) {
       destroyDone = function () {
@@ -4105,8 +4082,13 @@ Galaxy.View = /** @class */(function (G) {
       };
     });
 
-    $forData.queue.push(waitForDestroy);
+    parent.sequences.leave.onTruncate(function () {
+      if (!waitForDestroy.resolved) {
+        destroyDone();
+      }
+    });
 
+    $forData.queue.push(waitForDestroy);
     return destroyDone;
   }
 
@@ -4162,23 +4144,32 @@ Galaxy.View = /** @class */(function (G) {
 
   function createLeaveProcess(node, itemsToBeRemoved, config, onDone) {
     return function () {
-      const parentNode = node.parent;
+      const parent = node.parent;
       const schema = node.schema;
+
       node.renderingFlow.next(function leaveProcess(next) {
+        // if parent leave sequence interrupted, then make should these items will be removed from DOM
+        parent.sequences.leave.onTruncate(function () {
+          itemsToBeRemoved.forEach(function (vn) {
+            vn.sequences.leave.truncate();
+            vn.detach();
+          });
+        });
+
         if (itemsToBeRemoved.length) {
-          let domManipulationOrder = parentNode.schema.renderConfig.domManipulationOrder;
+          let domManipulationOrder = parent.schema.renderConfig.domManipulationOrder;
           if (schema.renderConfig.domManipulationOrder) {
             domManipulationOrder = schema.renderConfig.domManipulationOrder;
           }
 
           if (domManipulationOrder === 'cascade') {
-            View.ViewNode.destroyNodes(node, itemsToBeRemoved, null, parentNode.sequences.leave);
+            View.ViewNode.destroyNodes(node, itemsToBeRemoved, null, parent.sequences.leave);
           } else {
             View.ViewNode.destroyNodes(node, itemsToBeRemoved.reverse());
           }
 
-          parentNode.sequences.leave.nextAction(function () {
-            parentNode.callLifecycleEvent('postForLeave');
+          parent.sequences.leave.nextAction(function () {
+            parent.callLifecycleEvent('postForLeave');
             onDone();
             next();
           });
@@ -4300,7 +4291,7 @@ Galaxy.View = /** @class */(function (G) {
     },
     install: function (config) {
       const parentNode = this.parent;
-      parentNode.cache.$if = parentNode.cache.$if || { leaveProcessList: [], queue: [], mainPromise: null };
+      parentNode.cache.$if = parentNode.cache.$if || {leaveProcessList: [], queue: [], mainPromise: null};
     },
     apply: function (config, value, oldValue, expression) {
       /** @type {Galaxy.View.ViewNode} */
@@ -4325,7 +4316,9 @@ Galaxy.View = /** @class */(function (G) {
         }
 
         const waitStepDone = registerWaitStep(parentCache.$if);
-        waitStepDone();
+        node.renderingFlow.nextAction(function () {
+          waitStepDone();
+        });
       } else {
         if (!node.rendered.resolved) {
           node.inDOM = false;
@@ -5557,6 +5550,14 @@ Galaxy.View.ViewNode = /** @class */ (function (GV) {
 
   };
 
+  ViewNode.prototype.detach = function () {
+    const _this = this;
+
+    if (_this.node.parentNode) {
+      removeChild(_this.node.parentNode, _this.node);
+    }
+  };
+
   /**
    *
    * @param {boolean} flag
@@ -5727,10 +5728,10 @@ Galaxy.View.ViewNode = /** @class */ (function (GV) {
         _this.sequences.leave.nextAction(function () {
           if (_this.schema.renderConfig && _this.schema.renderConfig.domManipulationOrder === 'cascade') {
             root.nextAction(function () {
-              removeChild(_this.node.parentNode, _this.node);
+              _this.node.parentNode && removeChild(_this.node.parentNode, _this.node);
             });
           } else {
-            removeChild(_this.node.parentNode, _this.node);
+            _this.node.parentNode && removeChild(_this.node.parentNode, _this.node);
           }
 
           _this.placeholder.parentNode && removeChild(_this.placeholder.parentNode, _this.placeholder);
@@ -5901,6 +5902,10 @@ Galaxy.View.PROPERTY_SETTERS.attr = function (viewNode, attrName, property, expr
 /* global Galaxy */
 
 Galaxy.View.PROPERTY_SETTERS.prop = function (viewNode, attrName, property, expression) {
+  if (!property.name) {
+    throw new Error('PROPERTY_SETTERS.prop: property.name is mandatory in order to create property setter', property);
+  }
+
   const valueFn = property.value || function (vn, an, v, ov) {
     vn.node[an] = v;
   };
