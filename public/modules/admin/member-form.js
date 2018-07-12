@@ -1,11 +1,12 @@
 const view = Scope.import('galaxy/view');
+const inputs = Scope.import('galaxy/inputs');
 const router = Scope.parentScope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 
 apiService.getAllTeams().then(function (teams) {
   Scope.data.teams = teams;
 });
-
+console.log(inputs);
 Scope.data.form = {
   name: null,
   username: null,
@@ -29,6 +30,9 @@ view.init({
     }
   },
   animations: {
+    config: {
+      leaveWithParent: true
+    },
     enter: {
       from: {
         scale: .8,
@@ -41,7 +45,7 @@ view.init({
         scale: .8,
         opacity: 0
       },
-      duration: .1
+      duration: 1.1
     }
   },
   children: [

@@ -70,7 +70,7 @@ function detectTypeOfColumn(column) {
   return result;
 }
 
-getColumnIssues.watch = ['data.issues.changes', 'column']
+getColumnIssues.watch = ['data.issues.changes', 'column'];
 
 function getColumnIssues(issuesArrayChange, column) {
   const typeIds = statusesTypes[column.name];

@@ -22,7 +22,7 @@ const rowLeaveAnimation = {
     scale: .9,
     opacity: 0
   },
-  duration: .2
+  duration: 1.2
 };
 
 Scope.data.routes = [
@@ -35,7 +35,8 @@ Scope.data.routes = [
 ];
 Scope.data.activeModule = null;
 Scope.data.activeModuleInputs = {
-  busy: false
+  busy: false,
+  data: '<>data.activeModuleData'
 };
 
 Scope.data.teams = [];
@@ -72,6 +73,12 @@ router.init({
   '/new-team': function () {
     Scope.data.activeModule = {
       url: 'modules/admin/team-form.js'
+    };
+  },
+  '/edit-member/:id': function (params) {
+    Scope.data.activeModuleData = {id: params.id};
+    Scope.data.activeModule = {
+      url: 'modules/admin/member-form.js'
     };
   }
 });
@@ -111,7 +118,11 @@ view.init([
                   tag: 'tr',
 
                   animations: {
-                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'members' })
+                    config: {
+                      leaveWithParent: true
+                    },
+                    enter: Object.assign({}, rowEnterAnimation, {sequence: 'members'}),
+                    leave: rowLeaveAnimation
                   },
 
                   $for: {
@@ -213,7 +224,10 @@ view.init([
                   tag: 'tr',
 
                   animations: {
-                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'teams' }),
+                    config: {
+                      leaveWithParent: true
+                    },
+                    enter: Object.assign({}, rowEnterAnimation, {sequence: 'teams'}),
                     leave: rowLeaveAnimation
                   },
 
@@ -276,7 +290,7 @@ view.init([
         to: {
           opacity: 0
         },
-        duration: .2
+        duration: 1.3
       }
     },
 
@@ -293,6 +307,7 @@ view.init([
       }
     },
 
+    inputs: Scope.data.activeModuleInputs,
     module: '<>data.activeModule',
     children: {}
   }

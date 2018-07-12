@@ -44,7 +44,9 @@ class BoardController extends Controller {
     if (empty($content)) {
       $exception = new \Exception("Board '{$board_id}' not found", 404);
 
-      return $exception;
+      return response()->json([
+        'message' => $exception->getMessage()
+      ]);
     }
 
     return response($content);
@@ -57,8 +59,11 @@ class BoardController extends Controller {
 
     if (empty($content)) {
       $exception = new \Exception("Board '{$sprint_id}' not found", 404);
-
-      return $exception;
+//var_dump($exception);
+//die();
+      return response()->json([
+        'message' => $exception->getMessage()
+      ]);
     }
 
     $jsonfied_content = json_decode($content);
