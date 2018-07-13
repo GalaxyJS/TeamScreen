@@ -51,5 +51,21 @@ class TeamsController extends Controller {
       'data' => $team
     ];
   }
+
+  public function getMembersOf ($id) {
+//    $this->validate($request, \App\Models\Teams::$rules);
+
+    $team = \App\Models\Teams::with();
+
+    $team->fill($request->all());
+
+    $team->save();
+
+    return [
+      'code' => 200,
+      'message' => 'New team is created successfully',
+      'data' => $team
+    ];
+  }
   //
 }

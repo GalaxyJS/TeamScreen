@@ -3,7 +3,7 @@ const config = Scope.import('config.js');
 Scope.exports = {
   apiURL: config.apiURL,
   getAllBoards: function () {
-    return fetch(this.apiURL + '/api/boards/', {
+    return fetch(this.apiURL + '/api/board/', {
       method: 'GET',
       mode: 'cors',
       credentials: 'same-origin',
@@ -15,7 +15,7 @@ Scope.exports = {
     });
   },
   getBoardConfiguration: function (boardId) {
-    return fetch(this.apiURL + '/api/boards/' + boardId + '/configuration', {
+    return fetch(this.apiURL + '/api/board/' + boardId + '/configuration', {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, cors, *same-origin
       // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -32,7 +32,7 @@ Scope.exports = {
     });
   },
   getSprintIssues: function (sprintId) {
-    return fetch(this.apiURL + '/api/sprints/' + sprintId + '/issues', {
+    return fetch(this.apiURL + '/api/sprint/' + sprintId + '/issues', {
       method: 'GET',
       mode: 'cors',
       credentials: 'same-origin',
@@ -44,7 +44,7 @@ Scope.exports = {
     });
   },
   saveMember: function (data) {
-    return fetch('/api/members', {
+    return fetch('/api/member', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
@@ -64,7 +64,7 @@ Scope.exports = {
     });
   },
   getAllTeams: function () {
-    return fetch('/api/teams').then(function (response) {
+    return fetch('/api/team').then(function (response) {
       if (response.status !== 200) {
         throw response;
       }
@@ -78,7 +78,22 @@ Scope.exports = {
     });
   },
   getAllMembers: function () {
-    return fetch('/api/members').then(function (response) {
+    return fetch('/api/member').then(function (response) {
+      if (response.status !== 200) {
+        throw response;
+      }
+
+      return response.json();
+    }).catch(function (error) {
+      console.error(error);
+      error.json().then(function (content) {
+        console.error(JSON.stringify(content, null, ' '));
+      });
+    });
+  },
+
+  getTeamMembers: function (id) {
+    return fetch('/api/member').then(function (response) {
       if (response.status !== 200) {
         throw response;
       }
@@ -93,7 +108,7 @@ Scope.exports = {
   },
 
   deleteMember: function (id) {
-    return fetch('/api/members/' + id, {
+    return fetch('/api/member/' + id, {
       method: 'DELETE'
     }).then(function (response) {
       if (response.status !== 200) {
@@ -110,7 +125,7 @@ Scope.exports = {
   },
 
   saveTeam: function (data) {
-    return fetch('/api/teams', {
+    return fetch('/api/team', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
@@ -130,7 +145,7 @@ Scope.exports = {
     });
   },
   deleteTeam: function (id) {
-    return fetch('/api/teams/' + id, {
+    return fetch('/api/team/' + id, {
       method: 'DELETE'
     }).then(function (response) {
       if (response.status !== 200) {

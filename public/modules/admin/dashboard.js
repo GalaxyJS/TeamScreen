@@ -1,7 +1,9 @@
 /** @type Galaxy.Scope*/
 const view = Scope.import('galaxy/view');
 const router = Scope.import('galaxy/router');
+
 const apiService = Scope.import('services/api.js');
+const utility = Scope.import('services/utility.js');
 
 const rowEnterAnimation = {
   sequence: 'row-animation',
@@ -22,7 +24,7 @@ const rowLeaveAnimation = {
     scale: .9,
     opacity: 0
   },
-  duration: 1.2
+  duration: .2
 };
 
 Scope.data.routes = [
@@ -76,7 +78,7 @@ router.init({
     };
   },
   '/edit-member/:id': function (params) {
-    Scope.data.activeModuleData = {id: params.id};
+    Scope.data.activeModuleData = { id: params.id };
     Scope.data.activeModule = {
       url: 'modules/admin/member-form.js'
     };
@@ -114,82 +116,112 @@ view.init([
             children: [
               {
                 tag: 'table',
-                children: {
-                  tag: 'tr',
+                children: [
+                  {
+                    tag: 'tr',
+                    children: [
+                      {
+                        tag: 'th',
+                        text: 'Avatar'
+                      },
+                      {
+                        tag: 'th',
+                        text: 'Name'
+                      },
+                      {
+                        tag: 'th',
+                        text: 'JIRA Username'
+                      },
+                      {
+                        tag: 'th',
+                        text: 'Team'
+                      },
+                      {
+                        tag: 'th',
+                        text: ''
+                      }
+                    ]
+                  },
+                  {
+                    tag: 'tr',
 
-                  animations: {
-                    config: {
-                      leaveWithParent: true
+                    animations: {
+                      config: {
+                        leaveWithParent: true
+                      },
+                      enter: Object.assign({}, rowEnterAnimation, { sequence: 'members' }),
+                      leave: rowLeaveAnimation
                     },
-                    enter: Object.assign({}, rowEnterAnimation, {sequence: 'members'}),
-                    leave: rowLeaveAnimation
-                  },
 
-                  $for: {
-                    data: '<>data.members.changes',
-                    as: 'member',
-                    trackBy: function (item) {
-                      return item.id;
-                    }
-                  },
-
-                  children: [
-                    {
-                      tag: 'td',
-                      children: {
-                        tag: 'img',
-                        src: [
-                          'member.username',
-                          function (username) {
-                            return 'https://jira.local.mybit.nl/secure/useravatar?size=medium&ownerId=' + username;
-                          }
-                        ]
+                    $for: {
+                      data: '<>data.members.changes',
+                      as: 'member',
+                      trackBy: function (item) {
+                        return item.id;
                       }
                     },
-                    {
-                      tag: 'td',
-                      text: '<>member.name'
-                    },
-                    {
-                      tag: 'td',
-                      class: 'text-bold',
-                      text: '<>member.username'
-                    },
 
-                    {
-                      tag: 'td',
-                      children: [
-                        {
-                          tag: 'button',
-                          children: {
-                            tag: 'i',
-                            class: 'fas fa-edit'
-                          }
-                        },
-                        {
-                          tag: 'button',
-                          inputs: {
-                            memberId: '<>member.id'
-                          },
-                          children: {
-                            tag: 'i',
-                            class: 'fas fa-trash-alt'
-                          },
+                    children: [
+                      {
+                        tag: 'td',
+                        children: {
+                          tag: 'img',
+                          class: 'avatar',
+                          src: [
+                            'member.username',
+                            utility.avatarURLGenerator
+                          ]
+                        }
+                      },
+                      {
+                        tag: 'td',
+                        text: '<>member.name'
+                      },
+                      {
+                        tag: 'td',
+                        class: 'text-bold',
+                        text: '<>member.username'
+                      },
+                      {
+                        tag: 'td',
+                        text: '<>member.team.name'
+                      },
 
-                          on: {
-                            click: function () {
-                              if (confirm('Are you sure of deleting of this member?')) {
-                                apiService.deleteMember(this.inputs.memberId).then(function () {
-                                  fetchMembers();
-                                });
+                      {
+                        tag: 'td',
+                        children: [
+                          {
+                            tag: 'button',
+                            children: {
+                              tag: 'i',
+                              class: 'fas fa-edit'
+                            }
+                          },
+                          {
+                            tag: 'button',
+                            inputs: {
+                              memberId: '<>member.id'
+                            },
+                            children: {
+                              tag: 'i',
+                              class: 'fas fa-trash-alt'
+                            },
+
+                            on: {
+                              click: function () {
+                                if (confirm('Are you sure of deleting of this member?')) {
+                                  apiService.deleteMember(this.inputs.memberId).then(function () {
+                                    fetchMembers();
+                                  });
+                                }
                               }
                             }
                           }
-                        }
-                      ]
-                    }
-                  ]
-                }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -227,7 +259,7 @@ view.init([
                     config: {
                       leaveWithParent: true
                     },
-                    enter: Object.assign({}, rowEnterAnimation, {sequence: 'teams'}),
+                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'teams' }),
                     leave: rowLeaveAnimation
                   },
 
@@ -290,7 +322,7 @@ view.init([
         to: {
           opacity: 0
         },
-        duration: 1.3
+        duration: .2
       }
     },
 

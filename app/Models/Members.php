@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 class Members extends Model {
   protected $table = 'members';
 
+  protected $with = ['team'];
+
   protected $fillable = [
     'team_id',
     'name',
@@ -38,5 +40,9 @@ class Members extends Model {
 
   public function setWorkingDaysAttribute ($value) {
     $this->attributes['working_days'] = implode(',', $value);
+  }
+
+  public function getTeamNameAttribute () {
+    return 'sadasd';
   }
 }

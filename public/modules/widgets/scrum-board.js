@@ -2,6 +2,8 @@
 const view = Scope.import('galaxy/view');
 const apiService = Scope.import('services/api.js');
 
+const animations = Scope.import('services/animations.js');
+
 const statusesTypes = {};
 Scope.data.columns = [];
 Scope.data.issues = [];
@@ -84,107 +86,129 @@ function getColumnIssues(issuesArrayChange, column) {
 }
 
 view.init({
-  class: 'container-row ',
-  children: {
-    class: 'widget width-full scrum-board',
-    children: [
-      {
-        tag: 'h2',
-        text: 'Scrumboard Team 3DImerce'
+  animations: {
+    enter: {
+      parent: animations.widgetEnter.parent,
+      sequence: animations.widgetEnter.sequence,
+      from: {
+        y: 20,
+        opacity: 0
       },
-      {
-        class: 'content container-row',
-        children: {
-          tag: 'section',
-          class: detectTypeOfColumn,
+      duration: .2
+    },
+    leave: {
+      sequence: 'widgets-leave-sequence',
+      to: {
+        opacity: 0,
+        display: 'none'
+      },
+      position: '-=.2',
+      duration: .3
+    }
+  },
 
-          $for: {
-            data: '<>data.columns.changes',
-            as: 'column'
-          },
+  class: 'container-column scrum-board',
+  // children: {
+  //   class: 'widget width-full scrum-board',
+  children: [
+    {
+      tag: 'h2',
+      text: 'Scrumboard Team 3DImerce'
+    },
+    {
+      class: 'content container-row',
+      children: {
+        tag: 'section',
+        class: detectTypeOfColumn,
 
-          inputs: {
-            colName: '<>column.name'
-          },
+        $for: {
+          data: '<>data.columns.changes',
+          as: 'column'
+        },
 
-          animations: {
-            enter: {
-              sequence: 'columns',
-              from: {
-                y: 50,
-                opacity: 0
-              },
-              // to: {
-              //   scale: 1,
-              //   opacity: 1
-              // },
-              position: '-=.3',
-              duration: .5
-            }
-          },
+        inputs: {
+          colName: '<>column.name'
+        },
 
-          children: [
-            {
-              tag: 'h3',
-              text: '<>column.name'
-
+        animations: {
+          enter: {
+            parent: animations.widgetEnter.sequence,
+            sequence: 'columns',
+            from: {
+              y: 50,
+              opacity: 0
             },
-            {
-              tag: 'div',
-              class: 'task',
+            // to: {
+            //   scale: 1,
+            //   opacity: 1
+            // },
+            position: '-=.3',
+            duration: .4
+          }
+        },
 
-              animations: {
-                enter: {
-                  parent: 'columns',
-                  sequence: 'tasks',
-                  from: {
-                    scale: .5,
-                    opacity: 0
-                  },
-                  to: {
-                    scale: 1,
-                    opacity: 1
-                  },
-                  position: '-=.2',
-                  duration: .3
-                }
-              },
+        children: [
+          {
+            tag: 'h3',
+            text: '<>column.name'
 
-              $for: {
-                data: getColumnIssues,
-                as: 'issue'
-              },
+          },
+          {
+            tag: 'div',
+            class: 'task',
 
-              children: [
-                {
-                  tag: 'h4',
-                  text: '<>issue.key'
+            animations: {
+              enter: {
+                parent: 'columns',
+                sequence: 'tasks',
+                from: {
+                  scale: .5,
+                  opacity: 0
                 },
-                {
-                  tag: 'p',
-                  text: '<>issue.fields.summary'
+                to: {
+                  scale: 1,
+                  opacity: 1
                 },
-                {
-                  class: 'icon',
-                  tag: 'img',
-                  animations: {
-                    enter: {
-                      parent: 'columns',
-                      sequence: 'icons',
-                      from: {
-                        scale: 0
-                      },
-                      duration: .3
-                    }
-                  },
-                  $if: '<>issue.fields.assignee',
-                  src: '<>issue.fields.assignee.avatarUrls.48x48'
-                }
-              ]
-            }
-          ]
-        }
+                position: '-=.15',
+                duration: .2
+              }
+            },
+
+            $for: {
+              data: getColumnIssues,
+              as: 'issue'
+            },
+
+            children: [
+              {
+                tag: 'h4',
+                text: '<>issue.key'
+              },
+              {
+                tag: 'p',
+                text: '<>issue.fields.summary'
+              },
+              {
+                class: 'icon',
+                tag: 'img',
+                // animations: {
+                //   enter: {
+                //     parent: 'columns',
+                //     sequence: 'icons',
+                //     from: {
+                //       scale: 0
+                //     },
+                //     duration: .3
+                //   }
+                // },
+                $if: '<>issue.fields.assignee',
+                src: '<>issue.fields.assignee.avatarUrls.48x48'
+              }
+            ]
+          }
+        ]
       }
-    ]
-  }
+    }
+  ]
+  // }
 });

@@ -9,13 +9,16 @@ class BoardController extends Controller {
    * @return void
    */
   public function __construct () {
+    $this->context = stream_context_create([
+      'http' => [
+        'header' => "Authorization: Basic " . "dGltOjFTbG9nZ2kx"
+      ]
+    ]);
     //
   }
 
-  //
-
   public function getAll () {
-    $content = file_get_contents("http://tim.mybit.nl/jiraproxy.php/rest/agile/1.0/board");
+    $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board");
 
     if (empty($content)) {
       $exception = new \Exception("Not found", 404);
@@ -27,7 +30,7 @@ class BoardController extends Controller {
   }
 
   public function getActiveSprint ($board_id) {
-    $content = file_get_contents("http://tim.mybit.nl/jiraproxy.php/rest/agile/1.0/board/{$board_id}/sprint?state=active");
+    $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board/{$board_id}/sprint?state=active", false, $this->context);
 
     if (empty($content)) {
       $exception = new \Exception("Board '{$board_id}' not found", 404);
@@ -39,7 +42,7 @@ class BoardController extends Controller {
   }
 
   public function getBoardConfiguration ($board_id) {
-    $content = file_get_contents("http://tim.mybit.nl/jiraproxy.php/rest/agile/1.0/board/{$board_id}/configuration");
+    $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board/{$board_id}/configuration", false, $this->context);
 
     if (empty($content)) {
       $exception = new \Exception("Board '{$board_id}' not found", 404);
@@ -53,9 +56,9 @@ class BoardController extends Controller {
   }
 
   public function getSprintIssues ($sprint_id) {
-    $url = "http://tim.mybit.nl/jiraproxy.php/rest/agile/1.0/sprint/{$sprint_id}/issue";
+    $url = "https://jira.local.mybit.nl/rest/agile/1.0/sprint/{$sprint_id}/issue";
 
-    $content = file_get_contents($url);
+    $content = file_get_contents($url, false, $this->context);
 
     if (empty($content)) {
       $exception = new \Exception("Board '{$sprint_id}' not found", 404);
@@ -67,6 +70,7 @@ class BoardController extends Controller {
     }
 
     $jsonfied_content = json_decode($content);
+
     return response()->json($jsonfied_content);
   }
 }

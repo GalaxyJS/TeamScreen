@@ -19,6 +19,10 @@ class MembersController extends Controller {
     return \App\Models\Members::all();
   }
 
+  public function getAllForTeam ($team_id) {
+    return \App\Models\Members::has('team', $team_id)->get();
+  }
+
   public function create (Request $request) {
     $this->validate($request, \App\Models\Members::$rules);
 

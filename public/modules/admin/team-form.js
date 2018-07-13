@@ -20,7 +20,11 @@ view.init({
     }
   },
   animations: {
+    config: {
+      leaveWithParent: true
+    },
     enter: {
+      sequence: 'overlay-form',
       from: {
         scale: .8,
         opacity: 0
@@ -28,9 +32,11 @@ view.init({
       duration: .3
     },
     leave: {
+      sequence: 'overlay-form',
       to: {
         scale: .8,
-        opacity: 0
+        opacity: 0,
+        display:'none'
       },
       duration: .1
     }
