@@ -4,8 +4,10 @@ const router = Scope.import('galaxy/router');
 
 const apiService = Scope.import('services/api.js');
 const utility = Scope.import('services/utility.js');
+const animations = Scope.import('services/animations.js');
 
 const rowEnterAnimation = {
+  parent: animations.widgetEnter.sequence,
   sequence: 'row-animation',
   from: {
     y: -15,
@@ -78,7 +80,7 @@ router.init({
     };
   },
   '/edit-member/:id': function (params) {
-    Scope.data.activeModuleData = { id: params.id };
+    Scope.data.activeModuleData = {id: params.id};
     Scope.data.activeModule = {
       url: 'modules/admin/member-form.js'
     };
@@ -90,6 +92,11 @@ view.init([
     class: 'container-row',
     children: [
       {
+        animations: {
+          enter: animations.widgetEnter,
+          leave: animations.widgetLeave
+        },
+
         class: 'widget width-75',
         children: [
           {
@@ -149,7 +156,7 @@ view.init([
                       config: {
                         leaveWithParent: true
                       },
-                      enter: Object.assign({}, rowEnterAnimation, { sequence: 'members' }),
+                      enter: Object.assign({}, rowEnterAnimation, {sequence: 'members'}),
                       leave: rowLeaveAnimation
                     },
 
@@ -228,7 +235,12 @@ view.init([
         ]
       },
       {
-        class: 'widget width-25',
+        animations: {
+          enter: animations.widgetEnter,
+          leave: animations.widgetLeave
+        },
+
+        class: 'widget width-s',
         children: [
           {
             tag: 'h2',
@@ -259,7 +271,7 @@ view.init([
                     config: {
                       leaveWithParent: true
                     },
-                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'teams' }),
+                    enter: Object.assign({}, rowEnterAnimation, {sequence: 'teams'}),
                     leave: rowLeaveAnimation
                   },
 

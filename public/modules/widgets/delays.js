@@ -4,13 +4,13 @@ const inputs = Scope.import('galaxy/inputs');
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
 
-let googleMapService;
+const googleMapService = new google.maps.DistanceMatrixService();
 
 const origin = ['1217 ZC Hilversum, Netherlands'];
 
 function getTrafficInformation(destination) {
   if (!googleMapService) {
-    return Promise.resolve('not_ready');
+    return Promise.resolve('NOT_READY');
   }
 
   const param = {
@@ -29,16 +29,18 @@ function getTrafficInformation(destination) {
         if (result.status !== 'NOT_FOUND') {
           const diff = result.duration_in_traffic.value - result.duration.value;
           const diffInMinutes = Math.round(diff / 60);
-          resolved(diffInMinutes || 0)
+          resolved(diffInMinutes || 0);
         } else {
           resolved(0);
         }
       } catch (exception) {
-        reject('error');
+        reject('ERROR');
       }
     });
   });
 }
+
+
 
 const memberEnterAnimation = {
   parent: animations.widgetEnter.sequence,
@@ -105,15 +107,17 @@ view.init({
                   postInsert: function () {
                     const member = this.inputs.member;
                     const update = function () {
-                      member.delay = 'loading';
+                      member.delay = 'LOADING';
                       if (member.destination) {
                         getTrafficInformation(member.destination).then(function (time) {
-                          if (time === 'not_ready') {
+                          if (time === 'NOT_READY') {
                             setTimeout(update, 100);
                           } else {
                             member.delay = time;
                           }
                         });
+                      } else {
+                        member.delay = 'NO_ADDRESS';
                       }
                     };
 
@@ -139,12 +143,16 @@ view.init({
                           return 'far fa-meh c-orange';
                         }
 
-                        if (delay === 'error') {
-                          return 'fas fa-exclamation-circle c-red'
+                        if (delay === 'ERROR') {
+                          return 'fas fa-exclamation-circle c-red';
                         }
 
-                        if (delay === 'loading') {
-                          return 'fas fa-spinner'
+                        if (delay === 'LOADING') {
+                          return 'fas fa-spinner';
+                        }
+
+                        if (delay === 'NO_ADDRESS') {
+                          return 'fas fa-map-marked-alt';
                         }
 
                         return 'far fa-smile c-green';
@@ -164,8 +172,12 @@ view.init({
                           return '5-15 mins';
                         }
 
-                        if (delay === 'error') {
-                          return 'ERROR'
+                        if (delay === 'ERROR') {
+                          return 'ERROR';
+                        }
+
+                        if (delay === 'NO_ADDRESS') {
+                          return '';
                         }
 
                         return '< 5 mins';
@@ -178,15 +190,6 @@ view.init({
           }
         }
       ]
-    },
-    {
-      tag: 'script',
-      src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA4Nr1bQijl7QINVIwC7JCq7Ljh2FYk_8I',
-      on: {
-        load: function () {
-          googleMapService = new google.maps.DistanceMatrixService();
-        }
-      }
     }
   ]
 });

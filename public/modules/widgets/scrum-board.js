@@ -103,7 +103,7 @@ view.init({
         display: 'none'
       },
       position: '-=.2',
-      duration: .3
+      duration: 1.3
     }
   },
 
@@ -171,7 +171,7 @@ view.init({
                 },
                 position: '-=.15',
                 duration: .2
-              }
+              },
             },
 
             $for: {

@@ -24,7 +24,7 @@ function selectARandomWaiter() {
       Scope.data.cycle.push(randomWaiter.id);
       Scope.data.waiter = randomWaiter;
     }
-  }, 500);
+  }, 15000);
 }
 
 view.init({

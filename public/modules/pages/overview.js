@@ -10,7 +10,7 @@ view.init({
   class: 'container-row overview',
   children: [
     {
-      class: 'module width-25',
+      class: 'module width-s',
       inputs: {
         members: '<>data.members'
       },
@@ -19,7 +19,7 @@ view.init({
       }
     },
     {
-      class: 'module width-25',
+      class: 'module width-s',
       inputs: {
         members: '<>data.members'
       },

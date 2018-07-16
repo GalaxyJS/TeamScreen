@@ -47,12 +47,53 @@ view.config.cleanContainer = true;
 view.init([
   {
     class: 'top-bar',
-    module: {
-      url: 'modules/components/clock.js'
-    }
+    children: [
+      {
+        module: {
+          url: 'modules/components/clock.js'
+        }
+      },
+      {
+        tag: 'nav',
+        class: 'main-nav',
+        children: [
+          {
+            tag: 'a',
+
+            $for: {
+              data: '<>data.routes.changes',
+              as: 'route'
+            },
+
+            class: {
+              active: [
+                'route',
+                'data.activeModule',
+                function (route, activeModule) {
+                  return route.module === activeModule;
+                }
+              ]
+            },
+
+            href: [
+              'route',
+              function (route) {
+                return '#' + route.id;
+              }
+            ],
+            text: '<>route.id'
+          },
+        ]
+      }
+    ]
   },
   {
     class: 'main-content',
     module: '<>data.activeModule'
+  },
+  {
+    tag: 'script',
+    id: 'google-api-script',
+    src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA4Nr1bQijl7QINVIwC7JCq7Ljh2FYk_8I',
   }
 ]);
