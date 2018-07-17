@@ -25,4 +25,12 @@ class Agendas extends Model {
   public function member () {
     return $this->belongsTo('App\Models\Members', 'member_id');
   }
+
+  public function getStartTimeAttribute ($value) {
+    return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
+  }
+
+  public function getEndTimeAttribute ($value) {
+    return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
+  }
 }

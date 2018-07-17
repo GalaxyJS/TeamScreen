@@ -9,8 +9,6 @@
   <link rel="stylesheet" href="assets/css/app.css">
   <link rel="stylesheet" type="text/css" href="assets/date-picker/jquery.datetimepicker.min.css"/ >
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="assets/date-picker/jquery.datetimepicker.full.js"></script>
 
   <script>
     (function () {
@@ -34,10 +32,13 @@
 <body>
 <div class="bootstrap-loader"></div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" defer></script>
+<script src="assets/date-picker/jquery.datetimepicker.full.js" defer></script>
 <script src="assets/gsap/TweenLite.min.js" defer></script>
 <script src="assets/gsap/TimelineLite.min.js" defer></script>
 <script src="assets/gsap/easing/EasePack.min.js" defer></script>
 <script src="assets/gsap/plugins/CSSPlugin.min.js" defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4Nr1bQijl7QINVIwC7JCq7Ljh2FYk_8I" defer></script>
 
 <script src="assets/galaxyjs/galaxy.js" defer></script>
 </body>

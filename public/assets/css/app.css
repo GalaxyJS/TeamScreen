@@ -91,6 +91,10 @@ button, input, textarea, select {
   padding: 0 15px;
 }
 
+.team-chooser {
+  width: 200px;
+}
+
 .main-nav {
   display: inline-block;
   font-size: 14px;
@@ -373,14 +377,6 @@ button, input, textarea, select {
   font-weight: bold;
 }
 
-.person-item {
-  display: block;
-  padding: 5px;
-  background-color: rgba(255, 255, 255, .2);
-  margin-bottom: 5px;
-  border-radius: 6px;
-}
-
 .avatar {
   width: 32px;
   height: 32px;
@@ -413,6 +409,23 @@ button, input, textarea, select {
   padding: 6px 10px;
 }
 
+.person-item p {
+  padding: 10px 0 0;
+}
+
+.person-item i {
+  margin: 0 10px;
+}
+
+.person-item h4 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  vertical-align: middle;
+  display: inline-block;
+  margin: 0 10px;
+}
+
 .person-item > strong {
   width: 35%;
   white-space: nowrap;
@@ -429,6 +442,13 @@ button, input, textarea, select {
   text-align: right;
   align-items: center;
   font-size: .9em;
+}
+
+.person-item > .content.column {
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  font-size: 1em;
 }
 
 .person-item > .content > i {

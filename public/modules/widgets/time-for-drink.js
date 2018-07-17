@@ -9,11 +9,11 @@ Scope.data.cycle = [];
 
 function selectARandomWaiter() {
   setInterval(function () {
-    if (Scope.data.cycle.length === inputs.members.length) {
+    if (inputs.members && Scope.data.cycle.length === inputs.members.length) {
       Scope.data.cycle = [];
     }
 
-    if (inputs.members.length) {
+    if (inputs.members && inputs.members.length) {
       let randomIndex = Math.floor(Math.random() * inputs.members.length);
       let randomWaiter = inputs.members[randomIndex];
       while (Scope.data.cycle.indexOf(randomWaiter.id) !== -1) {

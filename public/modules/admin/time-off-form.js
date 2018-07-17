@@ -19,7 +19,7 @@ Scope.data.form = {
 
 view.init({
   tag: 'form',
-  autocomplete:'off',
+  autocomplete: 'off',
   method: 'post',
   class: 'form',
   on: {
@@ -51,9 +51,9 @@ view.init({
       lifecycle: {
         postEnter: function () {
           jQuery('.datetimepicker').datetimepicker({
-            onChangeDateTime:function(a,$input){
-               const v = this.getValue();
-               // debugger;
+            onChangeDateTime: function (a, $input) {
+              const node = $input[0];
+              Scope.data.form[node.getAttribute('name')] = node.value;
             },
             closeOnDateSelect: true,
             format: 'Y-m-d H:i',
@@ -100,7 +100,7 @@ view.init({
             {
               tag: 'input',
               class: 'datetimepicker',
-              name: 'name',
+              name: 'start_time',
               required: 'true',
               placeholder: 'YYYY-MM-DD HH:MM',
               value: '<>data.form.start_time',
@@ -125,7 +125,7 @@ view.init({
             {
               tag: 'input',
               class: 'datetimepicker',
-              name: 'name',
+              name: 'end_time',
               required: 'true',
               placeholder: 'YYYY-MM-DD HH:MM',
               value: '<>data.form.end_time'

@@ -15,7 +15,7 @@ class TeamsController extends Controller {
   }
 
   public function getAll () {
-    return \App\Models\Teams::all();
+    return \App\Models\Teams::with('members')->get();
   }
 
   public function getAgendas ($id) {

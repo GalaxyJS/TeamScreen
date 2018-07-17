@@ -16,9 +16,9 @@ class CreateMembersTable extends Migration {
       $table->integer('team_id');
       $table->string('name');
       $table->string('username');
-      $table->string('destination');
-      $table->string('drink_preference');
-      $table->string('working_days');
+      $table->string('destination')->nullable();
+      $table->string('drink_preference')->nullable();
+      $table->string('working_days')->nullable();
       $table->timestamps();
     });
   }

@@ -1,30 +1,35 @@
 const view = Scope.import('galaxy/view');
-const apiService = Scope.import('services/api.js');
+const appService = Scope.import('services/app.js');
 
-Scope.data.members = null;
-apiService.getAllMembers().then(function (members) {
-  Scope.data.members = members;
-});
-
+Scope.data.appService = appService;
 view.init({
   class: 'container-row overview',
   children: [
     {
       class: 'module width-s',
       inputs: {
-        members: '<>data.members'
+        members: '<>data.appService.activeMembers'
       },
       module: {
-        url: 'modules/widgets/delays.js'
+        url: 'modules/widgets/time-for-drink.js'
       }
     },
     {
       class: 'module width-s',
       inputs: {
-        members: '<>data.members'
+        team: '<>data.appService.activeTeam'
       },
       module: {
-        url: 'modules/widgets/time-for-drink.js'
+        url: 'modules/widgets/vacations.js'
+      }
+    },
+    {
+      class: 'module width-s',
+      inputs: {
+        members: '<>data.appService.activeMembers'
+      },
+      module: {
+        url: 'modules/widgets/delays.js'
       }
     }
   ]

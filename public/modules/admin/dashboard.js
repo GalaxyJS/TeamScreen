@@ -5,6 +5,7 @@ const router = Scope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
+const appService = Scope.import('services/app.js');
 
 const rowEnterAnimation = {
   parent: animations.widgetEnter.sequence,
@@ -82,6 +83,10 @@ function fetchMembers() {
 function fetchTeams() {
   apiService.getAllTeams().then(function (teams) {
     Scope.data.teams = teams;
+
+    if(appService.activeTeam) {
+      appService.setActiveTeam(appService.activeTeam.id, teams);
+    }
   });
 }
 

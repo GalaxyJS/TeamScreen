@@ -97,7 +97,7 @@ Scope.exports = {
   },
 
   updateMember: function (data) {
-    return this.update('/member/' + data.id, data);
+    return this.update('member/' + data.id, data);
   },
 
   getAllTeams: function () {
@@ -194,7 +194,7 @@ Scope.exports = {
   },
 
   getAgendasForTeam: function (id) {
-    return fetch('/api/agendas/team/' + id).then(function (response) {
+    return fetch('/api/team/' + id + '/agendas/').then(function (response) {
       if (response.status !== 200) {
         throw response;
       }

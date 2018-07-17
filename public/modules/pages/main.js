@@ -2,6 +2,15 @@
 const view = Scope.import('galaxy/view');
 const router = Scope.import('galaxy/router');
 
+const apiService = Scope.import('services/api.js');
+const appService = Scope.import('services/app.js');
+
+Scope.data.teams = [];
+
+apiService.getAllTeams().then(function (teams) {
+  Scope.data.teams = teams;
+});
+
 Scope.data.routes = [
   {
     id: 'scrum-board',
@@ -54,6 +63,39 @@ view.init([
         }
       },
       {
+        class: 'team-chooser',
+        tag: 'select',
+        children: [
+          {
+            tag: 'option',
+            value: null,
+            text: 'None'
+          },
+          {
+            tag: 'option',
+
+            $for: {
+              data: '<>data.teams.changes',
+              as: 'team'
+            },
+
+            value: '<>team.id',
+            text: '<>team.name'
+          }
+        ],
+        on: {
+          change: function () {
+            if (!this.node.value) {
+              appService.activeTeam = {};
+              appService.activeTeamMembers = [];
+              return;
+            }
+
+            appService.setActiveTeam(this.node.value, Scope.data.teams);
+          }
+        }
+      },
+      {
         tag: 'nav',
         class: 'main-nav',
         children: [
@@ -90,10 +132,5 @@ view.init([
   {
     class: 'main-content',
     module: '<>data.activeModule'
-  },
-  {
-    tag: 'script',
-    id: 'google-api-script',
-    src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA4Nr1bQijl7QINVIwC7JCq7Ljh2FYk_8I',
   }
 ]);

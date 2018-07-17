@@ -19,7 +19,7 @@ Scope.data.form = {
   name: null,
   username: null,
   team_id: null,
-  destination: null,
+  destination: '',
   drink_preference: null,
   working_days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 };
@@ -32,12 +32,12 @@ view.init({
     submit: function (event) {
       event.preventDefault();
       if(Scope.data.form.id) {
-        apiService.updateTimeOff(Scope.data.form).then(function (data) {
+        apiService.updateMember(Scope.data.form).then(function (data) {
           console.info('Member updated successfully', data);
           router.navigateFromHere('/');
         });
       } else {
-        apiService.addTimeOff(Scope.data.form).then(function (data) {
+        apiService.addMember(Scope.data.form).then(function (data) {
           console.info('Member added successfully', data);
           router.navigateFromHere('/');
         });
