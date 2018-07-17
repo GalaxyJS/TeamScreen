@@ -19,13 +19,24 @@ $router->get('/tim', function () use ($router) {
   return view('tim');
 });
 
+$router->get('/api/agendas', ['uses' => 'AgendasController@getAll']);
+$router->get('/api/agendas/{id}', ['uses' => 'AgendasController@get']);
+
+$router->post('/api/agendas', ['uses' => 'AgendasController@create']);
+$router->put('/api/agendas/{id}', ['uses' => 'AgendasController@update']);
+$router->delete('/api/agendas/{id}', ['uses' => 'AgendasController@delete']);
+
 $router->get('/api/team', ['uses' => 'TeamsController@getAll']);
-$router->get('/api/team/{id}', ['uses' => 'MembersController@get']);
+$router->get('/api/team/{id}', ['uses' => 'TeamsController@get']);
+$router->get('/api/team/{id}/agendas', ['uses' => 'TeamsController@getAgendas']);
+
 $router->get('/api/team/{id}/members', ['uses' => 'MembersController@getAllForTeam']);
 $router->post('/api/team/', ['uses' => 'TeamsController@create']);
 $router->delete('/api/team/{id}', ['uses' => 'TeamsController@delete']);
 
 $router->get('/api/member', ['uses' => 'MembersController@getAll']);
+$router->get('/api/member/{id}', ['uses' => 'MembersController@get']);
+$router->put('/api/member/{id}', ['uses' => 'MembersController@update']);
 $router->post('/api/member', ['uses' => 'MembersController@create']);
 $router->delete('/api/member/{id}', ['uses' => 'MembersController@delete']);
 

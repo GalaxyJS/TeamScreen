@@ -2,17 +2,25 @@ const view = Scope.import('galaxy/view');
 const inputs = Scope.import('galaxy/inputs');
 const router = Scope.parentScope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
+const animations = Scope.import('services/animations.js');
 
 apiService.getAllTeams().then(function (teams) {
   Scope.data.teams = teams;
 });
-console.log(inputs);
+
+if (inputs.data.params && inputs.data.params.id) {
+  apiService.getMemberById(inputs.data.params.id).then(function (data) {
+    Scope.data.form = data;
+  });
+}
+
 Scope.data.form = {
+  id: null,
   name: null,
   username: null,
   team_id: null,
   destination: null,
-  drink_preference: 'tea',
+  drink_preference: null,
   working_days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 };
 
@@ -23,38 +31,32 @@ view.init({
   on: {
     submit: function (event) {
       event.preventDefault();
-      apiService.saveMember(Scope.data.form).then(function (data) {
-        console.info('Member successful', data);
-        router.navigateFromHere('/');
-      });
+      if(Scope.data.form.id) {
+        apiService.updateTimeOff(Scope.data.form).then(function (data) {
+          console.info('Member updated successfully', data);
+          router.navigateFromHere('/');
+        });
+      } else {
+        apiService.addTimeOff(Scope.data.form).then(function (data) {
+          console.info('Member added successfully', data);
+          router.navigateFromHere('/');
+        });
+      }
     }
   },
   animations: {
-    config: {
-      leaveWithParent: true
-    },
-    enter: {
-      sequence: 'overlay-form',
-      from: {
-        scale: .8,
-        opacity: 0
-      },
-      duration: .3
-    },
-    leave: {
-      sequence: 'overlay-form',
-      to: {
-        scale: .8,
-        opacity: 0,
-        display:'none'
-      },
-      duration: .3
-    }
+    enter: animations.formEnter,
+    leave: animations.formLeave,
   },
   children: [
     {
       tag: 'h2',
-      text: 'New Member'
+      html: [
+        'data.form',
+        function (form) {
+          return form.id ? 'Member Info: <span>' + form.name + '</span>' : 'New Member';
+        }
+      ]
     },
     {
       class: 'content',
@@ -77,7 +79,7 @@ view.init({
                 postInsert: function () {
                   this.node.focus();
                 }
-              },
+              }
             }
           ]
         },

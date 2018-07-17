@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class MembersController extends Controller {
+class AgendasController extends Controller {
   /**
    * Create a new controller instance.
    *
@@ -15,37 +15,38 @@ class MembersController extends Controller {
   }
 
   public function get ($id) {
-    return \App\Models\Members::find($id);
+    return \App\Models\Agendas::find($id);
   }
 
   public function getAll () {
-    return \App\Models\Members::all();
+    return \App\Models\Agendas::all();
   }
 
+
   public function getAllForTeam ($team_id) {
-    return \App\Models\Members::has('team', $team_id)->get();
+    return \App\Models\Agendas::has('team', $team_id)->get();
   }
 
   public function create (Request $request) {
-    $this->validate($request, \App\Models\Members::$rules);
+    $this->validate($request, \App\Models\Agendas::$rules);
 
-    $member = new \App\Models\Members();
+    $agenda = new \App\Models\Agendas();
 
-    $member->fill($request->all());
+    $agenda->fill($request->all());
 
-    $member->save();
+    $agenda->save();
 
     return [
       'code' => 200,
-      'message' => 'New member is created successfully',
-      'data' => $member
+      'message' => 'Time off is created successfully',
+      'data' => $agenda
     ];
   }
 
   public function update (Request $request, $id) {
-    $this->validate($request, \App\Models\Members::$rules);
+    $this->validate($request, \App\Models\Agendas::$rules);
 
-    $member = \App\Models\Members::find($id);
+    $member = \App\Models\Agendas::find($id);
 
     $member->fill($request->all());
 
@@ -53,7 +54,7 @@ class MembersController extends Controller {
 
     return [
       'code' => 200,
-      'message' => 'Member is updated successfully',
+      'message' => 'Time off is updated successfully',
       'data' => $member
     ];
   }
@@ -65,13 +66,13 @@ class MembersController extends Controller {
       ]);
     }
 
-    $member = \App\Models\Members::find($id);
+    $member = \App\Models\Agendas::find($id);
 
     $member->delete();
 
     return [
       'code' => 200,
-      'message' => 'Member is deleted successfully',
+      'message' => 'Time off is deleted successfully',
       'data' => $member
     ];
   }

@@ -103,7 +103,7 @@ view.init({
         display: 'none'
       },
       position: '-=.2',
-      duration: 1.3
+      duration: .3
     }
   },
 

@@ -235,6 +235,18 @@ button, input, textarea, select {
   font-size: 1.2em;
 }
 
+.form > h2 > span {
+  vertical-align: middle;
+  font-weight: 300;
+}
+
+.form > h3:first-of-type {
+  padding: 0 15px 20px;
+  font-size: 1.2em;
+  font-weight: 300;
+  margin-top: -15px;
+}
+
 .form > .content {
   display: flex;
   flex-direction: column;

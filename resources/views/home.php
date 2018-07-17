@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
         integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" type="text/css" href="assets/date-picker/jquery.datetimepicker.min.css"/ >
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="assets/date-picker/jquery.datetimepicker.full.js"></script>
 
   <script>
     (function () {

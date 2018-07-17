@@ -21,7 +21,31 @@ const rowEnterAnimation = {
   duration: .2
 };
 
+const cascadeAnimation = {
+  parent: animations.widgetEnter.sequence,
+  sequence: 'cascade-animation',
+  from: {
+    height: function (v, node) {
+      const height = node.offsetHeight;
+      node._initOffsetHeight = height;
+      return height;
+    }
+  },
+  to: {
+    height: function (v, node) {
+      node.style.height = 'auto';
+      const height = node.offsetHeight;
+      node.style.height = node._initOffsetHeight + 'px' || 0;
+
+      return height;
+    }
+  },
+  position: '-=.15',
+  duration: .5
+};
+
 const rowLeaveAnimation = {
+  sequence: 'row-leave',
   to: {
     scale: .9,
     opacity: 0
@@ -38,6 +62,9 @@ Scope.data.routes = [
   }
 ];
 Scope.data.activeModule = null;
+Scope.data.activeModuleData = {
+  params: null
+};
 Scope.data.activeModuleInputs = {
   busy: false,
   data: '<>data.activeModuleData'
@@ -46,15 +73,15 @@ Scope.data.activeModuleInputs = {
 Scope.data.teams = [];
 Scope.data.members = [];
 
-function fetchTeams() {
-  apiService.getAllTeams().then(function (teams) {
-    Scope.data.teams = teams;
-  });
-}
-
 function fetchMembers() {
   apiService.getAllMembers().then(function (members) {
     Scope.data.members = members;
+  });
+}
+
+function fetchTeams() {
+  apiService.getAllTeams().then(function (teams) {
+    Scope.data.teams = teams;
   });
 }
 
@@ -80,9 +107,15 @@ router.init({
     };
   },
   '/edit-member/:id': function (params) {
-    Scope.data.activeModuleData = {id: params.id};
+    Scope.data.activeModuleData.params = params;
     Scope.data.activeModule = {
       url: 'modules/admin/member-form.js'
+    };
+  },
+  '/time-off/:id': function (params) {
+    Scope.data.activeModuleData.params = params;
+    Scope.data.activeModule = {
+      url: 'modules/admin/time-off-form.js'
     };
   }
 });
@@ -119,7 +152,19 @@ view.init([
             ]
           },
           {
-            class: 'content container-row',
+            class: {
+              'content': true,
+              'container-row': true,
+              'loaded': [
+                'data.members.length',
+                function (length) {
+                  return length > 0;
+                }
+              ]
+            },
+            animations: {
+              '.loaded': Object.assign({}, cascadeAnimation, { sequence: 'members' })
+            },
             children: [
               {
                 tag: 'table',
@@ -154,9 +199,17 @@ view.init([
 
                     animations: {
                       config: {
-                        leaveWithParent: true
+                        leaveWithParent: true,
+                        enterWithParent: true
                       },
-                      enter: Object.assign({}, rowEnterAnimation, {sequence: 'members'}),
+                      // enter: {
+                      //   sequence: rowLeaveAnimation.sequence,
+                      //   from: {
+                      //     scale: .8,
+                      //     opacity: 0
+                      //   },
+                      //   duration: 1.2
+                      // },
                       leave: rowLeaveAnimation
                     },
 
@@ -164,7 +217,7 @@ view.init([
                       data: '<>data.members.changes',
                       as: 'member',
                       trackBy: function (item) {
-                        return item.id;
+                        return item.updated_at;
                       }
                     },
 
@@ -196,9 +249,32 @@ view.init([
 
                       {
                         tag: 'td',
+                        inputs: {
+                          member: '<>member'
+                        },
                         children: [
                           {
                             tag: 'button',
+
+                            on: {
+                              click: function () {
+                                router.navigateFromHere('/time-off/' + this.parent.inputs.member.id);
+                              }
+                            },
+
+                            children: {
+                              tag: 'i',
+                              class: 'fas fa-calendar-plus'
+                            }
+                          },
+                          {
+                            tag: 'button',
+                            on: {
+                              click: function () {
+                                router.navigateFromHere('/edit-member/' + this.parent.inputs.member.id);
+                              }
+                            },
+
                             children: {
                               tag: 'i',
                               class: 'fas fa-edit'
@@ -206,22 +282,19 @@ view.init([
                           },
                           {
                             tag: 'button',
-                            inputs: {
-                              memberId: '<>member.id'
-                            },
-                            children: {
-                              tag: 'i',
-                              class: 'fas fa-trash-alt'
-                            },
-
                             on: {
                               click: function () {
                                 if (confirm('Are you sure of deleting of this member?')) {
-                                  apiService.deleteMember(this.inputs.memberId).then(function () {
+                                  apiService.deleteMember(this.parent.inputs.member.id).then(function () {
                                     fetchMembers();
                                   });
                                 }
                               }
+                            },
+
+                            children: {
+                              tag: 'i',
+                              class: 'fas fa-trash-alt'
                             }
                           }
                         ]
@@ -271,7 +344,7 @@ view.init([
                     config: {
                       leaveWithParent: true
                     },
-                    enter: Object.assign({}, rowEnterAnimation, {sequence: 'teams'}),
+                    enter: Object.assign({}, rowEnterAnimation, { sequence: 'teams' }),
                     leave: rowLeaveAnimation
                   },
 

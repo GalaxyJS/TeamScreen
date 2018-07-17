@@ -1,6 +1,7 @@
 const view = Scope.import('galaxy/view');
 const router = Scope.parentScope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
+const animations = Scope.import('services/animations.js');
 
 Scope.data.form = {
   name: null
@@ -20,26 +21,8 @@ view.init({
     }
   },
   animations: {
-    config: {
-      leaveWithParent: true
-    },
-    enter: {
-      sequence: 'overlay-form',
-      from: {
-        scale: .8,
-        opacity: 0
-      },
-      duration: .3
-    },
-    leave: {
-      sequence: 'overlay-form',
-      to: {
-        scale: .8,
-        opacity: 0,
-        display:'none'
-      },
-      duration: .1
-    }
+    enter: animations.formEnter,
+    leave: animations.formLeave,
   },
   children: [
     {

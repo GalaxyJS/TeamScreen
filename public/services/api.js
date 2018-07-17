@@ -43,9 +43,31 @@ Scope.exports = {
       console.error('services/api.js', error);
     });
   },
-  saveMember: function (data) {
-    return fetch('/api/member', {
+
+  add: function (component, data) {
+    return fetch('/api/' + component, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify(data)
+    }).then(function (response) {
+      if (response.status !== 200) {
+        throw response;
+      }
+
+      return response.json();
+    }).catch(function (error) {
+      throw error.json().then(function (content) {
+        const errorText = JSON.stringify(content, null, ' ');
+        console.error(errorText);
+        alert(errorText);
+      });
+    });
+  },
+  update: function (component, data) {
+    return fetch('/api/' + component, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
       },
@@ -63,6 +85,21 @@ Scope.exports = {
       });
     });
   },
+
+  addTeam: function (data) {
+    return this.add('team', data);
+  },
+  addMember: function (data) {
+    return this.add('member', data);
+  },
+  addTimeOff: function (data) {
+    return this.add('agendas', data);
+  },
+
+  updateMember: function (data) {
+    return this.update('/member/' + data.id, data);
+  },
+
   getAllTeams: function () {
     return fetch('/api/team').then(function (response) {
       if (response.status !== 200) {
@@ -79,6 +116,21 @@ Scope.exports = {
   },
   getAllMembers: function () {
     return fetch('/api/member').then(function (response) {
+      if (response.status !== 200) {
+        throw response;
+      }
+
+      return response.json();
+    }).catch(function (error) {
+      console.error(error);
+      error.json().then(function (content) {
+        console.error(JSON.stringify(content, null, ' '));
+      });
+    });
+  },
+
+  getMemberById: function (id) {
+    return fetch('/api/member/' + id).then(function (response) {
       if (response.status !== 200) {
         throw response;
       }
@@ -124,13 +176,9 @@ Scope.exports = {
     });
   },
 
-  saveTeam: function (data) {
-    return fetch('/api/team', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      },
-      body: JSON.stringify(data)
+  deleteTeam: function (id) {
+    return fetch('/api/team/' + id, {
+      method: 'DELETE'
     }).then(function (response) {
       if (response.status !== 200) {
         throw response;
@@ -144,10 +192,9 @@ Scope.exports = {
       });
     });
   },
-  deleteTeam: function (id) {
-    return fetch('/api/team/' + id, {
-      method: 'DELETE'
-    }).then(function (response) {
+
+  getAgendasForTeam: function (id) {
+    return fetch('/api/agendas/team/' + id).then(function (response) {
       if (response.status !== 200) {
         throw response;
       }

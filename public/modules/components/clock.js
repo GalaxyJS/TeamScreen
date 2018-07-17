@@ -1,8 +1,10 @@
 /** @type Galaxy.Scope*/
 const view = Scope.import('galaxy/view');
 
+Scope.data.ttt = 'asdsad';
 Scope.data.currentTime = new Date().toLocaleTimeString();
-setInterval(function () {
+setTimeout(function () {
+  Scope.data.ttt = 'asdsad2';
   Scope.data.currentTime = new Date().toLocaleTimeString();
 }, 500);
 
@@ -14,6 +16,10 @@ view.init({
     {
       tag: 'span',
       text: '<>data.currentTime'
+    },
+    {
+      tag: 'span',
+      text: '<>data.ttt'
     }
   ]
 });

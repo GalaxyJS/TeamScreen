@@ -18,6 +18,12 @@ class TeamsController extends Controller {
     return \App\Models\Teams::all();
   }
 
+  public function getAgendas ($id) {
+    return \App\Models\Agendas::whereHas('member', function ($query) use ($id) {
+      $query->where('team_id', $id);
+    })->with('member')->get();
+  }
+
   public function create (Request $request) {
     $this->validate($request, \App\Models\Teams::$rules);
 
@@ -34,7 +40,7 @@ class TeamsController extends Controller {
     ];
   }
 
-  public function delete ( $id) {
+  public function delete ($id) {
     if (!isset($id)) {
       return response('', 400)->json([
         'message' => 'member id is required',
@@ -52,20 +58,4 @@ class TeamsController extends Controller {
     ];
   }
 
-  public function getMembersOf ($id) {
-//    $this->validate($request, \App\Models\Teams::$rules);
-
-    $team = \App\Models\Teams::with();
-
-    $team->fill($request->all());
-
-    $team->save();
-
-    return [
-      'code' => 200,
-      'message' => 'New team is created successfully',
-      'data' => $team
-    ];
-  }
-  //
 }

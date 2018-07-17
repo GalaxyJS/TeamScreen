@@ -19,6 +19,23 @@ Scope.exports = {
     },
     position: '-=.2',
     duration: .3
+  },
+  formEnter: {
+    sequence: 'overlay-form',
+    from: {
+      scale: .8,
+      opacity: 0
+    },
+    duration: .3
+  },
+  formLeave: {
+    sequence: 'overlay-form',
+    to: {
+      y: -50,
+      opacity: 0,
+      display: 'none'
+    },
+    duration: .3
   }
 };
 

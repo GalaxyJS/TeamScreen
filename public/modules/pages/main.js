@@ -78,7 +78,7 @@ view.init([
             href: [
               'route',
               function (route) {
-                return '#' + route.id;
+                return '#/' + route.id;
               }
             ],
             text: '<>route.id'

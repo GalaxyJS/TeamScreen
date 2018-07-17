@@ -20,4 +20,8 @@ class Teams extends Model {
   public function members () {
     return $this->hasMany('App\Models\Members', 'team_id');
   }
+
+  public function agendas () {
+    return $this->members()->agendas();
+  }
 }

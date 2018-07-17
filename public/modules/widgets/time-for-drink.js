@@ -24,8 +24,20 @@ function selectARandomWaiter() {
       Scope.data.cycle.push(randomWaiter.id);
       Scope.data.waiter = randomWaiter;
     }
-  }, 15000);
+  }, 3000);
 }
+
+const memberEnterAnimation = {
+  parent: animations.widgetEnter.sequence,
+  sequence: 'time-for-drink',
+  from: {
+    height: 0,
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+  position: '-=.1',
+  duration: .2
+};
 
 view.init({
   animations: {
@@ -67,30 +79,54 @@ view.init({
                 html: [
                   'data.waiter.name',
                   function (name) {
-                    return '<strong>' + name + '</strong>, it\'s your turn to brink us the drinks!';
+                    return '<strong>' + name + '</strong>, it\'s your turn to bring us the drinks!';
                   }
                 ]
               }
             ]
           },
           {
+            animations: {
+              enter: memberEnterAnimation
+            },
+
             tag: 'p',
             class: [
-              'member.id',
-              'data.cycle.changes',
+               'member.id',
+              'data.cycle',
               function (memberId, ac) {
                 const result = ['person-item'];
 
-                if (ac.original.indexOf(memberId) !== -1) {
+                if (ac.indexOf(memberId) !== -1) {
                   result.push('disable');
                 }
 
                 return result;
               }
             ],
-
+          // {
+          //   'person-item': true,
+          //   disable: [
+          //     'member.id',
+          //     'data.cycle',
+          //     function (memberId, ac) {
+          //       // const result = ['person-item'];
+          //
+          //       if (ac.indexOf(memberId) !== -1) {
+          //         return true;
+          //       }
+          //
+          //       return false
+          //     }
+          //   ]
+          // }
             $for: {
-              data: '<>inputs.members.changes',
+              data: [
+                '<>inputs.members.changes',
+                function (changes) {
+                  return changes;
+                }
+              ],
               as: 'member'
             },
             children: [
@@ -111,7 +147,8 @@ view.init({
 
                 inputs: {
                   member: '<>member'
-                }
+                },
+                text: '<>member.drink_preference'
               }
             ]
           }
