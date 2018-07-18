@@ -1,38 +1,70 @@
 /** @type Galaxy.Scope*/
 const view = Scope.import('galaxy/view');
 const apiService = Scope.import('services/api.js');
+const appService = Scope.import('services/app.js');
 
 const animations = Scope.import('services/animations.js');
 
 const statusesTypes = {};
+
+Scope.data.appService = appService;
 Scope.data.columns = [];
 Scope.data.issues = [];
 
-apiService.getBoardConfiguration(122).then(function (data) {
-  Scope.data.columns = data.columnConfig.columns;
-  Scope.data.columns.forEach(function (item) {
-    statusesTypes[item.name] = item.statuses.map(function (status) {
-      return status.id;
-    });
-  });
-});
-
-apiService.getSprintIssues(836).then(function (data) {
-  Scope.data.issues = data.issues;
-});
-
 Scope.data.activeSprint = {
-  "id": 836,
-  "self": "https://jira.local.mybit.nl/rest/agile/1.0/sprint/836",
-  "state": "active",
-  "name": "3Dimerce 2018 - Sprint 14",
-  "startDate": "2018-07-02T09:50:41.750+02:00",
-  "endDate": "2018-07-20T09:50:00.000+02:00",
-  "originBoardId": 122,
-  "goal": "Bert vertalingen, LEO afronding zitmeubelen, Portal Reorder Choices & FBX viewer, Add JIRA to scrumboard"
+  // "id": 836,
+  // "self": "https://jira.local.mybit.nl/rest/agile/1.0/sprint/836",
+  // "state": "active",
+  // "name": "3Dimerce 2018 - Sprint 14",
+  // "startDate": "2018-07-02T09:50:41.750+02:00",
+  // "endDate": "2018-07-20T09:50:00.000+02:00",
+  // "originBoardId": 122,
+  // "goal": "Bert vertalingen, LEO afronding zitmeubelen, Portal Reorder Choices & FBX viewer, Add JIRA to scrumboard"
 };
 
-detectTypeOfColumn.watch = ['column'];
+getActiveSprint.watch = ['data.appService.activeTeam'];
+
+function getActiveSprint(activeTeam) {
+  if (activeTeam && activeTeam.board_id) {
+    apiService.getActiveSprint(activeTeam.board_id).then(function (data) {
+      Scope.data.activeSprint = data.values[0];
+    });
+  } else {
+    Scope.data.activeSprint = {
+      name: ''
+    };
+  }
+}
+
+getBoardConfiguration.watch = ['data.appService.activeTeam'];
+
+function getBoardConfiguration(activeTeam) {
+  if (activeTeam && activeTeam.board_id) {
+    apiService.getBoardConfiguration(activeTeam.board_id).then(function (data) {
+      Scope.data.issues = [];
+      Scope.data.columns = data.columnConfig.columns;
+      Scope.data.columns.forEach(function (item) {
+        statusesTypes[item.name] = item.statuses.map(function (status) {
+          return status.id;
+        });
+      });
+    });
+  } else {
+    Scope.data.columns = [];
+  }
+}
+
+getSprintIssues.watch = ['data.activeSprint'];
+
+function getSprintIssues(activeSprint) {
+  if (activeSprint && activeSprint.id) {
+    apiService.getSprintIssues(activeSprint.id).then(function (data) {
+      Scope.data.issues = data.issues;
+    });
+  } else {
+    Scope.data.issues = [];
+  }
+}
 
 const toDoClasses = ['to do', 'To Do', 'ToDo', 'Todo'];
 const devClasses = ['In Development', 'In development', 'in development', 'In Dev'];
@@ -40,6 +72,8 @@ const reviewClasses = ['In Review', 'Review', 'review', 'Code Review'];
 const readyForQAClasses = ['Ready For QA', 'Ready for QA', 'Ready For Q&A'];
 const qaClasses = ['QA', 'Q&A'];
 const doneClasses = ['Done', 'done', 'Done/Accept/Closed'];
+
+detectTypeOfColumn.watch = ['column'];
 
 function detectTypeOfColumn(column) {
   const name = column.name;
@@ -86,6 +120,10 @@ function getColumnIssues(issuesArrayChange, column) {
 }
 
 view.init({
+  app_activeSprint: getActiveSprint,
+  app_boardConfiguration: getBoardConfiguration,
+  app_issues: getSprintIssues,
+
   animations: {
     enter: {
       parent: animations.widgetEnter.parent,
@@ -106,14 +144,17 @@ view.init({
       duration: .3
     }
   },
-
   class: 'container-column scrum-board',
-  // children: {
-  //   class: 'widget width-full scrum-board',
+
   children: [
     {
       tag: 'h2',
-      text: 'Scrumboard Team 3DImerce'
+      html: [
+        'data.activeSprint',
+        function (sprint) {
+          return 'Scrumboard ' + sprint.name + ': <span>' + (sprint.goal || '') + '</span>';
+        }
+      ]
     },
     {
       class: 'content container-row',
@@ -142,8 +183,8 @@ view.init({
             //   scale: 1,
             //   opacity: 1
             // },
-            position: '-=.3',
-            duration: .4
+            position: '-=.2',
+            duration: .3
           }
         },
 
@@ -169,9 +210,9 @@ view.init({
                   scale: 1,
                   opacity: 1
                 },
-                position: '-=.15',
+                position: '-=.16',
                 duration: .2
-              },
+              }
             },
 
             $for: {

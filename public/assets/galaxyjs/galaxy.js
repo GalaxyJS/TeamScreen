@@ -2919,6 +2919,8 @@ Galaxy.View = /** @class */(function (G) {
         parentReactiveData.addKeyToShadow(propertyKey);
       }
 
+
+
       if (childPropertyKeyPath === null) {
         if (!(target instanceof Galaxy.View.ViewNode)) {
           defProp(target, targetKeyName, {

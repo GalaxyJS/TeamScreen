@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Agendas;
 
 class AgendasController extends Controller {
   /**
@@ -15,22 +16,22 @@ class AgendasController extends Controller {
   }
 
   public function get ($id) {
-    return \App\Models\Agendas::find($id);
+    return Agendas::find($id);
   }
 
   public function getAll () {
-    return \App\Models\Agendas::all();
+    return Agendas::all();
   }
 
 
   public function getAllForTeam ($team_id) {
-    return \App\Models\Agendas::has('team', $team_id)->get();
+    return Agendas::has('team', $team_id)->get();
   }
 
   public function create (Request $request) {
-    $this->validate($request, \App\Models\Agendas::$rules);
+    $this->validate($request, Agendas::$rules);
 
-    $agenda = new \App\Models\Agendas();
+    $agenda = new Agendas();
 
     $agenda->fill($request->all());
 
@@ -44,9 +45,9 @@ class AgendasController extends Controller {
   }
 
   public function update (Request $request, $id) {
-    $this->validate($request, \App\Models\Agendas::$rules);
+    $this->validate($request, Agendas::$rules);
 
-    $member = \App\Models\Agendas::find($id);
+    $member = Agendas::find($id);
 
     $member->fill($request->all());
 
@@ -66,7 +67,7 @@ class AgendasController extends Controller {
       ]);
     }
 
-    $member = \App\Models\Agendas::find($id);
+    $member = Agendas::find($id);
 
     $member->delete();
 

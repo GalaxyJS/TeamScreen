@@ -1,30 +1,30 @@
 const view = Scope.import('galaxy/view');
-const inputs = Scope.import('galaxy/inputs');
+const appService = Scope.import('services/app.js');
+Scope.data.appService = appService;
 
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
 
 Scope.data.waiter = null;
-Scope.data.cycle = [];
 
-function selectARandomWaiter() {
-  setInterval(function () {
-    if (inputs.members && Scope.data.cycle.length === inputs.members.length) {
-      Scope.data.cycle = [];
+let randomInterval;
+
+function selectRandomWaiter(members) {
+  if (members && appService.cycle.length === members.length) {
+    appService.cycle = [];
+  }
+
+  if (members && members.length) {
+    let randomIndex = Math.floor(Math.random() * members.length);
+    let randomWaiter = members[randomIndex];
+    while (appService.cycle.indexOf(randomWaiter.id) !== -1) {
+      randomIndex = Math.floor(Math.random() * members.length);
+      randomWaiter = members[randomIndex];
     }
 
-    if (inputs.members && inputs.members.length) {
-      let randomIndex = Math.floor(Math.random() * inputs.members.length);
-      let randomWaiter = inputs.members[randomIndex];
-      while (Scope.data.cycle.indexOf(randomWaiter.id) !== -1) {
-        randomIndex = Math.floor(Math.random() * inputs.members.length);
-        randomWaiter = inputs.members[randomIndex];
-      }
-
-      Scope.data.cycle.push(randomWaiter.id);
-      Scope.data.waiter = randomWaiter;
-    }
-  }, 3000);
+    appService.cycle.push(randomWaiter.id);
+    Scope.data.waiter = randomWaiter;
+  }
 }
 
 const memberEnterAnimation = {
@@ -45,11 +45,19 @@ view.init({
     leave: animations.widgetLeave
   },
 
-  lifecycle: {
-    postInsert: function () {
-      selectARandomWaiter();
+  randomWaiterInterval: [
+    'data.appService.activeMembers',
+    function (members) {
+      Scope.data.waiter = null;
+      selectRandomWaiter(members);
+      clearInterval(randomInterval);
+      randomInterval = setInterval(function () {
+        selectRandomWaiter(members);
+      }, (60 * 1000) * 120);
+
+      return '';
     }
-  },
+  ],
 
   class: 'container-row',
   children: {
@@ -92,8 +100,8 @@ view.init({
 
             tag: 'p',
             class: [
-               'member.id',
-              'data.cycle',
+              'member.id',
+              'data.appService.cycle',
               function (memberId, ac) {
                 const result = ['person-item'];
 
@@ -104,29 +112,9 @@ view.init({
                 return result;
               }
             ],
-          // {
-          //   'person-item': true,
-          //   disable: [
-          //     'member.id',
-          //     'data.cycle',
-          //     function (memberId, ac) {
-          //       // const result = ['person-item'];
-          //
-          //       if (ac.indexOf(memberId) !== -1) {
-          //         return true;
-          //       }
-          //
-          //       return false
-          //     }
-          //   ]
-          // }
+
             $for: {
-              data: [
-                '<>inputs.members.changes',
-                function (changes) {
-                  return changes;
-                }
-              ],
+              data: '<>data.appService.activeMembers.changes',
               as: 'member'
             },
             children: [

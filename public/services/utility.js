@@ -1,9 +1,9 @@
 Scope.exports = {
   avatarURLGenerator: function (username) {
-    return 'https://jira.local.mybit.nl/secure/useravatar?size=medium&ownerId=' + username;
+    return 'api/avatars/' + username + '/medium';
   },
   bigAvatarURLGenerator: function (username) {
-    return 'https://jira.local.mybit.nl/secure/useravatar?size=xlarge&ownerId=' + username;
+    return 'api/avatars/' + username + '/xlarge';
   }
 };
 

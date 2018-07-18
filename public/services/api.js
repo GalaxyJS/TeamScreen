@@ -2,8 +2,8 @@ const config = Scope.import('config.js');
 
 Scope.exports = {
   apiURL: config.apiURL,
-  getAllBoards: function () {
-    return fetch(this.apiURL + '/api/board/', {
+  get: function (url) {
+    return fetch(this.apiURL + url, {
       method: 'GET',
       mode: 'cors',
       credentials: 'same-origin',
@@ -13,6 +13,13 @@ Scope.exports = {
     }, function (error) {
       console.error('services/api.js', error);
     });
+  },
+
+  getActiveSprint: function (boardId) {
+    return this.get('/api/board/' + boardId + '/active-sprint');
+  },
+  getAllBoards: function () {
+    return this.get('/api/board/');
   },
   getBoardConfiguration: function (boardId) {
     return fetch(this.apiURL + '/api/board/' + boardId + '/configuration', {
@@ -100,6 +107,10 @@ Scope.exports = {
     return this.update('member/' + data.id, data);
   },
 
+  updateTeam: function (data) {
+    return this.update('team/' + data.id, data);
+  },
+
   getAllTeams: function () {
     return fetch('/api/team').then(function (response) {
       if (response.status !== 200) {
@@ -146,6 +157,21 @@ Scope.exports = {
 
   getTeamMembers: function (id) {
     return fetch('/api/member').then(function (response) {
+      if (response.status !== 200) {
+        throw response;
+      }
+
+      return response.json();
+    }).catch(function (error) {
+      console.error(error);
+      error.json().then(function (content) {
+        console.error(JSON.stringify(content, null, ' '));
+      });
+    });
+  },
+
+  getTeamById: function (id) {
+    return fetch('/api/team/' + id).then(function (response) {
       if (response.status !== 200) {
         throw response;
       }

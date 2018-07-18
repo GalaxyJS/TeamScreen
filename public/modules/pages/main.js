@@ -5,11 +5,34 @@ const router = Scope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 const appService = Scope.import('services/app.js');
 
+Scope.data.slideshow = false;
 Scope.data.teams = [];
 
 apiService.getAllTeams().then(function (teams) {
   Scope.data.teams = teams;
 });
+
+let slideShowInterval;
+const slides = {
+  '#/scrum-board': '/overview',
+  '#/overview': '/scrum-board'
+};
+
+clearInterval(slideShowInterval);
+
+setSlideShow.watch = ['data.slideShow'];
+
+function setSlideShow(flag) {
+  if (flag) {
+    slideShowInterval = setInterval(function () {
+      if (router.oldURL === '#/scrum-board' || router.oldURL === '#/overview') {
+        router.navigateFromHere(slides[router.oldURL]);
+      }
+    }, (60 * 1000) * 5);
+  } else {
+    clearInterval(slideShowInterval);
+  }
+}
 
 Scope.data.routes = [
   {
@@ -48,13 +71,14 @@ router.init({
     if (nav) {
       Scope.data.activeModule = nav.module;
     }
-    console.log('hash change', params.moduleId);
   }
 });
 
 view.config.cleanContainer = true;
 view.init([
   {
+    app_slideShow: setSlideShow,
+
     class: 'top-bar',
     children: [
       {
@@ -87,12 +111,22 @@ view.init([
           change: function () {
             if (!this.node.value) {
               appService.activeTeam = {};
-              appService.activeTeamMembers = [];
+              appService.activeMembers = [];
               return;
             }
 
             appService.setActiveTeam(this.node.value, Scope.data.teams);
           }
+        }
+      },
+      {
+        tag: 'label',
+        class: 'checkbox',
+        text: 'Slide Show',
+        children: {
+          tag: 'input',
+          type: 'checkbox',
+          checked: '<>data.slideShow'
         }
       },
       {
@@ -124,7 +158,7 @@ view.init([
               }
             ],
             text: '<>route.id'
-          },
+          }
         ]
       }
     ]

@@ -6,7 +6,8 @@ class Teams extends Model {
   protected $table = 'teams';
 
   protected $fillable = [
-    'name'
+    'name',
+    'board_id'
   ];
 
   protected $dates = [];

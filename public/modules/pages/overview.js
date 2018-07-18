@@ -1,6 +1,7 @@
 const view = Scope.import('galaxy/view');
 const appService = Scope.import('services/app.js');
 
+console.log(appService);
 Scope.data.appService = appService;
 view.init({
   class: 'container-row overview',
@@ -8,7 +9,7 @@ view.init({
     {
       class: 'module width-s',
       inputs: {
-        members: '<>data.appService.activeMembers'
+        team: '<>data.appService.activeTeam'
       },
       module: {
         url: 'modules/widgets/time-for-drink.js'
@@ -26,7 +27,7 @@ view.init({
     {
       class: 'module width-s',
       inputs: {
-        members: '<>data.appService.activeMembers'
+        team: '<>data.appService.activeTeam'
       },
       module: {
         url: 'modules/widgets/delays.js'

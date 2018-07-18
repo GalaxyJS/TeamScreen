@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Members;
 
 class MembersController extends Controller {
   /**
@@ -15,21 +16,21 @@ class MembersController extends Controller {
   }
 
   public function get ($id) {
-    return \App\Models\Members::find($id);
+    return Members::find($id);
   }
 
   public function getAll () {
-    return \App\Models\Members::all();
+    return Members::all();
   }
 
   public function getAllForTeam ($team_id) {
-    return \App\Models\Members::has('team', $team_id)->get();
+    return Members::has('team', $team_id)->get();
   }
 
   public function create (Request $request) {
-    $this->validate($request, \App\Models\Members::$rules);
+    $this->validate($request, Members::$rules);
 
-    $member = new \App\Models\Members();
+    $member = new Members();
 
     $member->fill($request->all());
 
@@ -43,9 +44,9 @@ class MembersController extends Controller {
   }
 
   public function update (Request $request, $id) {
-    $this->validate($request, \App\Models\Members::$rules);
+    $this->validate($request, Members::$rules);
 
-    $member = \App\Models\Members::find($id);
+    $member = Members::find($id);
 
     $member->fill($request->all());
 
@@ -65,7 +66,7 @@ class MembersController extends Controller {
       ]);
     }
 
-    $member = \App\Models\Members::find($id);
+    $member = Members::find($id);
 
     $member->delete();
 

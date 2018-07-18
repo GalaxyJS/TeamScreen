@@ -84,7 +84,7 @@ function fetchTeams() {
   apiService.getAllTeams().then(function (teams) {
     Scope.data.teams = teams;
 
-    if(appService.activeTeam) {
+    if (appService.activeTeam) {
       appService.setActiveTeam(appService.activeTeam.id, teams);
     }
   });
@@ -102,13 +102,9 @@ router.init({
     fetchAllData();
   },
   '/new-member': function () {
+    Scope.data.activeModuleData.params = null;
     Scope.data.activeModule = {
       url: 'modules/admin/member-form.js'
-    };
-  },
-  '/new-team': function () {
-    Scope.data.activeModule = {
-      url: 'modules/admin/team-form.js'
     };
   },
   '/edit-member/:id': function (params) {
@@ -117,6 +113,20 @@ router.init({
       url: 'modules/admin/member-form.js'
     };
   },
+
+  '/new-team': function () {
+    Scope.data.activeModuleData.params = null;
+    Scope.data.activeModule = {
+      url: 'modules/admin/team-form.js'
+    };
+  },
+  '/edit-team/:id': function (params) {
+    Scope.data.activeModuleData.params = params;
+    Scope.data.activeModule = {
+      url: 'modules/admin/team-form.js'
+    };
+  },
+
   '/time-off/:id': function (params) {
     Scope.data.activeModuleData.params = params;
     Scope.data.activeModule = {
@@ -368,26 +378,42 @@ view.init([
                     },
                     {
                       tag: 'td',
-                      children: {
-                        tag: 'button',
-                        inputs: {
-                          teamId: '<>team.id'
-                        },
-                        children: {
-                          tag: 'i',
-                          class: 'fas fa-trash-alt'
-                        },
+                      inputs: {
+                        teamId: '<>team.id'
+                      },
 
-                        on: {
-                          click: function () {
-                            if (confirm('Are you sure of deleting of this team?')) {
-                              apiService.deleteTeam(this.inputs.teamId).then(function () {
-                                fetchTeams();
-                              });
+                      children: [
+                        {
+                          tag: 'button',
+                          on: {
+                            click: function () {
+                              router.navigateFromHere('/edit-team/' + this.parent.inputs.teamId);
+                            }
+                          },
+
+                          children: {
+                            tag: 'i',
+                            class: 'fas fa-edit'
+                          }
+                        },
+                        {
+                          tag: 'button',
+                          children: {
+                            tag: 'i',
+                            class: 'fas fa-trash-alt'
+                          },
+
+                          on: {
+                            click: function () {
+                              if (confirm('Are you sure of deleting of this team?')) {
+                                apiService.deleteTeam(this.parent.inputs.teamId).then(function () {
+                                  fetchTeams();
+                                });
+                              }
                             }
                           }
                         }
-                      }
+                      ]
                     }
                   ]
                 }

@@ -1,5 +1,6 @@
 const view = Scope.import('galaxy/view');
-const inputs = Scope.import('galaxy/inputs');
+const appService = Scope.import('services/app.js');
+Scope.data.appService = appService;
 
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
@@ -40,8 +41,6 @@ function getTrafficInformation(destination) {
   });
 }
 
-
-
 const memberEnterAnimation = {
   parent: animations.widgetEnter.sequence,
   sequence: 'delay-list',
@@ -80,7 +79,7 @@ view.init({
             },
 
             $for: {
-              data: '<>inputs.members.changes',
+              data: '<>data.appService.activeMembers.changes',
               as: 'member'
             },
             children: [

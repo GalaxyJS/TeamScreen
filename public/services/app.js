@@ -8,5 +8,6 @@ Scope.exports = {
 
     this.activeTeam = activeTeam;
     this.activeMembers = activeTeam.members;
-  }
+  },
+  cycle: []
 };

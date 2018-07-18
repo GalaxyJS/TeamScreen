@@ -32,6 +32,7 @@ $router->get('/api/team/{id}/agendas', ['uses' => 'TeamsController@getAgendas'])
 
 $router->get('/api/team/{id}/members', ['uses' => 'MembersController@getAllForTeam']);
 $router->post('/api/team/', ['uses' => 'TeamsController@create']);
+$router->put('/api/team/{id}', ['uses' => 'TeamsController@update']);
 $router->delete('/api/team/{id}', ['uses' => 'TeamsController@delete']);
 
 $router->get('/api/member', ['uses' => 'MembersController@getAll']);
@@ -44,4 +45,5 @@ $router->get('/api/board', ['uses' => 'BoardController@getAll']);
 $router->get('/api/board/{board_id}/active-sprint', ['uses' => 'BoardController@getActiveSprint']);
 $router->get('/api/board/{board_id}/configuration', ['uses' => 'BoardController@getBoardConfiguration']);
 $router->get('/api/sprint/{sprint_id}/issues', ['uses' => 'BoardController@getSprintIssues']);
+$router->get('/api/avatars/{username}/{size}', ['uses' => 'BoardController@getAvatar']);
 

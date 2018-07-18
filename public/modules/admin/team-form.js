@@ -1,11 +1,20 @@
 const view = Scope.import('galaxy/view');
-const router = Scope.parentScope.import('galaxy/router');
+const parentRouter = Scope.parentScope.import('galaxy/router');
+const inputs = Scope.import('galaxy/inputs');
+
 const apiService = Scope.import('services/api.js');
 const animations = Scope.import('services/animations.js');
 
 Scope.data.form = {
-  name: null
+  name: null,
+  board_id: null
 };
+
+if (inputs.data.params && inputs.data.params.id) {
+  apiService.getTeamById(inputs.data.params.id).then(function (data) {
+    Scope.data.form = data;
+  });
+}
 
 view.init({
   tag: 'form',
@@ -14,10 +23,17 @@ view.init({
   on: {
     submit: function (event) {
       event.preventDefault();
-      apiService.saveTeam(Scope.data.form).then(function (data) {
-        console.info('Team successful', data);
-        router.navigateFromHere('/');
-      });
+      if(Scope.data.form.id) {
+        apiService.updateTeam(Scope.data.form).then(function (data) {
+          console.info('Team updated successfully', data);
+          parentRouter.navigateFromHere('/');
+        });
+      } else {
+        apiService.addTeam(Scope.data.form).then(function (data) {
+          console.info('Team added successful', data);
+          parentRouter.navigateFromHere('/');
+        });
+      }
     }
   },
   animations: {
@@ -27,7 +43,12 @@ view.init({
   children: [
     {
       tag: 'h2',
-      text: 'New Team'
+      html: [
+        'data.form',
+        function (form) {
+          return form.id ? 'Team Info: <span>' + form.name + '</span>' : 'New Team';
+        }
+      ]
     },
     {
       class: 'content',
@@ -55,6 +76,53 @@ view.init({
             }
           ]
         },
+        {
+          tag: 'label',
+          class: 'field',
+          children: [
+            {
+              tag: 'span',
+              text: 'JIRA Board ID'
+            },
+            {
+              tag: 'select',
+              name: 'board_id',
+              selected: '<>data.form.board_id',
+              children: [
+                {
+                  tag: 'option',
+                  value: '',
+                  text: 'none'
+                },
+                {
+                  tag: 'option',
+                  value: 122,
+                  text: '3dimerce_team3 '
+                },
+                {
+                  tag: 'option',
+                  value: 84,
+                  text: 'Mobile'
+                },
+                {
+                  tag: 'option',
+                  value: 95,
+                  text: 'Notuback'
+                },
+                {
+                  tag: 'option',
+                  value: 149,
+                  text: 'Notuweb'
+                },
+                {
+                  tag: 'option',
+                  value: 101,
+                  text: 'VCS'
+                }
+              ]
+            }
+          ]
+        },
       ]
     },
     {
@@ -64,12 +132,6 @@ view.init({
           tag: 'button',
           text: 'Save',
           type: 'submit',
-          on: {
-            click: function () {
-
-              // alert('as')
-            }
-          }
         }
       ]
     }

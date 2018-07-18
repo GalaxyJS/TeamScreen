@@ -43,7 +43,7 @@ view.init({
 
     {
       tag: 'h3',
-      text: '<>inputs.data.member.name'
+      text: '<>data.member.name'
     },
 
     {

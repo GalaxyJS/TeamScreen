@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use finfo;
+
 class BoardController extends Controller {
   /**
    * Create a new controller instance.
@@ -21,7 +24,7 @@ class BoardController extends Controller {
     $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board");
 
     if (empty($content)) {
-      $exception = new \Exception("Not found", 404);
+      $exception = new Exception("Not found", 404);
 
       return $exception;
     }
@@ -33,7 +36,7 @@ class BoardController extends Controller {
     $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board/{$board_id}/sprint?state=active", false, $this->context);
 
     if (empty($content)) {
-      $exception = new \Exception("Board '{$board_id}' not found", 404);
+      $exception = new Exception("Board '{$board_id}' not found", 404);
 
       return $exception;
     }
@@ -45,7 +48,7 @@ class BoardController extends Controller {
     $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board/{$board_id}/configuration", false, $this->context);
 
     if (empty($content)) {
-      $exception = new \Exception("Board '{$board_id}' not found", 404);
+      $exception = new Exception("Board '{$board_id}' not found", 404);
 
       return response()->json([
         'message' => $exception->getMessage()
@@ -61,9 +64,8 @@ class BoardController extends Controller {
     $content = file_get_contents($url, false, $this->context);
 
     if (empty($content)) {
-      $exception = new \Exception("Board '{$sprint_id}' not found", 404);
-//var_dump($exception);
-//die();
+      $exception = new Exception("Board '{$sprint_id}' not found", 404);
+
       return response()->json([
         'message' => $exception->getMessage()
       ]);
@@ -72,5 +74,22 @@ class BoardController extends Controller {
     $jsonfied_content = json_decode($content);
 
     return response()->json($jsonfied_content);
+  }
+
+  public function getAvatar ($username, $size = 'xlarge') {
+    $content = file_get_contents("https://jira.local.mybit.nl/secure/useravatar?ownerId={$username}&size={$size}", false, $this->context);
+
+    $fileinfo = new finfo(FILEINFO_MIME);
+    $mimetype = $fileinfo->buffer($content);
+
+    if (empty($content)) {
+      $exception = new Exception("Not found", 404);
+
+      return $exception;
+    }
+
+    return response($content, 200, [
+      'content-type' => "{$mimetype}"
+    ]);
   }
 }

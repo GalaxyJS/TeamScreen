@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agendas;
+use App\Models\Teams;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller {
@@ -15,19 +17,23 @@ class TeamsController extends Controller {
   }
 
   public function getAll () {
-    return \App\Models\Teams::with('members')->get();
+    return Teams::with('members')->get();
+  }
+
+  public function get ($id) {
+    return Teams::find($id);
   }
 
   public function getAgendas ($id) {
-    return \App\Models\Agendas::whereHas('member', function ($query) use ($id) {
+    return Agendas::whereHas('member', function ($query) use ($id) {
       $query->where('team_id', $id);
     })->with('member')->get();
   }
 
   public function create (Request $request) {
-    $this->validate($request, \App\Models\Teams::$rules);
+    $this->validate($request, Teams::$rules);
 
-    $team = new \App\Models\Teams();
+    $team = new Teams();
 
     $team->fill($request->all());
 
@@ -40,6 +46,22 @@ class TeamsController extends Controller {
     ];
   }
 
+  public function update (Request $request, $id) {
+    $this->validate($request, Teams::$rules);
+
+    $team = Teams::find($id);
+
+    $team->fill($request->all());
+
+    $team->save();
+
+    return [
+      'code' => 200,
+      'message' => 'Team is updated successfully',
+      'data' => $team
+    ];
+  }
+
   public function delete ($id) {
     if (!isset($id)) {
       return response('', 400)->json([
@@ -47,7 +69,7 @@ class TeamsController extends Controller {
       ]);
     }
 
-    $team = \App\Models\Teams::find($id);
+    $team = Teams::find($id);
 
     $team->delete();
 
