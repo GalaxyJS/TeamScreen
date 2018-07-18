@@ -120,9 +120,9 @@ function getColumnIssues(issuesArrayChange, column) {
 }
 
 view.init({
-  app_activeSprint: getActiveSprint,
-  app_boardConfiguration: getBoardConfiguration,
-  app_issues: getSprintIssues,
+  // app_activeSprint: getActiveSprint,
+  // app_boardConfiguration: getBoardConfiguration,
+  // app_issues: getSprintIssues,
 
   animations: {
     enter: {

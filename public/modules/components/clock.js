@@ -2,7 +2,7 @@
 const view = Scope.import('galaxy/view');
 
 Scope.data.currentTime = new Date().toLocaleTimeString();
-setTimeout(function () {
+setInterval(function () {
   Scope.data.currentTime = new Date().toLocaleTimeString();
 }, 500);
 

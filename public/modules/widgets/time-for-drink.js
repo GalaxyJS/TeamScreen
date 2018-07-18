@@ -1,9 +1,11 @@
 const view = Scope.import('galaxy/view');
-const appService = Scope.import('services/app.js');
-Scope.data.appService = appService;
+const inputs = Scope.import('galaxy/inputs');
 
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
+const appService = Scope.import('services/app.js');
+
+Scope.data.appService = appService;
 
 Scope.data.waiter = null;
 
@@ -46,18 +48,29 @@ view.init({
   },
 
   randomWaiterInterval: [
-    'data.appService.activeMembers',
+    'inputs.members',
     function (members) {
-      Scope.data.waiter = null;
-      selectRandomWaiter(members);
-      clearInterval(randomInterval);
-      randomInterval = setInterval(function () {
-        selectRandomWaiter(members);
-      }, (60 * 1000) * 120);
+      this.rendered.then(function () {
+        Scope.data.waiter = null;
+        if (appService.cycle.length === 0) {
+          selectRandomWaiter(members);
+        }
+
+        clearInterval(randomInterval);
+        randomInterval = setInterval(function () {
+          selectRandomWaiter(members);
+        }, /*(60 * 1000) * 120*/4000);
+      });
 
       return '';
     }
   ],
+
+  lifecycle: {
+    postDestroy: function () {
+      clearInterval(randomInterval);
+    }
+  },
 
   class: 'container-row',
   children: {
@@ -114,7 +127,7 @@ view.init({
             ],
 
             $for: {
-              data: '<>data.appService.activeMembers.changes',
+              data: '<>inputs.members.changes',
               as: 'member'
             },
             children: [

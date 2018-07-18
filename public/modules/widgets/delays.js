@@ -1,6 +1,5 @@
 const view = Scope.import('galaxy/view');
-const appService = Scope.import('services/app.js');
-Scope.data.appService = appService;
+const inputs = Scope.import('galaxy/inputs');
 
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
@@ -79,7 +78,7 @@ view.init({
             },
 
             $for: {
-              data: '<>data.appService.activeMembers.changes',
+              data: '<>inputs.members.changes',
               as: 'member'
             },
             children: [
