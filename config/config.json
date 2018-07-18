@@ -1,7 +1,0 @@
-{
-    "db" : {
-        "username" : "teamscreen",
-        "password" : "tsadmin"
-    },
-    "root_url" : "/web/"
-}
