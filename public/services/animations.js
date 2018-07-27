@@ -1,17 +1,17 @@
 Scope.exports = {
   widgetEnter: {
-    parent: 'widgets-leave-sequence',
+    // parent: 'widgets-leave-sequence',
     sequence: 'widgets-enter-and-leave-sequence',
     from: {
       scale: .86,
       opacity: 0,
       clearProps: 'all'
     },
-    position: '-=.2',
-    duration: .4
+    position: '-=.1',
+    duration: .3
   },
   widgetLeave: {
-    sequence: 'widgets-leave-sequence',
+    sequence: 'widgets-enter-and-leave-sequence',
     to: {
       scale: .8,
       opacity: 0,
@@ -36,6 +36,39 @@ Scope.exports = {
       display: 'none'
     },
     duration: .3
+  },
+
+  itemEnter: {
+    sequence: 'item-animation',
+    from: {
+      height: 0,
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    position: '-=.05',
+    duration: .15
+  },
+
+  cascadeAnimation: {
+    sequence: 'cascade-animation',
+    from: {
+      height: function (v, node) {
+        const height = node.offsetHeight;
+        node._initOffsetHeight = height;
+        return height;
+      }
+    },
+    to: {
+      height: function (v, node) {
+        node.style.height = 'auto';
+        const height = node.offsetHeight;
+        node.style.height = node._initOffsetHeight + 'px' || 0;
+
+        return height;
+      }
+    },
+    position: '-=.15',
+    duration: .5
   }
 };
 

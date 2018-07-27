@@ -29,18 +29,6 @@ function selectRandomWaiter(members) {
   }
 }
 
-const memberEnterAnimation = {
-  parent: animations.widgetEnter.sequence,
-  sequence: 'time-for-drink',
-  from: {
-    height: 0,
-    paddingTop: 0,
-    paddingBottom: 0
-  },
-  position: '-=.1',
-  duration: .2
-};
-
 view.init({
   animations: {
     enter: animations.widgetEnter,
@@ -108,7 +96,12 @@ view.init({
           },
           {
             animations: {
-              enter: memberEnterAnimation
+              enter: Object.assign({}, animations.itemEnter, {
+                // sequence: 'widgets-enter-and-leave-sequence',
+                parent: animations.widgetEnter.sequence,
+                // chainToParent: true,
+                sequence: 'time-for-drink'
+              })
             },
 
             tag: 'p',

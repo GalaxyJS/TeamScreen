@@ -37,13 +37,14 @@ function getActiveSprint(activeTeam) {
 }
 
 getBoardConfiguration.watch = ['data.appService.activeTeam'];
+let colm = []
 
 function getBoardConfiguration(activeTeam) {
   if (activeTeam && activeTeam.board_id) {
     apiService.getBoardConfiguration(activeTeam.board_id).then(function (data) {
       Scope.data.issues = [];
-      Scope.data.columns = data.columnConfig.columns;
-      Scope.data.columns.forEach(function (item) {
+      colm = data.columnConfig.columns;
+      colm.forEach(function (item) {
         statusesTypes[item.name] = item.statuses.map(function (status) {
           return status.id;
         });
@@ -60,6 +61,7 @@ function getSprintIssues(activeSprint) {
   if (activeSprint && activeSprint.id) {
     apiService.getSprintIssues(activeSprint.id).then(function (data) {
       Scope.data.issues = data.issues;
+      Scope.data.columns = colm;
     });
   } else {
     Scope.data.issues = [];
@@ -120,13 +122,13 @@ function getColumnIssues(issuesArrayChange, column) {
 }
 
 view.init({
-  // app_activeSprint: getActiveSprint,
-  // app_boardConfiguration: getBoardConfiguration,
-  // app_issues: getSprintIssues,
+  app_activeSprint: getActiveSprint,
+  app_boardConfiguration: getBoardConfiguration,
+  app_issues: getSprintIssues,
 
   animations: {
     enter: {
-      parent: animations.widgetEnter.parent,
+      // parent: animations.widgetEnter.parent,
       sequence: animations.widgetEnter.sequence,
       from: {
         y: 20,
@@ -135,13 +137,17 @@ view.init({
       duration: .2
     },
     leave: {
-      sequence: 'widgets-leave-sequence',
+      sequence: animations.widgetEnter.sequence,
+      from: {
+        position: 'absolute',
+        width: '100%'
+      },
       to: {
         opacity: 0,
         display: 'none'
       },
       position: '-=.2',
-      duration: .3
+      duration: 0.6
     }
   },
   class: 'container-column scrum-board',
@@ -173,7 +179,7 @@ view.init({
 
         animations: {
           enter: {
-            parent: animations.widgetEnter.sequence,
+            // parent: animations.widgetEnter.sequence,
             sequence: 'columns',
             from: {
               y: 50,
@@ -198,10 +204,21 @@ view.init({
             tag: 'div',
             class: 'task',
 
+            inputs: {
+              columnName: '<>column.name'
+            },
+
             animations: {
               enter: {
                 parent: 'columns',
-                sequence: 'tasks',
+                // parent: function () {
+                //   return 'columns-' + this.parent.inputs.colName;
+                // },
+                // chainToParent: true,
+                sequence: function () {
+                  // console.log('tasks-' + this.inputs.columnName);
+                  return 'columns-' + this.parent.inputs.colName;
+                },
                 from: {
                   scale: .5,
                   opacity: 0
