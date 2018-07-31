@@ -47,7 +47,7 @@ view.init({
         clearInterval(randomInterval);
         randomInterval = setInterval(function () {
           selectRandomWaiter(members);
-        }, /*(60 * 1000) * 120*/4000);
+        }, (60 * 1000) * 120);
       });
 
       return '';
