@@ -37,14 +37,14 @@ function getActiveSprint(activeTeam) {
 }
 
 getBoardConfiguration.watch = ['data.appService.activeTeam'];
-let colm = []
+let columns = [];
 
 function getBoardConfiguration(activeTeam) {
   if (activeTeam && activeTeam.board_id) {
     apiService.getBoardConfiguration(activeTeam.board_id).then(function (data) {
       Scope.data.issues = [];
-      colm = data.columnConfig.columns;
-      colm.forEach(function (item) {
+      columns = data.columnConfig.columns;
+      columns.forEach(function (item) {
         statusesTypes[item.name] = item.statuses.map(function (status) {
           return status.id;
         });
@@ -61,7 +61,7 @@ function getSprintIssues(activeSprint) {
   if (activeSprint && activeSprint.id) {
     apiService.getSprintIssues(activeSprint.id).then(function (data) {
       Scope.data.issues = data.issues;
-      Scope.data.columns = colm;
+      Scope.data.columns = columns;
     });
   } else {
     Scope.data.issues = [];

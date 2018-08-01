@@ -13,11 +13,9 @@ class Teams extends Model {
   protected $dates = [];
 
   public static $rules = [
-    // Validation rules
     'name' => 'required'
   ];
 
-  // Relationships
   public function members () {
     return $this->hasMany('App\Models\Members', 'team_id');
   }

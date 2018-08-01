@@ -6,6 +6,9 @@ use Exception;
 use finfo;
 
 class BoardController extends Controller {
+  private $context;
+  private $api_url;
+
   /**
    * Create a new controller instance.
    *
@@ -17,23 +20,21 @@ class BoardController extends Controller {
         'header' => "Authorization: Basic " . "dGltOjFTbG9nZ2kx"
       ]
     ]);
-    //
+    $this->api_url = env('JIRA_API_URL');
   }
 
   public function getAll () {
-    $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board");
+    $content = file_get_contents($this->api_url . '/board');
 
     if (empty($content)) {
-      $exception = new Exception("Not found", 404);
-
-      return $exception;
+      throw  new Exception("Not found", 404);
     }
 
     return response($content);
   }
 
   public function getActiveSprint ($board_id) {
-    $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board/{$board_id}/sprint?state=active", false, $this->context);
+    $content = file_get_contents($this->api_url . '/board/{$board_id}/sprint?state=active', false, $this->context);
 
     if (empty($content)) {
       $exception = new Exception("Board '{$board_id}' not found", 404);
@@ -45,7 +46,7 @@ class BoardController extends Controller {
   }
 
   public function getBoardConfiguration ($board_id) {
-    $content = file_get_contents("https://jira.local.mybit.nl/rest/agile/1.0/board/{$board_id}/configuration", false, $this->context);
+    $content = file_get_contents($this->api_url . '/board/{$board_id}/configuration', false, $this->context);
 
     if (empty($content)) {
       $exception = new Exception("Board '{$board_id}' not found", 404);
@@ -59,7 +60,7 @@ class BoardController extends Controller {
   }
 
   public function getSprintIssues ($sprint_id) {
-    $url = "https://jira.local.mybit.nl/rest/agile/1.0/sprint/{$sprint_id}/issue";
+    $url = $this->api_url . '/sprint/{$sprint_id}/issue';
 
     $content = file_get_contents($url, false, $this->context);
 
@@ -83,9 +84,8 @@ class BoardController extends Controller {
     $mimetype = $fileinfo->buffer($content);
 
     if (empty($content)) {
-      $exception = new Exception("Not found", 404);
+      throw new Exception("Not found", 404);
 
-      return $exception;
     }
 
     return response($content, 200, [

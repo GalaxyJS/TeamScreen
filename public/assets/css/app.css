@@ -81,13 +81,13 @@ button, input, textarea, select {
 }
 
 .top-bar {
+  align-items: center;
+  background-color: #212c36;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #212c36;
   height: 50px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
+  justify-content: space-between;
   padding: 0 15px;
 }
 
@@ -101,14 +101,14 @@ button, input, textarea, select {
 }
 
 .main-nav > a {
-  display: inline-block;
   color: rgba(255, 255, 255, .8);
-  text-transform: uppercase;
-  padding: 15px 10px;
+  display: inline-block;
   font-weight: 300;
   letter-spacing: 1px;
-  text-decoration: none;
   line-height: 20px;
+  padding: 15px 10px;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
 .main-nav > a.active {
@@ -126,40 +126,40 @@ button, input, textarea, select {
 
 .main-content {
   display: block;
-  width: 100%;
-  top: 50px;
   height: calc(100% - 50px);
-  position: absolute;
   overflow-x: auto;
   overflow-y: scroll;
+  position: absolute;
+  top: 50px;
+  width: 100%;
 }
 
 .container-row {
-  display: flex;
-  flex-direction: row;
-  flex: 1 0 auto;
-  justify-content: flex-start;
   align-items: flex-start;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: row;
+  justify-content: flex-start;
   overflow: hidden;
 }
 
 .container-column {
   display: flex;
-  flex-direction: column;
   flex: 1 0 auto;
+  flex-direction: column;
   overflow: hidden;
 }
 
 .widget {
-  box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
-  min-width: 20%;
   background-color: #212c36;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, .5);
   margin: 15px;
+  min-width: 20%;
 }
 
 .widget > h2 {
-  padding: 20px 20px 10px;
   border-bottom: 1px solid rgba(255, 255, 255, .1);
+  padding: 20px 20px 10px;
 }
 
 .widget > .content {
@@ -197,11 +197,11 @@ button, input, textarea, select {
 
 .overlay {
   background-color: rgba(0, 0, 0, .3);
+  height: 100%;
+  left: 0;
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
   z-index: 100;
 }
 
@@ -225,25 +225,25 @@ button, input, textarea, select {
 }
 
 .form {
-  overflow: hidden;
-  display: block;
-  width: 800px;
-  margin: 60px auto;
   background-color: #212c36;
   border-radius: 5px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, .5);
+  display: block;
+  margin: 60px auto;
+  overflow: hidden;
+  width: 800px;
 }
 
 .form > h2:first-of-type {
-  padding: 15px 15px 25px;
   font-size: 1.2em;
+  padding: 15px 15px 25px;
 }
 
 .form > h3:first-of-type {
-  padding: 0 15px 20px;
   font-size: 1.2em;
   font-weight: 300;
   margin-top: -15px;
+  padding: 0 15px 20px;
 }
 
 .form > .content {
@@ -256,16 +256,16 @@ button, input, textarea, select {
 }
 
 .field {
-  padding: 15px;
   display: flex;
   flex-direction: column;
+  padding: 15px;
 }
 
 .field > span {
-  padding: 10px 0 0;
-  font-size: 14px;
   color: rgba(255, 255, 255, .8);
+  font-size: 14px;
   font-weight: bold;
+  padding: 10px 0 0;
 }
 
 .field > .values {
@@ -276,29 +276,29 @@ button, input, textarea, select {
 /*------------------- Widgets ------------------------*/
 
 .scrum-board {
-  padding: 10px 15px;
   min-height: 300px;
+  padding: 10px 15px;
 }
 
 .scrum-board > h2 {
-  padding: 10px 0;
   margin-bottom: 15px;
+  padding: 10px 0;
 }
 
 .scrum-board .column {
-  max-width: 300px;
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
   margin: 0 5px;
+  max-width: 300px;
   overflow: hidden;
 }
 
 .scrum-board .column > h3 {
   background-color: rgba(255, 255, 255, .2);
   border-radius: 4px;
-  padding: 15px;
   display: block;
+  padding: 15px;
 }
 
 .scrum-board .column:first-of-type {
@@ -334,29 +334,29 @@ button, input, textarea, select {
 }
 
 .scrum-board .task {
-  margin: 10px 0 0;
   background-color: #45505a;
   border-radius: 6px;
   display: block;
-  padding: 10px 15px;
   font-size: 15px;
+  margin: 10px 0 0;
+  padding: 10px 15px;
 }
 
 .task > p {
+  display: inline-block;
   line-height: 1.2em;
   padding: 5px 0 0;
-  display: inline-block;
   width: calc(100% - 40px);
 }
 
 .task > .icon {
+  border-radius: 14px;
   display: inline-block;
   height: 30px;
   margin: 0 -2px 0 12px;
-  width: 30px;
-  vertical-align: top;
   overflow: hidden;
-  border-radius: 14px;
+  vertical-align: top;
+  width: 30px;
 }
 
 .module {
@@ -373,12 +373,12 @@ button, input, textarea, select {
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
   border-radius: 16px;
   display: inline-block;
-  vertical-align: middle;
   flex: 0 0 auto;
+  height: 32px;
+  vertical-align: middle;
+  width: 32px;
 }
 
 .c-red {
@@ -413,69 +413,69 @@ button, input, textarea, select {
 }
 
 .person-item h4 {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-weight: 600;
-  vertical-align: middle;
   display: inline-block;
+  font-weight: 600;
   margin: 0 10px;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .person-item > strong {
-  width: 35%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-weight: 600;
-  vertical-align: middle;
   display: inline-block;
+  font-weight: 600;
   margin: 0 10px;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 35%;
 }
 
 .person-item > .content {
-  padding: 0;
-  flex: 1 0 auto;
-  text-align: right;
   align-items: center;
+  flex: 1 0 auto;
   font-size: .9em;
+  padding: 0;
+  text-align: right;
 }
 
 .person-item > .content.column {
-  flex-direction: column;
   align-items: stretch;
-  text-align: left;
+  flex-direction: column;
   font-size: 1em;
+  text-align: left;
 }
 
 .person-item > .content > i {
-  font-size: 24px;
   display: inline-block;
+  font-size: 24px;
   vertical-align: middle;
 }
 
 .person-item > .content > span {
-  width: 70px;
   display: inline-block;
   vertical-align: middle;
+  width: 70px;
 }
 
 .person-item.spotlight {
   background-color: transparent;
-  padding: 10px 0;
   font-size: 18px;
   justify-content: flex-start;
+  padding: 10px 0;
 }
 
 .person-item.spotlight > span {
-  white-space: normal;
-  text-align: justify;
   font-weight: 300;
+  text-align: justify;
+  white-space: normal;
 }
 
 .person-item.spotlight > .avatar {
-  width: 64px;
+  border-radius: 32px;
   height: 64px;
   margin-right: 15px;
-  border-radius: 32px;
+  width: 64px;
 }
 
 .person-item.disable {
@@ -490,23 +490,23 @@ button {
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
+  font-size: 14px;
   font-weight: bold;
   line-height: 20px;
+  min-width: 10px;
   outline: none;
   padding: 10px 15px;
   transition: all 100ms linear;
-  font-size: 14px;
-  min-width: 10px;
 }
 
 button > i.fas {
-  margin: 0;
+  display: block;
   font-size: 18px;
   height: 20px;
-  width: 20px;
-  display: block;
+  margin: 0;
   text-align: center;
   vertical-align: middle;
+  width: 20px;
 
 }
 
@@ -515,23 +515,23 @@ button:hover {
 }
 
 button:active {
-  transform: scale(1.01);
   background-color: #4389cc;
   box-shadow: 0 0 8px 1px #4389cc;
+  transform: scale(1.01);
 }
 
 input, select, textarea {
+  background-color: rgba(255, 255, 255, .0);
   border: none;
   border-bottom: 2px solid rgba(255, 255, 255, .18);
   color: #fff;
   display: block;
+  font-size: 16px;
   font-weight: bold;
   line-height: 20px;
+  margin: 0 -1px;
   outline: none;
   padding: 8px 1px;
-  margin: 0 -1px;
-  font-size: 16px;
-  background-color: rgba(255, 255, 255, .0);
   transition: all 100ms linear;
 }
 
@@ -544,25 +544,25 @@ input:focus, select:focus, textarea:focus {
 }
 
 table {
-  width: 100%;
   font-size: 14px;
+  width: 100%;
 }
 
 table td {
-  padding: 10px;
-  line-height: 20px;
-  vertical-align: middle;
   border-right: 1px solid #212c36;
+  line-height: 20px;
+  padding: 10px;
+  vertical-align: middle;
 }
 
 table th {
+  border-right: 1px solid #212c36;
+  font-size: 16px;
   font-weight: bold;
   line-height: 22px;
   padding: 10px;
-  vertical-align: middle;
   text-align: left;
-  font-size: 16px;
-  border-right: 1px solid #212c36;
+  vertical-align: middle;
 }
 
 table td:last-child, table th:last-child {
@@ -571,14 +571,14 @@ table td:last-child, table th:last-child {
 
 td > img {
   display: block;
+  height: 32px;
   margin: -6px 5px;
   width: 32px;
-  height: 32px;
 }
 
 td > button {
-  padding: 5px;
   margin: -5px 5px;
+  padding: 5px;
 }
 
 table tr:nth-child(odd) {
@@ -586,17 +586,17 @@ table tr:nth-child(odd) {
 }
 
 h2 > span {
-  vertical-align: middle;
   font-weight: 300;
+  vertical-align: middle;
 }
 
 .checkbox {
   display: inline-block;
-  padding: 8px 0;
-  margin: 0 15px;
   font-size: 14px;
   font-weight: bold;
   line-height: 20px;
+  margin: 0 15px;
+  padding: 8px 0;
   position: relative;
   text-align: right;
 }
@@ -611,12 +611,12 @@ h2 > span {
 
 .checkbox > input {
   display: inline-block;
-  margin: 6px 10px 6px 5px;
-  width: 9px;
-  height: 9px;
-  vertical-align: middle;
-  position: relative;
   float: left;
+  height: 9px;
+  margin: 6px 10px 6px 5px;
+  position: relative;
+  vertical-align: middle;
+  width: 9px;
 }
 
 .checkbox > input:after {
@@ -633,14 +633,10 @@ h2 > span {
 }
 
 .checkbox > input:checked:after {
-  content: ' ';
   background-color: #4389cc;
   border-color: rgba(255, 255, 255, .8);
   box-shadow: 0 0 3px 1px #4389cc;
+  content: ' ';
 }
 
 /*------------------- Loaders ------------------------*/
-
-.bootstrap-loader {
-
-}

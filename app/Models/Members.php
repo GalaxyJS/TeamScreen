@@ -19,13 +19,11 @@ class Members extends Model {
   protected $dates = [];
 
   public static $rules = [
-    // Validation rules
     'name' => 'required',
     'username' => 'required',
     'team_id' => 'required'
   ];
 
-  // Relationships
   public function team () {
     return $this->belongsTo('App\Models\Teams', 'team_id');
   }
