@@ -1,6 +1,9 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Agendas extends Model {
   protected $table = 'agendas';
@@ -25,10 +28,10 @@ class Agendas extends Model {
   }
 
   public function getStartTimeAttribute ($value) {
-    return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
+    return Carbon::parse($value)->format('Y-m-d H:i');
   }
 
   public function getEndTimeAttribute ($value) {
-    return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
+    return Carbon::parse($value)->format('Y-m-d H:i');
   }
 }

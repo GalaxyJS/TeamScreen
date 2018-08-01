@@ -2,33 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Agendas;
 
 class AgendasController extends Controller {
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct () {
-    //
+  public function get (int $id): JsonResponse {
+    $content = Agendas::find($id);
+
+    return response()->json($content);
   }
 
-  public function get ($id) {
-    return Agendas::find($id);
+  public function getAll (): JsonResponse {
+    $content = Agendas::all();
+
+    return response()->json($content);
   }
 
-  public function getAll () {
-    return Agendas::all();
+  public function getAllForTeam (int $team_id): JsonResponse {
+    $content = Agendas::has('team', $team_id)->get();
+
+    return response()->json($content);
   }
 
-
-  public function getAllForTeam ($team_id) {
-    return Agendas::has('team', $team_id)->get();
-  }
-
-  public function create (Request $request) {
+  public function create (Request $request): JsonResponse {
     $this->validate($request, Agendas::$rules);
 
     $agenda = new Agendas();
@@ -37,14 +34,14 @@ class AgendasController extends Controller {
 
     $agenda->save();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Time off is created successfully',
       'data' => $agenda
-    ];
+    ]);
   }
 
-  public function update (Request $request, $id) {
+  public function update (int $id, Request $request): JsonResponse {
     $this->validate($request, Agendas::$rules);
 
     $member = Agendas::find($id);
@@ -53,29 +50,22 @@ class AgendasController extends Controller {
 
     $member->save();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Time off is updated successfully',
       'data' => $member
-    ];
+    ]);
   }
 
-  public function delete ($id) {
-    if (!isset($id)) {
-      return response('', 400)->json([
-        'message' => 'member id is required',
-      ]);
-    }
-
+  public function delete (int $id): JsonResponse {
     $member = Agendas::find($id);
 
     $member->delete();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Time off is deleted successfully',
       'data' => $member
-    ];
+    ]);
   }
-  //
 }

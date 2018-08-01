@@ -1,9 +1,6 @@
-const config = Scope.import('config.js');
-
 Scope.exports = {
-  apiURL: config.apiURL,
   get: function (url) {
-    return fetch(this.apiURL + url, {
+    return fetch(url, {
       method: 'GET',
       mode: 'cors',
       credentials: 'same-origin',
@@ -22,7 +19,7 @@ Scope.exports = {
     return this.get('/api/board/');
   },
   getBoardConfiguration: function (boardId) {
-    return fetch(this.apiURL + '/api/board/' + boardId + '/configuration', {
+    return fetch('/api/board/' + boardId + '/configuration', {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, cors, *same-origin
       // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -39,7 +36,7 @@ Scope.exports = {
     });
   },
   getSprintIssues: function (sprintId) {
-    return fetch(this.apiURL + '/api/sprint/' + sprintId + '/issues', {
+    return fetch('/api/sprint/' + sprintId + '/issues', {
       method: 'GET',
       mode: 'cors',
       credentials: 'same-origin',

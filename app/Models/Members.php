@@ -1,4 +1,6 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,9 +40,5 @@ class Members extends Model {
 
   public function setWorkingDaysAttribute ($value) {
     $this->attributes['working_days'] = implode(',', $value);
-  }
-
-  public function getTeamNameAttribute () {
-    return 'sadasd';
   }
 }

@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Exception;
 use finfo;
 
 class BoardController extends Controller {
   private $context;
+
+  private $api_key;
   private $api_url;
+  private $url;
 
   /**
    * Create a new controller instance.
@@ -15,38 +20,47 @@ class BoardController extends Controller {
    * @return void
    */
   public function __construct () {
+    $this->api_key = env('JIRA_API_KEY');
+    $this->api_url = env('JIRA_API_URL');
+    $this->url = env('JIRA_URL');
+
     $this->context = stream_context_create([
       'http' => [
-        'header' => "Authorization: Basic " . "dGltOjFTbG9nZ2kx"
+        'header' => "Authorization: Basic {$this->api_key}"
       ]
     ]);
-    $this->api_url = env('JIRA_API_URL');
   }
 
-  public function getAll () {
-    $content = file_get_contents($this->api_url . '/board');
+  private function getUrl (string $path = '', array $query = [], string $host = ''): string {
+    $query = http_build_query($query);
+    $host = empty($host) ? $this->api_url : $host;
+    $url = implode('/', [ $host, $path ]);
+
+    return implode('?', [ $url, $query ]);
+  }
+
+  public function getAll (): JsonResponse {
+    $request = $this->getUrl('board');
+
+    $content = file_get_contents($request);
 
     if (empty($content)) {
-      throw  new Exception("Not found", 404);
+      $exception = new Exception("Api not available", 500);
+
+      return response()->json([
+        'message' => $exception->getMessage()
+      ]);
     }
 
-    return response($content);
+    return response()->json($content);
   }
 
-  public function getActiveSprint ($board_id) {
-    $content = file_get_contents($this->api_url . '/board/{$board_id}/sprint?state=active', false, $this->context);
+  public function getActiveSprint (int $board_id): JsonResponse {
+    $query = [ 'state' => 'active' ];
+    $path = implode('/', [ 'board', $board_id, 'sprint' ]);
+    $request = $this->getUrl($path, $query);
 
-    if (empty($content)) {
-      $exception = new Exception("Board '{$board_id}' not found", 404);
-
-      return $exception;
-    }
-
-    return response($content);
-  }
-
-  public function getBoardConfiguration ($board_id) {
-    $content = file_get_contents($this->api_url . '/board/{$board_id}/configuration', false, $this->context);
+    $content = file_get_contents($request, false, $this->context);
 
     if (empty($content)) {
       $exception = new Exception("Board '{$board_id}' not found", 404);
@@ -56,13 +70,35 @@ class BoardController extends Controller {
       ]);
     }
 
-    return response($content);
+    $content = json_decode($content);
+
+    return response()->json($content);
   }
 
-  public function getSprintIssues ($sprint_id) {
-    $url = $this->api_url . '/sprint/{$sprint_id}/issue';
+  public function getBoardConfiguration (int $board_id): JsonResponse {
+    $path = implode('/', [ 'board', $board_id, 'configuration' ]);
+    $request = $this->getUrl($path);
 
-    $content = file_get_contents($url, false, $this->context);
+    $content = file_get_contents($request, false, $this->context);
+
+    if (empty($content)) {
+      $exception = new Exception("Board '{$board_id}' not found", 404);
+
+      return response()->json([
+        'message' => $exception->getMessage()
+      ]);
+    }
+
+    $content = json_decode($content);
+
+    return response()->json($content);
+  }
+
+  public function getSprintIssues (int $sprint_id): JsonResponse {
+    $path = implode('/', [ 'sprint', $sprint_id, 'issue' ]);
+    $request = $this->getUrl($path);
+
+    $content = file_get_contents($request, false, $this->context);
 
     if (empty($content)) {
       $exception = new Exception("Board '{$sprint_id}' not found", 404);
@@ -72,24 +108,26 @@ class BoardController extends Controller {
       ]);
     }
 
-    $jsonfied_content = json_decode($content);
+    $content = json_decode($content);
 
-    return response()->json($jsonfied_content);
+    return response()->json($content);
   }
 
-  public function getAvatar ($username, $size = 'xlarge') {
-    $content = file_get_contents("https://jira.local.mybit.nl/secure/useravatar?ownerId={$username}&size={$size}", false, $this->context);
+  public function getAvatar (string $username, string $size = 'xlarge'): Response {
+    $query = [ 'ownerId' => $username, 'size' => $size ];
+    $path = implode('/', [ 'secure', 'useravatar' ]);
+    $request = $this->getUrl($path, $query, $this->url);
 
-    $fileinfo = new finfo(FILEINFO_MIME);
-    $mimetype = $fileinfo->buffer($content);
+    $content = file_get_contents($request, false, $this->context);
 
     if (empty($content)) {
       throw new Exception("Not found", 404);
-
     }
 
+    $fileinfo = new finfo(FILEINFO_MIME);
+
     return response($content, 200, [
-      'content-type' => "{$mimetype}"
+      'content-type' => $fileinfo->buffer($content)
     ]);
   }
 }
