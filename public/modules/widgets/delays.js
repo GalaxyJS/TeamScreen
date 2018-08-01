@@ -1,6 +1,5 @@
 const view = Scope.import('galaxy/view');
-const appService = Scope.import('services/app.js');
-Scope.data.appService = appService;
+const inputs = Scope.import('galaxy/inputs');
 
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
@@ -23,8 +22,8 @@ function getTrafficInformation(destination) {
     }
   };
 
-  return new Promise(function (resolved) {
-    googleMapService.getDistanceMatrix(param, function (response, reject) {
+  return new Promise(function (resolved, reject) {
+    googleMapService.getDistanceMatrix(param, function (response) {
       try {
         const result = response.rows[0].elements[0];
         if (result.status !== 'NOT_FOUND') {
@@ -40,18 +39,6 @@ function getTrafficInformation(destination) {
     });
   });
 }
-
-const memberEnterAnimation = {
-  parent: animations.widgetEnter.sequence,
-  sequence: 'delay-list',
-  from: {
-    height: 0,
-    paddingTop: 0,
-    paddingBottom: 0
-  },
-  position: '-=.1',
-  duration: .2
-};
 
 view.init({
   animations: {
@@ -75,11 +62,14 @@ view.init({
             class: 'person-item',
 
             animations: {
-              enter: memberEnterAnimation
+              enter: Object.assign({}, animations.itemEnter, {
+                parent: animations.widgetEnter.sequence,
+                sequence: 'delays'
+              })
             },
 
             $for: {
-              data: '<>data.appService.activeMembers.changes',
+              data: '<>inputs.members.changes',
               as: 'member'
             },
             children: [

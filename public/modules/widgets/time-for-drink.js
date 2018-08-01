@@ -1,9 +1,11 @@
 const view = Scope.import('galaxy/view');
-const appService = Scope.import('services/app.js');
-Scope.data.appService = appService;
+const inputs = Scope.import('galaxy/inputs');
 
 const utility = Scope.import('services/utility.js');
 const animations = Scope.import('services/animations.js');
+const appService = Scope.import('services/app.js');
+
+Scope.data.appService = appService;
 
 Scope.data.waiter = null;
 
@@ -27,18 +29,6 @@ function selectRandomWaiter(members) {
   }
 }
 
-const memberEnterAnimation = {
-  parent: animations.widgetEnter.sequence,
-  sequence: 'time-for-drink',
-  from: {
-    height: 0,
-    paddingTop: 0,
-    paddingBottom: 0
-  },
-  position: '-=.1',
-  duration: .2
-};
-
 view.init({
   animations: {
     enter: animations.widgetEnter,
@@ -46,18 +36,29 @@ view.init({
   },
 
   randomWaiterInterval: [
-    'data.appService.activeMembers',
+    'inputs.members',
     function (members) {
-      Scope.data.waiter = null;
-      selectRandomWaiter(members);
-      clearInterval(randomInterval);
-      randomInterval = setInterval(function () {
-        selectRandomWaiter(members);
-      }, (60 * 1000) * 120);
+      this.rendered.then(function () {
+        Scope.data.waiter = null;
+        if (appService.cycle.length === 0) {
+          selectRandomWaiter(members);
+        }
+
+        clearInterval(randomInterval);
+        randomInterval = setInterval(function () {
+          selectRandomWaiter(members);
+        }, (60 * 1000) * 120);
+      });
 
       return '';
     }
   ],
+
+  lifecycle: {
+    postDestroy: function () {
+      clearInterval(randomInterval);
+    }
+  },
 
   class: 'container-row',
   children: {
@@ -95,7 +96,12 @@ view.init({
           },
           {
             animations: {
-              enter: memberEnterAnimation
+              enter: Object.assign({}, animations.itemEnter, {
+                // sequence: 'widgets-enter-and-leave-sequence',
+                parent: animations.widgetEnter.sequence,
+                // chainToParent: true,
+                sequence: 'time-for-drink'
+              })
             },
 
             tag: 'p',
@@ -114,7 +120,7 @@ view.init({
             ],
 
             $for: {
-              data: '<>data.appService.activeMembers.changes',
+              data: '<>inputs.members.changes',
               as: 'member'
             },
             children: [

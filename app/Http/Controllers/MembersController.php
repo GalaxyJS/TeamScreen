@@ -2,32 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Members;
 
 class MembersController extends Controller {
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct () {
-    //
+  public function get (int $id): JsonResponse {
+    $content = Members::find($id);
+
+    return response()->json($content);
   }
 
-  public function get ($id) {
-    return Members::find($id);
+  public function getAll (): JsonResponse {
+    $content = Members::all();
+
+    return response()->json($content);
   }
 
-  public function getAll () {
-    return Members::all();
+  public function getAllForTeam (int $team_id): JsonResponse {
+    $content = Members::has('team', $team_id)->get();
+
+    return response()->json($content);
   }
 
-  public function getAllForTeam ($team_id) {
-    return Members::has('team', $team_id)->get();
-  }
-
-  public function create (Request $request) {
+  public function create (Request $request): JsonResponse {
     $this->validate($request, Members::$rules);
 
     $member = new Members();
@@ -36,14 +34,14 @@ class MembersController extends Controller {
 
     $member->save();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'New member is created successfully',
       'data' => $member
-    ];
+    ]);
   }
 
-  public function update (Request $request, $id) {
+  public function update (int $id, Request $request): JsonResponse {
     $this->validate($request, Members::$rules);
 
     $member = Members::find($id);
@@ -52,29 +50,22 @@ class MembersController extends Controller {
 
     $member->save();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Member is updated successfully',
       'data' => $member
-    ];
+    ]);
   }
 
-  public function delete ($id) {
-    if (!isset($id)) {
-      return response('', 400)->json([
-        'message' => 'member id is required',
-      ]);
-    }
-
+  public function delete (int $id): JsonResponse {
     $member = Members::find($id);
 
     $member->delete();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Member is deleted successfully',
       'data' => $member
-    ];
+    ]);
   }
-  //
 }

@@ -1,4 +1,6 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,13 +21,11 @@ class Members extends Model {
   protected $dates = [];
 
   public static $rules = [
-    // Validation rules
     'name' => 'required',
     'username' => 'required',
     'team_id' => 'required'
   ];
 
-  // Relationships
   public function team () {
     return $this->belongsTo('App\Models\Teams', 'team_id');
   }
@@ -40,9 +40,5 @@ class Members extends Model {
 
   public function setWorkingDaysAttribute ($value) {
     $this->attributes['working_days'] = implode(',', $value);
-  }
-
-  public function getTeamNameAttribute () {
-    return 'sadasd';
   }
 }

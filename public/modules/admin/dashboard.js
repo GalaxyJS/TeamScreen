@@ -22,29 +22,6 @@ const rowEnterAnimation = {
   duration: .2
 };
 
-const cascadeAnimation = {
-  parent: animations.widgetEnter.sequence,
-  sequence: 'cascade-animation',
-  from: {
-    height: function (v, node) {
-      const height = node.offsetHeight;
-      node._initOffsetHeight = height;
-      return height;
-    }
-  },
-  to: {
-    height: function (v, node) {
-      node.style.height = 'auto';
-      const height = node.offsetHeight;
-      node.style.height = node._initOffsetHeight + 'px' || 0;
-
-      return height;
-    }
-  },
-  position: '-=.15',
-  duration: .5
-};
-
 const rowLeaveAnimation = {
   sequence: 'row-leave',
   to: {
@@ -76,7 +53,10 @@ Scope.data.members = [];
 
 function fetchMembers() {
   apiService.getAllMembers().then(function (members) {
-    Scope.data.members = members;
+    // setTimeout(function () {
+      Scope.data.members = members;
+    // }, 800)
+
   });
 }
 
@@ -141,8 +121,8 @@ view.init([
     children: [
       {
         animations: {
-          enter: animations.widgetEnter,
-          leave: animations.widgetLeave
+          enter: animations.widgetEnter
+          // leave: animations.widgetLeave
         },
 
         class: 'widget width-75',
@@ -178,7 +158,12 @@ view.init([
               ]
             },
             animations: {
-              '.loaded': Object.assign({}, cascadeAnimation, { sequence: 'members' })
+              '.loaded': Object.assign({},
+                animations.cascadeAnimation,
+                {
+                  sequence: 'members',
+                  parent: animations.widgetEnter.sequence
+                })
             },
             children: [
               {
@@ -324,8 +309,8 @@ view.init([
       },
       {
         animations: {
-          enter: animations.widgetEnter,
-          leave: animations.widgetLeave
+          enter: animations.widgetEnter
+          // leave: animations.widgetLeave
         },
 
         class: 'widget width-s',

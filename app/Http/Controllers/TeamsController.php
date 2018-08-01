@@ -4,33 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Agendas;
 use App\Models\Teams;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller {
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct () {
-    //
+  public function getAll (): JsonResponse {
+    $content = Teams::with('members')->get();
+
+    return response()->json($content);
   }
 
-  public function getAll () {
-    return Teams::with('members')->get();
+  public function get ($id): JsonResponse {
+    $content =  Teams::find($id);
+
+    return response()->json($content);
   }
 
-  public function get ($id) {
-    return Teams::find($id);
-  }
-
-  public function getAgendas ($id) {
-    return Agendas::whereHas('member', function ($query) use ($id) {
+  public function getAgendas ($id): JsonResponse {
+    $content = Agendas::whereHas('member', function ($query) use ($id) {
       $query->where('team_id', $id);
     })->with('member')->get();
+
+    return response()->json($content);
   }
 
-  public function create (Request $request) {
+  public function create (Request $request): JsonResponse {
     $this->validate($request, Teams::$rules);
 
     $team = new Teams();
@@ -39,14 +37,14 @@ class TeamsController extends Controller {
 
     $team->save();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'New team is created successfully',
       'data' => $team
-    ];
+    ]);
   }
 
-  public function update (Request $request, $id) {
+  public function update (int $id, Request $request): JsonResponse {
     $this->validate($request, Teams::$rules);
 
     $team = Teams::find($id);
@@ -55,29 +53,23 @@ class TeamsController extends Controller {
 
     $team->save();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Team is updated successfully',
       'data' => $team
-    ];
+    ]);
   }
 
-  public function delete ($id) {
-    if (!isset($id)) {
-      return response('', 400)->json([
-        'message' => 'member id is required',
-      ]);
-    }
-
+  public function delete (int $id): JsonResponse {
     $team = Teams::find($id);
 
     $team->delete();
 
-    return [
+    return response()->json([
       'code' => 200,
       'message' => 'Team is deleted successfully',
       'data' => $team
-    ];
+    ]);
   }
 
 }
