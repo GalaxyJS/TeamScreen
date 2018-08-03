@@ -11,16 +11,7 @@ Scope.data.appService = appService;
 Scope.data.columns = [];
 Scope.data.issues = [];
 
-Scope.data.activeSprint = {
-  // "id": 836,
-  // "self": "https://jira.local.mybit.nl/rest/agile/1.0/sprint/836",
-  // "state": "active",
-  // "name": "3Dimerce 2018 - Sprint 14",
-  // "startDate": "2018-07-02T09:50:41.750+02:00",
-  // "endDate": "2018-07-20T09:50:00.000+02:00",
-  // "originBoardId": 122,
-  // "goal": "Bert vertalingen, LEO afronding zitmeubelen, Portal Reorder Choices & FBX viewer, Add JIRA to scrumboard"
-};
+Scope.data.activeSprint = {};
 
 getActiveSprint.watch = ['data.appService.activeTeam'];
 
