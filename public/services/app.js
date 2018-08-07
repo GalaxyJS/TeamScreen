@@ -8,7 +8,7 @@ Scope.exports = {
 
     this.cycle = [];
     this.activeTeam = activeTeam;
-    this.activeMembers = activeTeam.members;
+    this.activeMembers = activeTeam ? activeTeam.members : [];
   },
   cycle: []
 };

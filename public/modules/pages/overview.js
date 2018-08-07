@@ -39,32 +39,5 @@ view.init({
       },
       module: '<>mod.module'
     }
-    // {
-    //   class: 'module width-s',
-    //   inputs: {
-    //     members:'<>data.appService.activeMembers',
-    //   },
-    //   module: {
-    //     url: 'modules/widgets/time-for-drink.js'
-    //   }
-    // },
-    // {
-    //   class: 'module width-s',
-    //   inputs: {
-    //     team: '<>data.appService.activeTeam'
-    //   },
-    //   module: {
-    //     url: 'modules/widgets/vacations.js'
-    //   }
-    // },
-    // {
-    //   class: 'module width-s',
-    //   inputs: {
-    //     members:'<>data.appService.activeMembers',
-    //   },
-    //   module: {
-    //     url: 'modules/widgets/delays.js'
-    //   }
-    // }
   ]
 });

@@ -53,10 +53,7 @@ Scope.data.members = [];
 
 function fetchMembers() {
   apiService.getAllMembers().then(function (members) {
-    // setTimeout(function () {
-      Scope.data.members = members;
-    // }, 800)
-
+    Scope.data.members = members;
   });
 }
 
@@ -122,7 +119,6 @@ view.init([
       {
         animations: {
           enter: animations.widgetEnter
-          // leave: animations.widgetLeave
         },
 
         class: 'widget width-75',
@@ -202,14 +198,6 @@ view.init([
                         leaveWithParent: true,
                         enterWithParent: true
                       },
-                      // enter: {
-                      //   sequence: rowLeaveAnimation.sequence,
-                      //   from: {
-                      //     scale: .8,
-                      //     opacity: 0
-                      //   },
-                      //   duration: 1.2
-                      // },
                       leave: rowLeaveAnimation
                     },
 

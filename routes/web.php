@@ -15,10 +15,6 @@ $router->get('/', function () use ($router) {
   return view('home');
 });
 
-$router->get('/tim', function () use ($router) {
-  return view('tim');
-});
-
 $router->get('/api/agendas', ['uses' => 'AgendasController@getAll']);
 $router->get('/api/agendas/{id}', ['uses' => 'AgendasController@get']);
 

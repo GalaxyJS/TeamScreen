@@ -1,6 +1,5 @@
 Scope.exports = {
   widgetEnter: {
-    // parent: 'widgets-leave-sequence',
     sequence: 'widgets-enter-and-leave-sequence',
     from: {
       scale: .86,
@@ -12,6 +11,12 @@ Scope.exports = {
   },
   widgetLeave: {
     sequence: 'widgets-enter-and-leave-sequence',
+    from: {
+      width: function(w,node){
+        return node.offsetWidth;
+      },
+      position: 'absolute'
+    },
     to: {
       scale: .8,
       opacity: 0,
