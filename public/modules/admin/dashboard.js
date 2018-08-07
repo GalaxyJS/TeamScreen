@@ -298,7 +298,6 @@ view.init([
       {
         animations: {
           enter: animations.widgetEnter
-          // leave: animations.widgetLeave
         },
 
         class: 'widget width-s',
