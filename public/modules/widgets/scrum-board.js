@@ -11,16 +11,13 @@ Scope.data.appService = appService;
 Scope.data.columns = [];
 Scope.data.issues = [];
 
-Scope.data.activeSprint = {
-  name: ''
-};
+Scope.data.activeSprint = {};
 
 let updateBoard = null;
 
 getActiveSprint.watch = ['data.appService.activeTeam'];
 
 function getActiveSprint(activeTeam) {
-  clearInterval(updateBoard);
   if (activeTeam && activeTeam.board_id) {
     apiService.getActiveSprint(activeTeam.board_id).then(function (data) {
       Scope.data.activeSprint = data.values[0];
@@ -58,12 +55,6 @@ function getSprintIssues(activeSprint) {
     apiService.getSprintIssues(activeSprint.id).then(function (data) {
       Scope.data.issues = data.issues;
       Scope.data.columns = columns;
-
-      updateBoard = setInterval(function () {
-        if (Scope.data.activeSprint.id) {
-          getSprintIssues(Scope.data.activeSprint);
-        }
-      }, (60 * 1000) * 15);
     });
   } else {
     Scope.data.issues = [];
@@ -225,10 +216,7 @@ view.init({
 
             $for: {
               data: getColumnIssues,
-              as: 'issue',
-              trackBy: function (item) {
-                return item.id;
-              }
+              as: 'issue'
             },
 
             children: [
