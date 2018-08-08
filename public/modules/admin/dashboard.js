@@ -53,10 +53,7 @@ Scope.data.members = [];
 
 function fetchMembers() {
   apiService.getAllMembers().then(function (members) {
-    // setTimeout(function () {
       Scope.data.members = members;
-    // }, 800)
-
   });
 }
 

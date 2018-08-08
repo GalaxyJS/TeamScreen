@@ -26,6 +26,7 @@ view.init({
     submit: function (event) {
       event.preventDefault();
       apiService.addTimeOff(Scope.data.form).then(function (data) {
+        // TODO: Replace this with a toast
         console.info('Time off added successful', data);
         router.navigateFromHere('/');
       });
@@ -140,13 +141,7 @@ view.init({
         {
           tag: 'button',
           text: 'Save',
-          type: 'submit',
-          on: {
-            click: function () {
-
-              // alert('as')
-            }
-          }
+          type: 'submit'
         }
       ]
     }

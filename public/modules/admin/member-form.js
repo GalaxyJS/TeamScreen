@@ -31,7 +31,7 @@ view.init({
   on: {
     submit: function (event) {
       event.preventDefault();
-      if(Scope.data.form.id) {
+      if (Scope.data.form.id) {
         apiService.updateMember(Scope.data.form).then(function (data) {
           console.info('Member updated successfully', data);
           router.navigateFromHere('/');
@@ -46,7 +46,7 @@ view.init({
   },
   animations: {
     enter: animations.formEnter,
-    leave: animations.formLeave,
+    leave: animations.formLeave
   },
   children: [
     {
@@ -268,13 +268,7 @@ view.init({
         {
           tag: 'button',
           text: 'Save',
-          type: 'submit',
-          on: {
-            click: function () {
-
-              // alert('as')
-            }
-          }
+          type: 'submit'
         }
       ]
     }
