@@ -119,7 +119,6 @@ view.init([
       {
         animations: {
           enter: animations.widgetEnter
-          // leave: animations.widgetLeave
         },
 
         class: 'widget width-75',
@@ -199,14 +198,6 @@ view.init([
                         leaveWithParent: true,
                         enterWithParent: true
                       },
-                      // enter: {
-                      //   sequence: rowLeaveAnimation.sequence,
-                      //   from: {
-                      //     scale: .8,
-                      //     opacity: 0
-                      //   },
-                      //   duration: 1.2
-                      // },
                       leave: rowLeaveAnimation
                     },
 
@@ -307,7 +298,6 @@ view.init([
       {
         animations: {
           enter: animations.widgetEnter
-          // leave: animations.widgetLeave
         },
 
         class: 'widget width-s',

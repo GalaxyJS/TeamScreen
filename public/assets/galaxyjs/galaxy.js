@@ -4076,7 +4076,7 @@ Galaxy.View = /** @class */(function (G) {
     install: function (config) {
       const node = this;
       const parentNode = node.parent;
-      parentNode.cache.$for = parentNode.cache.$for || {leaveProcessList: [], queue: [], mainPromise: null};
+      parentNode.cache.$for = parentNode.cache.$for || { leaveProcessList: [], queue: [], mainPromise: null };
 
       if (config.matches instanceof Array) {
         View.makeBinding(this, '$for', undefined, config.scope, {
@@ -4332,7 +4332,6 @@ Galaxy.View = /** @class */(function (G) {
       const parent = node.parent;
       // const schema = node.schema;
 
-      // node.renderingFlow.next(function leaveProcess(next) {
       // if parent leave sequence interrupted, then make sure these items will be removed from DOM
       parent.sequences.leave.onTruncate(function hjere() {
         itemsToBeRemoved.forEach(function (vn) {
@@ -4357,13 +4356,10 @@ Galaxy.View = /** @class */(function (G) {
         parent.sequences.leave.nextAction(function () {
           parent.callLifecycleEvent('postForLeave');
           onDone();
-          // next();
         });
       } else {
         onDone();
-        // next();
       }
-      // });
     };
   }
 

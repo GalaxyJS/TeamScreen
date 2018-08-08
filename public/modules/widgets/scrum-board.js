@@ -62,6 +62,7 @@ function getSprintIssues(activeSprint) {
           getSprintIssues(Scope.data.activeSprint);
         }
       }, (60 * 1000) * 15);
+
     });
   } else {
     Scope.data.issues = [];
