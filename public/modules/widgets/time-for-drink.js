@@ -97,9 +97,7 @@ view.init({
           {
             animations: {
               enter: Object.assign({}, animations.itemEnter, {
-                // sequence: 'widgets-enter-and-leave-sequence',
                 parent: animations.widgetEnter.sequence,
-                // chainToParent: true,
                 sequence: 'time-for-drink'
               })
             },

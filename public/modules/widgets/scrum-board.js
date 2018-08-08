@@ -12,19 +12,15 @@ Scope.data.columns = [];
 Scope.data.issues = [];
 
 Scope.data.activeSprint = {
-  // "id": 836,
-  // "self": "https://jira.local.mybit.nl/rest/agile/1.0/sprint/836",
-  // "state": "active",
-  // "name": "3Dimerce 2018 - Sprint 14",
-  // "startDate": "2018-07-02T09:50:41.750+02:00",
-  // "endDate": "2018-07-20T09:50:00.000+02:00",
-  // "originBoardId": 122,
-  // "goal": "Bert vertalingen, LEO afronding zitmeubelen, Portal Reorder Choices & FBX viewer, Add JIRA to scrumboard"
+  name: ''
 };
+
+let updateBoard = null;
 
 getActiveSprint.watch = ['data.appService.activeTeam'];
 
 function getActiveSprint(activeTeam) {
+  clearInterval(updateBoard);
   if (activeTeam && activeTeam.board_id) {
     apiService.getActiveSprint(activeTeam.board_id).then(function (data) {
       Scope.data.activeSprint = data.values[0];
@@ -62,6 +58,12 @@ function getSprintIssues(activeSprint) {
     apiService.getSprintIssues(activeSprint.id).then(function (data) {
       Scope.data.issues = data.issues;
       Scope.data.columns = columns;
+
+      updateBoard = setInterval(function () {
+        if (Scope.data.activeSprint.id) {
+          getSprintIssues(Scope.data.activeSprint);
+        }
+      }, (60 * 1000) * 15);
     });
   } else {
     Scope.data.issues = [];
@@ -128,7 +130,6 @@ view.init({
 
   animations: {
     enter: {
-      // parent: animations.widgetEnter.parent,
       sequence: animations.widgetEnter.sequence,
       from: {
         y: 20,
@@ -147,7 +148,7 @@ view.init({
         display: 'none'
       },
       position: '-=.2',
-      duration: 0.6
+      duration: 1.6
     }
   },
   class: 'container-column scrum-board',
@@ -179,16 +180,11 @@ view.init({
 
         animations: {
           enter: {
-            // parent: animations.widgetEnter.sequence,
             sequence: 'columns',
             from: {
               y: 50,
               opacity: 0
             },
-            // to: {
-            //   scale: 1,
-            //   opacity: 1
-            // },
             position: '-=.2',
             duration: .3
           }
@@ -211,12 +207,7 @@ view.init({
             animations: {
               enter: {
                 parent: 'columns',
-                // parent: function () {
-                //   return 'columns-' + this.parent.inputs.colName;
-                // },
-                // chainToParent: true,
                 sequence: function () {
-                  // console.log('tasks-' + this.inputs.columnName);
                   return 'columns-' + this.parent.inputs.colName;
                 },
                 from: {
@@ -234,7 +225,10 @@ view.init({
 
             $for: {
               data: getColumnIssues,
-              as: 'issue'
+              as: 'issue',
+              trackBy: function (item) {
+                return item.id;
+              }
             },
 
             children: [
@@ -249,16 +243,6 @@ view.init({
               {
                 class: 'icon',
                 tag: 'img',
-                // animations: {
-                //   enter: {
-                //     parent: 'columns',
-                //     sequence: 'icons',
-                //     from: {
-                //       scale: 0
-                //     },
-                //     duration: .3
-                //   }
-                // },
                 $if: '<>issue.fields.assignee',
                 src: '<>issue.fields.assignee.avatarUrls.48x48'
               }
@@ -268,5 +252,4 @@ view.init({
       }
     }
   ]
-  // }
 });

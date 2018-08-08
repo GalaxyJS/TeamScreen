@@ -12,42 +12,6 @@ Scope.exports = {
     });
   },
 
-  getActiveSprint: function (boardId) {
-    return this.get('/api/board/' + boardId + '/active-sprint');
-  },
-  getAllBoards: function () {
-    return this.get('/api/board/');
-  },
-  getBoardConfiguration: function (boardId) {
-    return fetch('/api/board/' + boardId + '/configuration', {
-      method: 'GET', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, cors, *same-origin
-      // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, same-origin, *omit
-      referrerPolicy: 'origin-when-cross-origin'
-      // headers: {
-      //   'Content-Type': 'application/json; charset=utf-8',
-      //   // 'Content-Type': 'application/x-www-form-urlencoded',
-      // }
-    }).then(function (response) {
-      return response.json();
-    }, function (error) {
-      console.error('services/api.js', error);
-    });
-  },
-  getSprintIssues: function (sprintId) {
-    return fetch('/api/sprint/' + sprintId + '/issues', {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'same-origin',
-      referrerPolicy: 'origin-when-cross-origin'
-    }).then(function (response) {
-      return response.json();
-    }, function (error) {
-      console.error('services/api.js', error);
-    });
-  },
-
   add: function (component, data) {
     return fetch('/api/' + component, {
       method: 'POST',
@@ -88,6 +52,19 @@ Scope.exports = {
         console.error(JSON.stringify(content, null, ' '));
       });
     });
+  },
+
+  getActiveSprint: function (boardId) {
+    return this.get('/api/board/' + boardId + '/active-sprint');
+  },
+  getAllBoards: function () {
+    return this.get('/api/board/');
+  },
+  getBoardConfiguration: function (boardId) {
+    return this.get('/api/board/' + boardId + '/configuration');
+  },
+  getSprintIssues: function (sprintId) {
+    return this.get('/api/sprint/' + sprintId + '/issues');
   },
 
   addTeam: function (data) {

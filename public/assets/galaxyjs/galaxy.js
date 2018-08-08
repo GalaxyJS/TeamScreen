@@ -2361,7 +2361,7 @@ Galaxy.Sequence = /** @class */ (function () {
     _this.actions = [];
     _this.resolver = Promise.resolve();
 
-    this.reset();
+    _this.reset();
   }
 
   Sequence.prototype = {
@@ -2371,10 +2371,14 @@ Galaxy.Sequence = /** @class */ (function () {
       _this.isFinished = false;
       _this.processing = false;
 
-      this.activeState = new Promise(function (resolve) {
+      _this.activeState = new Promise(function (resolve) {
         _this.activeStateResolve = function () {
           _this.isFinished = true;
           _this.processing = false;
+          // console.log(_this.truncateHandlers.length);
+          if (_this.truncateHandlers.length > 1) {
+            _this.truncateHandlers = [];
+          }
           resolve();
         };
       });
@@ -2415,9 +2419,7 @@ Galaxy.Sequence = /** @class */ (function () {
 
         if (subActions.length) {
           const lastItem = subActions[subActions.length - 1];
-          // debugger
           this.actions.splice(_this.actions.indexOf(lastItem) + 1, 0, act);
-          // debugger
         } else {
           _this.actions.push(act);
         }
@@ -2437,13 +2439,11 @@ Galaxy.Sequence = /** @class */ (function () {
       const _this = this;
       const oldAction = _this.actions.shift();
       const firstAction = _this.actions[0];
-      // console.log('should end',_this.actions.length, firstAction);
+
       if (firstAction) {
         _this.resolver.then(firstAction.run.bind(firstAction));
       } else if (oldAction) {
-        // _this.resolver.then(function () {
         _this.activeStateResolve();
-        // });
       }
     },
 
@@ -2529,8 +2529,6 @@ Galaxy.GalaxyURI = /** @class */ (function () {
 
 Galaxy.View = /** @class */(function (G) {
   const defProp = Object.defineProperty;
-  const setAttr = Element.prototype.setAttribute;
-  const removeAttr = Element.prototype.removeAttribute;
 
   //------------------------------
 
@@ -2550,8 +2548,9 @@ Galaxy.View = /** @class */(function (G) {
   View.NODE_SCHEMA_PROPERTY_MAP = {
     tag: {
       type: 'none'
-      // createSetter
-      // value
+      // setup: function(viewNode, scopeReactiveData, property, expression) {}
+      // createSetter: function(viewNode, attrName, property, expression, scope) {}
+      // value: function(viewNode, attr, value, oldValue) {}
     },
     children: {
       type: 'none'
@@ -2603,13 +2602,17 @@ Galaxy.View = /** @class */(function (G) {
     }
   };
 
-  View.setAttr = function (viewNode, name, value, oldValue) {
+  View.setAttr = function setAttr(viewNode, value, oldValue, name) {
     viewNode.notifyObserver(name, value, oldValue);
     if (value) {
-      setAttr.call(viewNode.node, name, value, oldValue);
+      viewNode.node.setAttribute(name, value);
     } else {
-      removeAttr.call(viewNode.node, name);
+      viewNode.node.removeAttribute(name);
     }
+  };
+
+  View.setProp = function setProp(viewNode, value, oldValue, name) {
+    viewNode.node[name] = value;
   };
 
   View.createMirror = function (obj, forObj) {
@@ -3055,11 +3058,11 @@ Galaxy.View = /** @class */(function (G) {
     return function (value, oldValue) {
       if (value instanceof Promise) {
         const asyncCall = function (asyncValue) {
-          View.setAttr(node, attributeName, asyncValue, oldValue);
+          View.setAttr(node, asyncValue, oldValue, attributeName);
         };
         value.then(asyncCall).catch(asyncCall);
       } else {
-        View.setAttr(node, attributeName, value, oldValue);
+        View.setAttr(node, value, oldValue, attributeName);
       }
     };
   };
@@ -3091,7 +3094,7 @@ Galaxy.View = /** @class */(function (G) {
   };
 
   View.createSetter = function (viewNode, key, scopeProperty, expression) {
-    const property = View.NODE_SCHEMA_PROPERTY_MAP[key] || {type: 'attr'};
+    const property = View.NODE_SCHEMA_PROPERTY_MAP[key] || { type: 'attr' };
 
     if (property.setup && scopeProperty) {
       property.setup(viewNode, scopeProperty, key, expression);
@@ -3112,7 +3115,7 @@ Galaxy.View = /** @class */(function (G) {
   };
 
   View.setPropertyForNode = function (viewNode, attributeName, value) {
-    const property = View.NODE_SCHEMA_PROPERTY_MAP[attributeName] || {type: 'attr'};
+    const property = View.NODE_SCHEMA_PROPERTY_MAP[attributeName] || { type: 'attr' };
 
     switch (property.type) {
       case 'attr':
@@ -3305,31 +3308,28 @@ Galaxy.View = /** @class */(function (G) {
     /**
      *
      * @param {Galaxy.View.ViewNode} viewNode
-     * @param attr
-     * @param animations
-     * @param oldConfig
-     * @param scopeData
+     * @param value
      */
-    value: function (viewNode, attr, animations, oldConfig, scopeData) {
-      if (viewNode.virtual || !animations) {
+    value: function (viewNode, value) {
+      if (viewNode.virtual || !value) {
         return;
       }
 
-      const enter = animations.enter;
+      const enter = value.enter;
       if (enter) {
         if (enter.sequence) {
           AnimationMeta.get(enter.sequence).configs.enter = enter;
         }
 
         viewNode.populateEnterSequence = function (sequence) {
-          animations.config = animations.config || {};
+          value.config = value.config || {};
 
           sequence.onTruncate(function () {
             TweenLite.killTweensOf(viewNode.node);
           });
 
           // if enterWithParent flag is there, then only apply animation only to the nodes are rendered
-          if (animations.config.enterWithParent) {
+          if (value.config.enterWithParent) {
             const parent = viewNode.parent;
             if (!parent.rendered.resolved) {
               return;
@@ -3342,26 +3342,26 @@ Galaxy.View = /** @class */(function (G) {
               return done();
             }
 
-            AnimationMeta.installGSAPAnimation(viewNode, 'enter', enter, animations.config, done);
+            AnimationMeta.installGSAPAnimation(viewNode, 'enter', enter, value.config, done);
           });
         };
       }
 
-      const leave = animations.leave;
+      const leave = value.leave;
       if (leave) {
         if (leave.sequence) {
           AnimationMeta.get(leave.sequence).configs.leave = leave;
         }
 
         viewNode.populateLeaveSequence = function (sequence) {
-          animations.config = animations.config || {};
+          value.config = value.config || {};
 
           sequence.onTruncate(function () {
             TweenLite.killTweensOf(viewNode.node);
           });
 
           // if the leaveWithParent flag is there, then apply animation only to non-transitory nodes
-          if (animations.config.leaveWithParent) {
+          if (value.config.leaveWithParent) {
             const parent = viewNode.parent;
 
             if (parent.transitory) {
@@ -3386,7 +3386,7 @@ Galaxy.View = /** @class */(function (G) {
             waitForAnimation.then(done);
           });
 
-          AnimationMeta.installGSAPAnimation(viewNode, 'leave', leave, animations.config, animationDone);
+          AnimationMeta.installGSAPAnimation(viewNode, 'leave', leave, value.config, animationDone);
         };
       }
 
@@ -3398,7 +3398,7 @@ Galaxy.View = /** @class */(function (G) {
           try {
             classes.forEach(function (item) {
               if (item && oldClasses.indexOf(item) === -1) {
-                const _config = animations['.' + item];
+                const _config = value['.' + item];
                 if (!_config) {
                   return;
                 }
@@ -3406,14 +3406,14 @@ Galaxy.View = /** @class */(function (G) {
                 classSequence.next(function (done) {
                   const classAnimationConfig = Object.assign({}, _config);
                   classAnimationConfig.to = Object.assign({ className: '+=' + item || '' }, _config.to || {});
-                  AnimationMeta.installGSAPAnimation(viewNode, 'class-add', classAnimationConfig, animations.config, done);
+                  AnimationMeta.installGSAPAnimation(viewNode, 'class-add', classAnimationConfig, value.config, done);
                 });
               }
             });
 
             oldClasses.forEach(function (item) {
               if (item && classes.indexOf(item) === -1) {
-                const _config = animations['.' + item];
+                const _config = value['.' + item];
                 if (!_config) {
                   return;
                 }
@@ -3422,7 +3422,7 @@ Galaxy.View = /** @class */(function (G) {
                   // requestAnimationFrame(function () {
                   const classAnimationConfig = Object.assign({}, _config);
                   classAnimationConfig.to = { className: '-=' + item || '' };
-                  AnimationMeta.installGSAPAnimation(viewNode, 'class-remove', classAnimationConfig, animations.config, done);
+                  AnimationMeta.installGSAPAnimation(viewNode, 'class-remove', classAnimationConfig, value.config, done);
                   // });
                 });
               }
@@ -3586,19 +3586,18 @@ Galaxy.View = /** @class */(function (G) {
     return sequence.timeline;
   };
 
-  AnimationMeta.refresh = function (timeline) {
-    const parentChildren = timeline.getChildren(false, true, true);
-    timeline.clear();
-    parentChildren.forEach(function (item) {
-      console.log(item)
-      if (item.data) {
-        const conf = item.data.config;
-        timeline.add(item, conf.position);
-      } else {
-        timeline.add(item);
-      }
-    });
-  };
+  // AnimationMeta.refresh = function (timeline) {
+  //   const parentChildren = timeline.getChildren(false, true, true);
+  //   timeline.clear();
+  //   parentChildren.forEach(function (item) {
+  //     if (item.data) {
+  //       const conf = item.data.config;
+  //       timeline.add(item, conf.position);
+  //     } else {
+  //       timeline.add(item);
+  //     }
+  //   });
+  // };
 
   /**
    *
@@ -3711,6 +3710,8 @@ Galaxy.View = /** @class */(function (G) {
     if (_this.children.indexOf(parentNodeTimeline) === -1) {
       _this.children.push(parentNodeTimeline);
       let posInParent = childConf.positionInParent || '+=0';
+
+// debugger;
       // In the case that the parentNodeTimeline has not timeline then its _startTime should be 0
       if (parentNodeTimeline.timeline === null && children.length === 0) {
         parentNodeTimeline.pause();
@@ -3721,8 +3722,9 @@ Galaxy.View = /** @class */(function (G) {
           posInParent = null;
         }
       }
-
+      // parentNodeTimeline._startTime = 3;
       parentNodeTimeline.add(function () {
+        // debugger;
         _this.timeline.resume();
       }, posInParent);
     }
@@ -3781,10 +3783,7 @@ Galaxy.View = /** @class */(function (G) {
     viewNode.cache.animations = viewNode.cache.animations || {
       timeline: new TimelineLite({
         autoRemoveChildren: true,
-        smoothChildTiming: true,
-        onComplete: function () {
-          // viewNode.cache.animations.timeline.kill();
-        }
+        smoothChildTiming: true
       })
     };
 
@@ -3796,36 +3795,19 @@ Galaxy.View = /** @class */(function (G) {
     };
     nodeTimeline.add(tween);
 
-    // const parentNodeTimeline = AnimationMeta.getParentTimeline(viewNode);
-    const sameSequenceParentTimeline = AnimationMeta.getParentAnimationByName(viewNode, _this.name);
-
-    // if (_this.parent) {
-    //   debugger;
-    //   const progress = _this.parent.timeline.progress();
-    //   // debugger;
-    //   if (progress === undefined) {
-    //     _this.parent.timeline.play(0);
-    //   } else {
-    //     _this.parent.timeline.resume();
-    //   }
-    // }
     // if the animation has no parent but its parent animation is the same as its own animation
     // then it should intercept the animation in order to make the animation proper visual wise
-    // debugger;
+    const sameSequenceParentTimeline = AnimationMeta.getParentAnimationByName(viewNode, _this.name);
     if (sameSequenceParentTimeline) {
       const currentProgress = sameSequenceParentTimeline.progress();
       // if the currentProgress is 0 or bigger than the nodeTimeline start time
       // then we can intercept the parentNodeTimeline
+      // debugger;
       if (nodeTimeline.startTime() < currentProgress || currentProgress === 0) {
-        sameSequenceParentTimeline.add(nodeTimeline, config.position || '+=0');
-        AnimationMeta.refresh(_this.timeline);
-        return _this.timeline.play(0);
+        _this.timeline.add(nodeTimeline, config.position || '+=0');
+        return;
       }
     }
-
-    const parentNodeTimeline = AnimationMeta.getParentTimeline(viewNode);
-
-    // const cccc = parentNodeTimeline ? parentNodeTimeline.getChildren(false) : null;
 
     if (children.indexOf(nodeTimeline) === -1) {
       // _this.children.push(nodeTimeline);
@@ -3886,7 +3868,7 @@ Galaxy.View = /** @class */(function (G) {
         }
       });
     },
-    value: function (viewNode, attr, value) {
+    value: function (viewNode, value) {
       const nativeNode = viewNode.node;
 
       if (/\[\]$/.test(nativeNode.name)) {
@@ -4094,7 +4076,7 @@ Galaxy.View = /** @class */(function (G) {
     install: function (config) {
       const node = this;
       const parentNode = node.parent;
-      parentNode.cache.$for = parentNode.cache.$for || { leaveProcessList: [], queue: [], mainPromise: null };
+      parentNode.cache.$for = parentNode.cache.$for || {leaveProcessList: [], queue: [], mainPromise: null};
 
       if (config.matches instanceof Array) {
         View.makeBinding(this, '$for', undefined, config.scope, {
@@ -4116,6 +4098,11 @@ Galaxy.View = /** @class */(function (G) {
               console.error('Could not find: ' + path + '\n', error);
             }
           });
+        } else if (config.matches.data instanceof Array) {
+          const setter = node.setters['$for'] = View.createSetter(node, '$for', config.matches.data, null);
+          const value = new Galaxy.View.ArrayChange();
+          value.params = config.matches.data;
+          setter(value);
         }
       }
 
@@ -4160,9 +4147,9 @@ Galaxy.View = /** @class */(function (G) {
       const parentSchema = parent.schema;
       let newTrackMap = null;
 
-      if (changes.ts === config.oldChanges.ts && changes.type === config.oldChanges.type) {
-        return;
-      }
+      // if (changes.ts === config.oldChanges.ts && changes.type === config.oldChanges.type) {
+      //   return;
+      // }
 
       config.oldChanges = changes;
       parent.inserted.then(function () {
@@ -4180,7 +4167,6 @@ Galaxy.View = /** @class */(function (G) {
           newTrackMap = changes.params.map(function (item, i) {
             return config.trackBy.call(node, item, i);
           });
-
           // list of nodes that should be removed
           const hasBeenRemoved = [];
           config.trackMap.forEach(function (id, i) {
@@ -4225,6 +4211,7 @@ Galaxy.View = /** @class */(function (G) {
         } else if (changes.type === 'reset') {
           const nodes = config.nodes.slice(0);
           config.nodes = [];
+
           leaveProcess = createLeaveProcess(node, nodes, config, function () {
             changes = Object.assign({}, changes);
             changes.type = 'push';
@@ -4343,39 +4330,40 @@ Galaxy.View = /** @class */(function (G) {
   function createLeaveProcess(node, itemsToBeRemoved, config, onDone) {
     return function () {
       const parent = node.parent;
-      const schema = node.schema;
+      // const schema = node.schema;
 
-      node.renderingFlow.next(function leaveProcess(next) {
-        // if parent leave sequence interrupted, then make sure these items will be removed from DOM
-        parent.sequences.leave.onTruncate(function () {
-          itemsToBeRemoved.forEach(function (vn) {
-            vn.sequences.leave.truncate();
-            vn.detach();
-          });
+      // node.renderingFlow.next(function leaveProcess(next) {
+      // if parent leave sequence interrupted, then make sure these items will be removed from DOM
+      parent.sequences.leave.onTruncate(function hjere() {
+        itemsToBeRemoved.forEach(function (vn) {
+          vn.sequences.leave.truncate();
+          vn.detach();
         });
-
-        if (itemsToBeRemoved.length) {
-          let domManipulationOrder = parent.schema.renderConfig.domManipulationOrder;
-          if (schema.renderConfig.domManipulationOrder) {
-            domManipulationOrder = schema.renderConfig.domManipulationOrder;
-          }
-
-          if (domManipulationOrder === 'cascade') {
-            View.ViewNode.destroyNodes(node, itemsToBeRemoved, null, parent.sequences.leave);
-          } else {
-            View.ViewNode.destroyNodes(node, itemsToBeRemoved.reverse(), parent.sequences.leave);
-          }
-
-          parent.sequences.leave.nextAction(function () {
-            parent.callLifecycleEvent('postForLeave');
-            onDone();
-            next();
-          });
-        } else {
-          onDone();
-          next();
-        }
       });
+
+      if (itemsToBeRemoved.length) {
+        // let domManipulationOrder = parent.schema.renderConfig.domManipulationOrder;
+        // if (schema.renderConfig.domManipulationOrder) {
+        //   domManipulationOrder = schema.renderConfig.domManipulationOrder;
+        // }
+
+        // if (domManipulationOrder === 'cascade') {
+        //   View.ViewNode.destroyNodes(node, itemsToBeRemoved, null, parent.sequences.leave);
+        // } else {
+        //   // debugger;
+        View.ViewNode.destroyNodes(node, itemsToBeRemoved.reverse(), parent.sequences.leave, parent.sequences.leave);
+        // }
+
+        parent.sequences.leave.nextAction(function () {
+          parent.callLifecycleEvent('postForLeave');
+          onDone();
+          // next();
+        });
+      } else {
+        onDone();
+        // next();
+      }
+      // });
     };
   }
 
@@ -4392,89 +4380,94 @@ Galaxy.View = /** @class */(function (G) {
       parentNode.sequences.enter.removeByRef(node);
     });
 
-    node.renderingFlow.next(function forPushProcess(next) {
-      if (changes.type === 'push') {
-        let length = config.nodes.length;
+    // node.renderingFlow.next(function forPushProcess(next) {
+    if (changes.type === 'push') {
+      let length = config.nodes.length;
 
-        if (length) {
-          defaultPosition = config.nodes[length - 1].getPlaceholder().nextSibling;
-          if (positions.length) {
-            positions.forEach(function (pos) {
-              const target = config.nodes[pos];
-              placeholdersPositions.push(target ? target.getPlaceholder() : defaultPosition);
-            });
+      if (length) {
+        defaultPosition = config.nodes[length - 1].getPlaceholder().nextSibling;
+        if (positions.length) {
+          positions.forEach(function (pos) {
+            const target = config.nodes[pos];
+            placeholdersPositions.push(target ? target.getPlaceholder() : defaultPosition);
+          });
 
-            onEachAction = function (vn, i) {
-              this.splice(i, 0, vn);
-            };
-          }
-        } else {
-          defaultPosition = node.placeholder.nextSibling;
+          onEachAction = function (vn, i) {
+            this.splice(i, 0, vn);
+          };
         }
-
-        newItems = changes.params;
-      } else if (changes.type === 'unshift') {
-        defaultPosition = config.nodes[0] ? config.nodes[0].getPlaceholder() : null;
-        newItems = changes.params;
-        onEachAction = function (vn) {
-          this.unshift(vn);
-        };
-      } else if (changes.type === 'splice') {
-        let removedItems = Array.prototype.splice.apply(config.nodes, changes.params.slice(0, 2));
-        newItems = changes.params.slice(2);
-        removedItems.forEach(function (node) {
-          node.destroy();
-        });
-        config.trackMap.splice(changes.params[0], changes.params[1]);
-      } else if (changes.type === 'pop') {
-        const lastItem = config.nodes.pop();
-        lastItem && lastItem.destroy();
-        config.trackMap.pop();
-      } else if (changes.type === 'shift') {
-        const firstItem = config.nodes.shift();
-        firstItem && firstItem.destroy();
-        config.trackMap.shift();
-      } else if (changes.type === 'sort' || changes.type === 'reverse') {
-        config.nodes.forEach(function (viewNode) {
-          viewNode.destroy();
-        });
-
-        config.nodes = [];
-        newItems = changes.original;
-        Array.prototype[changes.type].call(config.trackMap);
+      } else {
+        defaultPosition = node.placeholder.nextSibling;
       }
 
-      let itemDataScope = nodeScopeData;
-      const pn = config.propName;
-      const nodes = config.nodes;
-      const templateSchema = node.cloneSchema();
-      Reflect.deleteProperty(templateSchema, '$for');
-
-      const gClone = Galaxy.clone;
-      const vCreateNode = View.createNode;
-      if (newItems instanceof Array) {
-        const c = newItems.slice(0);
-        for (let i = 0, len = newItems.length; i < len; i++) {
-          itemDataScope = View.createMirror(nodeScopeData);
-          itemDataScope['__rootScopeData__'] = config.scope;
-          itemDataScope[pn] = c[i];
-          itemDataScope['$forIndex'] = i;
-          let cns = gClone(templateSchema);
-
-          const vn = vCreateNode(parentNode, itemDataScope, cns, placeholdersPositions[i] || defaultPosition, node);
-          onEachAction.call(nodes, vn, positions[i]);
-        }
+      newItems = changes.params;
+      if (config.trackBy instanceof Function) {
+        newItems.forEach(function (item, i) {
+          config.trackMap.push(config.trackBy.call(node, item, i));
+        });
       }
+    } else if (changes.type === 'unshift') {
+      defaultPosition = config.nodes[0] ? config.nodes[0].getPlaceholder() : null;
+      newItems = changes.params;
+      onEachAction = function (vn) {
+        this.unshift(vn);
+      };
+    } else if (changes.type === 'splice') {
+      let removedItems = Array.prototype.splice.apply(config.nodes, changes.params.slice(0, 2));
+      newItems = changes.params.slice(2);
+      removedItems.forEach(function (node) {
+        node.destroy();
+      });
+      config.trackMap.splice(changes.params[0], changes.params[1]);
+    } else if (changes.type === 'pop') {
+      const lastItem = config.nodes.pop();
+      lastItem && lastItem.destroy();
+      config.trackMap.pop();
+    } else if (changes.type === 'shift') {
+      const firstItem = config.nodes.shift();
+      firstItem && firstItem.destroy();
+      config.trackMap.shift();
+    } else if (changes.type === 'sort' || changes.type === 'reverse') {
+      config.nodes.forEach(function (viewNode) {
+        viewNode.destroy();
+      });
 
-      // remove the animation from the parent which are referring to node
-      // TODO: All actions related to the for nodes will be removed.
-      // But this action wont get removed because it does not have a proper reference
+      config.nodes = [];
+      newItems = changes.original;
+      Array.prototype[changes.type].call(config.trackMap);
+    }
 
-      parentNode.sequences.enter.nextAction(function () {
-        parentNode.callLifecycleEvent('post$forEnter', newItems);
-        next();
-      }, node);
-    });
+    let itemDataScope = nodeScopeData;
+    const pn = config.propName;
+    const nodes = config.nodes;
+    const templateSchema = node.cloneSchema();
+    Reflect.deleteProperty(templateSchema, '$for');
+
+    const gClone = Galaxy.clone;
+    const vCreateNode = View.createNode;
+    if (newItems instanceof Array) {
+      const c = newItems.slice(0);
+      for (let i = 0, len = newItems.length; i < len; i++) {
+        itemDataScope = View.createMirror(nodeScopeData);
+        itemDataScope['__rootScopeData__'] = config.scope;
+        itemDataScope[pn] = c[i];
+        itemDataScope['$forIndex'] = i;
+        let cns = gClone(templateSchema);
+
+        const vn = vCreateNode(parentNode, itemDataScope, cns, placeholdersPositions[i] || defaultPosition, node);
+        onEachAction.call(nodes, vn, positions[i]);
+      }
+    }
+
+    // remove the animation from the parent which are referring to node
+    // TODO: All actions related to the for nodes will be removed.
+    // But this action wont get removed because it does not have a proper reference
+
+    parentNode.sequences.enter.nextAction(function () {
+      parentNode.callLifecycleEvent('post$forEnter', newItems);
+      // next();
+    }, node);
+    // });
   }
 })(Galaxy.View);
 
@@ -4774,10 +4767,9 @@ Galaxy.View = /** @class */(function (G) {
     /**
      *
      * @param {Galaxy.View.ViewNode} viewNode
-     * @param attr
      * @param events
      */
-    value: function (viewNode, attr, events) {
+    value: function (viewNode, events) {
       if (events !== null && typeof events === 'object') {
         for (let name in events) {
           if (events.hasOwnProperty(name)) {
@@ -4816,7 +4808,7 @@ Galaxy.View = /** @class */(function (G) {
         scopeReactiveData.data[id] = nativeNode.options[nativeNode.selectedIndex].value;
       });
     },
-    value: function (viewNode, attr, value) {
+    value: function (viewNode, value) {
       const nativeNode = viewNode.node;
 
       viewNode.rendered.then(function () {
@@ -4913,10 +4905,9 @@ Galaxy.View = /** @class */(function (G) {
     /**
      *
      * @param {Galaxy.View.ViewNode} viewNode
-     * @param {string} attr
      * @param value
      */
-    value: function (viewNode, attr, value) {
+    value: function (viewNode, value) {
       const textNode = viewNode.node['<>text'];
       const textValue = typeof value === 'undefined' || value === null ? '' : value;
 
@@ -4967,8 +4958,8 @@ Galaxy.View = /** @class */(function (G) {
         });
       }
     },
-    value: function (viewNode, propertyName, value, oldValue) {
-      viewNode.node[propertyName] = value === undefined ? '' : value;
+    value: function (viewNode, value, oldValue, attr) {
+      viewNode.node[attr] = value === undefined ? '' : value;
     }
   };
 })(Galaxy.View);
@@ -4977,6 +4968,24 @@ Galaxy.View = /** @class */(function (G) {
 /* global Galaxy */
 
 Galaxy.View.ArrayChange = /** @class */ (function () {
+  // let lastTS = new Date().getTime();
+  // let counter = 0;
+  //
+  // function getTS() {
+  //   const currentTS = new Date().getTime();
+  //
+  //   if (currentTS === lastTS) {
+  //     counter++;
+  //
+  //     return currentTS + '-' + counter;
+  //   }
+  //
+  //   counter = 0;
+  //   lastTS = currentTS;
+  //
+  //   return currentTS + '-' + counter;
+  // }
+
   function ArrayChange() {
     this.init = null;
     this.original = null;
@@ -4984,7 +4993,7 @@ Galaxy.View.ArrayChange = /** @class */ (function () {
     this.returnValue = null;
     this.params = [];
     this.type = 'reset';
-    this.ts = new Date().getTime();
+    // this.ts = getTS();
 
     Object.preventExtensions(this);
   }
@@ -4996,7 +5005,7 @@ Galaxy.View.ArrayChange = /** @class */ (function () {
     instance.snapshot = this.snapshot.slice(0);
     instance.params = this.params.slice(0);
     instance.type = this.type;
-    instance.ts = new Date().getTime();
+    // instance.ts = getTS();
 
     return instance;
   };
@@ -6041,9 +6050,11 @@ Galaxy.View.ViewNode = /** @class */ (function (GV) {
           animationDone();
         });
 
-        _this.parent.sequences.leave.nextAction(function () {
-          _this.node.parentNode && removeChild(_this.node.parentNode, _this.node);
-        });
+        if (rootSequence) {
+          rootSequence.nextAction(function () {
+            _this.node.parentNode && removeChild(_this.node.parentNode, _this.node);
+          });
+        }
       }
     }
 
@@ -6068,7 +6079,7 @@ Galaxy.View.ViewNode = /** @class */ (function (GV) {
    * @param {Object} item
    */
   ViewNode.prototype.addDependedObject = function (reactiveData, item) {
-    this.dependedObjects.push({ reactiveData: reactiveData, item: item });
+    this.dependedObjects.push({reactiveData: reactiveData, item: item});
   };
 
   ViewNode.prototype.getChildNodes = function () {
@@ -6169,17 +6180,17 @@ Galaxy.View.PROPERTY_SETTERS.attr = function (viewNode, attrName, property, expr
   const setter = function (value, oldValue) {
     if (value instanceof Promise) {
       const asyncCall = function (asyncValue) {
-        valueFn(viewNode, attrName, asyncValue, oldValue);
+        valueFn(viewNode, asyncValue, oldValue, attrName);
       };
       value.then(asyncCall).catch(asyncCall);
     } else {
-      valueFn(viewNode, attrName, value, oldValue);
+      valueFn(viewNode, value, oldValue, attrName);
     }
   };
 
   if (expression) {
     return function (none, oldValue) {
-      let expressionValue = expression(none);
+      const expressionValue = expression(none);
       setter(expressionValue, oldValue);
     };
   }
@@ -6195,19 +6206,17 @@ Galaxy.View.PROPERTY_SETTERS.prop = function (viewNode, attrName, property, expr
     throw new Error('PROPERTY_SETTERS.prop: property.name is mandatory in order to create property setter');
   }
 
-  const valueFn = property.value || function (vn, an, v, ov) {
-    vn.node[an] = v;
-  };
+  const valueFn = property.value || Galaxy.View.setProp;
 
   const setter = function (value, oldValue) {
     if (value instanceof Promise) {
       const asyncCall = function (asyncValue) {
-        valueFn(viewNode, property.name, asyncValue, oldValue);
+        valueFn(viewNode, asyncValue, oldValue, property.name);
         viewNode.notifyObserver(property.name, value, oldValue);
       };
       value.then(asyncCall).catch(asyncCall);
     } else {
-      valueFn(viewNode, property.name, value, oldValue);
+      valueFn(viewNode, value, oldValue, property.name);
       viewNode.notifyObserver(property.name, value, oldValue);
     }
   };
@@ -6228,10 +6237,6 @@ Galaxy.View.PROPERTY_SETTERS.prop = function (viewNode, attrName, property, expr
     const behavior = Galaxy.View.REACTIVE_BEHAVIORS[property.name];
     const cache = viewNode.cache[attrName];
     const reactiveFunction = createReactiveFunction(behavior, viewNode, cache, expression, scope);
-
-    // if (!reactiveFunction) {
-    //   console.error('Reactive handler not found for: ' + property.name);
-    // }
 
     return reactiveFunction;
   };
