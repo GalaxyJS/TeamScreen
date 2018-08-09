@@ -42,4 +42,3 @@ $router->get('/api/board/{board_id}/active-sprint', ['uses' => 'BoardController@
 $router->get('/api/board/{board_id}/configuration', ['uses' => 'BoardController@getBoardConfiguration']);
 $router->get('/api/sprint/{sprint_id}/issues', ['uses' => 'BoardController@getSprintIssues']);
 $router->get('/api/avatars/{username}/{size}', ['uses' => 'BoardController@getAvatar']);
-

@@ -1,4 +1,4 @@
-/** @type Galaxy.Scope*/
+/** @type Galaxy.View */
 const view = Scope.import('galaxy/view');
 const router = Scope.import('galaxy/router');
 
@@ -380,6 +380,9 @@ view.init([
                               if (confirm('Are you sure of deleting of this team?')) {
                                 apiService.deleteTeam(this.parent.inputs.teamId).then(function () {
                                   fetchTeams();
+                                  view.broadcast(new CustomEvent('team-delete', {
+                                    bubbles: true
+                                  }));
                                 });
                               }
                             }

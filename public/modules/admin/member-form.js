@@ -3,6 +3,7 @@ const inputs = Scope.import('galaxy/inputs');
 const router = Scope.parentScope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 const animations = Scope.import('services/animations.js');
+const utility = Scope.import('services/utility.js');
 
 apiService.getAllTeams().then(function (teams) {
   Scope.data.teams = teams;
@@ -54,13 +55,31 @@ view.init({
       html: [
         'data.form',
         function (form) {
-          return form.id ? 'Member Info: <span>' + form.name + '</span>' : 'New Member';
+          return form.id ? 'Member Info' : 'New Member';
         }
       ]
     },
     {
       class: 'content',
       children: [
+        {
+          class: 'info',
+          $if: '<>data.form.username',
+          children: [
+            {
+              class: 'avatar big',
+              tag: 'img',
+              src: [
+                'data.form.username',
+                utility.bigAvatarURLGenerator
+              ]
+            },
+            {
+              tag: 'strong',
+              text: '<>data.form.name'
+            }
+          ]
+        },
         {
           tag: 'label',
           class: 'field',

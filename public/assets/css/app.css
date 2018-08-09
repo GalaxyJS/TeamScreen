@@ -250,6 +250,17 @@ button, input, textarea, select {
   flex-direction: column;
 }
 
+.form > .content > .info {
+  display: block;
+  padding: 10px 15px;
+  text-align: center;
+  vertical-align: center;
+}
+
+.form > .content > .info > * {
+  margin: 0 5px;
+}
+
 .form > footer {
   padding: 20px 15px 15px;
 }
@@ -270,6 +281,22 @@ button, input, textarea, select {
 .field > .values {
   display: flex;
   justify-content: space-between;
+}
+
+.hover-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: none;
+  padding: 5px;
+}
+
+.hover-panel > button {
+  padding: 5px;
+}
+
+*:hover > .hover-panel {
+  display: block;
 }
 
 /*------------------- Widgets ------------------------*/
@@ -380,6 +407,12 @@ button, input, textarea, select {
   width: 32px;
 }
 
+.avatar.big {
+  height: 64px;
+  width: 64px;
+  border-radius: 32px;
+}
+
 .c-red {
   color: #f53;
 }
@@ -401,6 +434,7 @@ button, input, textarea, select {
   margin-bottom: 5px;
   overflow: hidden;
   padding: 6px 10px;
+  position: relative;
 }
 
 .person-item p {

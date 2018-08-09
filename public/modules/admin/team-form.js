@@ -23,14 +23,20 @@ view.init({
   on: {
     submit: function (event) {
       event.preventDefault();
-      if(Scope.data.form.id) {
+      if (Scope.data.form.id) {
         apiService.updateTeam(Scope.data.form).then(function (data) {
           console.info('Team updated successfully', data);
+          view.broadcast(new CustomEvent('team-update', {
+            bubbles: true
+          }));
           parentRouter.navigateFromHere('/');
         });
       } else {
         apiService.addTeam(Scope.data.form).then(function (data) {
           console.info('Team added successful', data);
+          view.broadcast(new CustomEvent('team-add', {
+            bubbles: true
+          }));
           parentRouter.navigateFromHere('/');
         });
       }
@@ -38,7 +44,7 @@ view.init({
   },
   animations: {
     enter: animations.formEnter,
-    leave: animations.formLeave,
+    leave: animations.formLeave
   },
   children: [
     {
@@ -72,7 +78,7 @@ view.init({
                 postInsert: function () {
                   this.node.focus();
                 }
-              },
+              }
             }
           ]
         },
@@ -116,13 +122,18 @@ view.init({
                 },
                 {
                   tag: 'option',
+                  value: 55,
+                  text: 'ShareRing'
+                },
+                {
+                  tag: 'option',
                   value: 101,
                   text: 'VCS'
                 }
               ]
             }
           ]
-        },
+        }
       ]
     },
     {
@@ -131,7 +142,7 @@ view.init({
         {
           tag: 'button',
           text: 'Save',
-          type: 'submit',
+          type: 'submit'
         }
       ]
     }

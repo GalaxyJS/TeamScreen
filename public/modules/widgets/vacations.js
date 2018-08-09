@@ -58,7 +58,7 @@ view.init({
                       'date.member.username',
                       utility.avatarURLGenerator
                     ]
-                  },
+                  }
 
                 ]
               },
@@ -78,8 +78,37 @@ view.init({
                       }
                     ]
                   },
+                  {
+                    class: 'hover-panel',
+                    children: [
+                      {
+                        tag: 'button',
+                        inputs: {
+                          agendaId: '<>date.id'
+                        },
+                        on: {
+                          click: function () {
+                            if (confirm('Are you sure of deleting of this time-off?')) {
+                              apiService.deleteAgenda(this.inputs.agendaId).then(function () {
+                                if (inputs.team) {
+                                  apiService.getAgendasForTeam(inputs.team.id).then(function (agendas) {
+                                    Scope.data.agendas = agendas;
+                                  });
+                                }
+                              });
+                            }
+                          }
+                        },
+
+                        children: {
+                          tag: 'i',
+                          class: 'fas fa-trash-alt'
+                        }
+                      }
+                    ]
+                  }
                 ]
-              },
+              }
             ]
           }
         }

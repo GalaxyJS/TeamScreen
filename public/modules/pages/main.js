@@ -1,4 +1,4 @@
-/** @type Galaxy.Scope*/
+/** @type Galaxy.View */
 const view = Scope.import('galaxy/view');
 const router = Scope.import('galaxy/router');
 
@@ -8,9 +8,13 @@ const appService = Scope.import('services/app.js');
 Scope.data.slideshow = false;
 Scope.data.teams = [];
 
-apiService.getAllTeams().then(function (teams) {
-  Scope.data.teams = teams;
-});
+function fetchTeams() {
+  apiService.getAllTeams().then(function (teams) {
+    Scope.data.teams = teams;
+  });
+}
+
+fetchTeams();
 
 let slideShowInterval;
 const slides = {
@@ -165,6 +169,17 @@ view.init([
   },
   {
     class: 'main-content',
-    module: '<>data.activeModule'
+    module: '<>data.activeModule',
+    on: {
+      'team-add': function (event) {
+        fetchTeams();
+      },
+      'team-update': function (event) {
+        fetchTeams();
+      },
+      'team-delete': function (event) {
+        fetchTeams();
+      }
+    }
   }
 ]);

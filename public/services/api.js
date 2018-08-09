@@ -206,5 +206,22 @@ Scope.exports = {
         console.error(JSON.stringify(content, null, ' '));
       });
     });
+  },
+
+  deleteAgenda: function (id) {
+    return fetch('/api/agendas/' + id, {
+      method: 'DELETE'
+    }).then(function (response) {
+      if (response.status !== 200) {
+        throw response;
+      }
+
+      return response.json();
+    }).catch(function (error) {
+      console.error(error);
+      error.json().then(function (content) {
+        console.error(JSON.stringify(content, null, ' '));
+      });
+    });
   }
 };
