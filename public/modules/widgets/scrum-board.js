@@ -147,7 +147,7 @@ view.init({
         display: 'none'
       },
       position: '-=.2',
-      duration: 1.6
+      duration: 1
     }
   },
   class: 'container-column scrum-board',

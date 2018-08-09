@@ -6,7 +6,10 @@ Scope.exports = {
       return item.id === parseInt(teamId);
     });
 
-    this.cycle = [];
+    if (!this.activeTeam || this.activeTeam.id !== activeTeam.id) {
+      this.cycle = [];
+    }
+
     this.activeTeam = activeTeam;
     this.activeMembers = activeTeam ? activeTeam.members : [];
   },

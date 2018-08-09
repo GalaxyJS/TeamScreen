@@ -42,6 +42,11 @@ view.init({
         Scope.data.waiter = null;
         if (appService.cycle.length === 0) {
           selectRandomWaiter(members);
+        } else {
+          const lastPersonId = appService.cycle[appService.cycle.length - 1];
+          Scope.data.waiter = members.find(function (member) {
+            return member.id === lastPersonId;
+          })
         }
 
         clearInterval(randomInterval);
