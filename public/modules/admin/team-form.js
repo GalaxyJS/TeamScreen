@@ -91,46 +91,27 @@ view.init({
               text: 'JIRA Board ID'
             },
             {
-              tag: 'select',
+              tag: 'input',
               name: 'board_id',
-              selected: '<>data.form.board_id',
-              children: [
-                {
-                  tag: 'option',
-                  value: '',
-                  text: 'none'
-                },
-                {
-                  tag: 'option',
-                  value: 122,
-                  text: '3dimerce_team3 '
-                },
-                {
-                  tag: 'option',
-                  value: 84,
-                  text: 'Mobile'
-                },
-                {
-                  tag: 'option',
-                  value: 95,
-                  text: 'Notuback'
-                },
-                {
-                  tag: 'option',
-                  value: 149,
-                  text: 'Notuweb'
-                },
-                {
-                  tag: 'option',
-                  value: 55,
-                  text: 'ShareRing'
-                },
-                {
-                  tag: 'option',
-                  value: 101,
-                  text: 'VCS'
-                }
-              ]
+              required: 'true',
+              value: '<>data.form.board_id',
+            }
+          ]
+        },
+        {
+          tag: 'label',
+          class: 'field',
+
+          children: [
+            {
+              tag: 'span',
+              text: 'Board name'
+            },
+            {
+              tag: 'input',
+              name: 'board_name',
+              required: 'true',
+              value: '<>data.form.board_name',
             }
           ]
         }

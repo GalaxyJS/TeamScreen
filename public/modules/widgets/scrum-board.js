@@ -178,15 +178,22 @@ view.init({
         },
 
         animations: {
+          config: {
+            leaveWithParent: true
+          },
           enter: {
             sequence: 'columns',
             from: {
               y: 50,
-              opacity: 0
+              opacity: 0,
+              onComplete:function () {
+                debugger;
+              }
             },
-            position: '-=.2',
-            duration: .3
-          }
+            position: '-=.6',
+            duration: 1
+          },
+          leave: {}
         },
 
         children: [
