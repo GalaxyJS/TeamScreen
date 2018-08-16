@@ -9,13 +9,15 @@ class Teams extends Model {
 
   protected $fillable = [
     'name',
-    'board_id'
+    'board_id',
+    'board_name'
   ];
 
   protected $dates = [];
 
   public static $rules = [
-    'name' => 'required'
+    'name' => 'required',
+    'board_id' => 'required'
   ];
 
   public function members () {

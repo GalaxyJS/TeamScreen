@@ -29,7 +29,9 @@
   </script>
 </head>
 <body>
-<div class="bootstrap-loader"></div>
+<div class="bootstrap-loader">
+  loading...
+</div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" defer></script>
 <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyA4Nr1bQijl7QINVIwC7JCq7Ljh2FYk_8I" defer></script>

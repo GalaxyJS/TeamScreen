@@ -3,7 +3,6 @@ const appService = Scope.import('services/app.js');
 
 Scope.data.mods = [
   {
-
     module: {
       url: 'modules/widgets/time-for-drink.js'
     }
@@ -37,6 +36,7 @@ view.init({
         members: '<>data.appService.activeMembers',
         team: '<>data.appService.activeTeam'
       },
+
       module: '<>mod.module'
     }
   ]

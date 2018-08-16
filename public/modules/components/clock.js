@@ -6,7 +6,6 @@ setInterval(function () {
   Scope.data.currentTime = new Date().toLocaleTimeString();
 }, 500);
 
-view.config.cleanContainer = true;
 view.init({
   class: 'clock',
   children: [

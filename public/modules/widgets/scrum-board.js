@@ -21,7 +21,13 @@ function getActiveSprint(activeTeam) {
   clearInterval(updateBoard);
   if (activeTeam && activeTeam.board_id) {
     apiService.getActiveSprint(activeTeam.board_id).then(function (data) {
-      Scope.data.activeSprint = data.values[0];
+      Scope.data.activeSprint = data.values.filter(function (sprint) {
+        if (!activeTeam.board_name) {
+          return false;
+        }
+
+        return sprint.name.toLowerCase().indexOf(activeTeam.board_name.toLowerCase()) === 0;
+      })[0] || {};
     });
   } else {
     Scope.data.activeSprint = {
@@ -158,7 +164,11 @@ view.init({
       html: [
         'data.activeSprint',
         function (sprint) {
-          return 'Scrumboard ' + sprint.name + ': <span>' + (sprint.goal || '') + '</span>';
+          if (sprint.name) {
+            return 'Scrumboard ' + sprint.name + ': <span>' + (sprint.goal || '') + '</span>';
+          } else {
+            return 'No board found';
+          }
         }
       ]
     },
@@ -185,13 +195,10 @@ view.init({
             sequence: 'columns',
             from: {
               y: 50,
-              opacity: 0,
-              onComplete:function () {
-                debugger;
-              }
+              opacity: 0
             },
-            position: '-=.6',
-            duration: 1
+            position: '-=.5',
+            duration: .8
           },
           leave: {}
         },

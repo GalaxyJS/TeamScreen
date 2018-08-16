@@ -38,6 +38,12 @@ function setSlideShow(flag) {
   }
 }
 
+activeDetector.watch = ['route', 'data.activeModule'];
+
+function activeDetector(route, activeModule) {
+  return route.module === activeModule;
+}
+
 Scope.data.routes = [
   {
     id: 'scrum-board',
@@ -146,13 +152,7 @@ view.init([
             },
 
             class: {
-              active: [
-                'route',
-                'data.activeModule',
-                function (route, activeModule) {
-                  return route.module === activeModule;
-                }
-              ]
+              active: activeDetector
             },
 
             href: [

@@ -205,7 +205,7 @@ view.init([
                       data: '<>data.members.changes',
                       as: 'member',
                       trackBy: function (item) {
-                        return item.updated_at;
+                        return item.id + '-' + item.updated_at;
                       }
                     },
 
@@ -339,7 +339,7 @@ view.init([
                     data: '<>data.teams.changes',
                     as: 'team',
                     trackBy: function (item) {
-                      return item.id;
+                      return item.id + '-' + item.updated_at;
                     }
                   },
 
