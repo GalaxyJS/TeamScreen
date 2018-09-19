@@ -1,5 +1,6 @@
 /** @type Galaxy.Scope*/
 const view = Scope.import('galaxy/view');
+const router = Scope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 const appService = Scope.import('services/app.js');
 
@@ -127,6 +128,15 @@ function getColumnIssues(issuesArrayChange, column) {
 
   return issuesArrayChange;
 }
+
+router.init({
+  '/': function () {
+    console.info('You can pass the team id in the URL');
+  },
+  '/:id': function (params) {
+    console.log('params: %o', params);
+  }
+});
 
 view.init({
   app_activeSprint: getActiveSprint,
