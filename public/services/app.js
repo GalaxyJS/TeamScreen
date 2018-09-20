@@ -1,4 +1,6 @@
 Scope.exports = {
+  activeTeamId: null,
+  allTeams: [],
   activeTeam: null,
   activeMembers: null,
   setActiveTeam: function (teamId, teams) {
@@ -12,6 +14,17 @@ Scope.exports = {
 
     this.activeTeam = activeTeam;
     this.activeMembers = activeTeam ? activeTeam.members : [];
+  },
+  setAllTeams: function(teams) {
+    this.allTeams = teams;
+
+    if(this.activeTeamId) {
+      this.setActiveTeamById(this.activeTeamId);
+    }
+  },
+  setActiveTeamById: function (id) {
+    this.activeTeamId = id;
+    this.setActiveTeam(id, this.allTeams);
   },
   cycle: []
 };

@@ -5,12 +5,14 @@ const router = Scope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 const appService = Scope.import('services/app.js');
 
+Scope.data.appService = appService;
 Scope.data.slideshow = false;
 Scope.data.teams = [];
 
 function fetchTeams() {
   apiService.getAllTeams().then(function (teams) {
     Scope.data.teams = teams;
+    appService.setAllTeams(teams);
   });
 }
 
@@ -99,6 +101,7 @@ view.init([
       {
         class: 'team-chooser',
         tag: 'select',
+        selected: '<>data.appService.activeTeam.id',
         children: [
           {
             tag: 'option',

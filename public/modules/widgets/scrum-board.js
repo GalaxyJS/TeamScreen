@@ -134,7 +134,10 @@ router.init({
     console.info('You can pass the team id in the URL');
   },
   '/:id': function (params) {
-    console.log('params: %o', params);
+    console.log('Team ID: %s', params.id);
+    if (params.id) {
+      appService.setActiveTeamById(params.id);
+    }
   }
 });
 
