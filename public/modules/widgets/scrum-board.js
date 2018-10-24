@@ -14,12 +14,12 @@ Scope.data.issues = [];
 
 Scope.data.activeSprint = {};
 
-let updateBoard = null;
+let updateBoardTimer = null;
 
 getActiveSprint.watch = ['data.appService.activeTeam'];
 
 function getActiveSprint(activeTeam) {
-  clearInterval(updateBoard);
+  clearTimeout(updateBoardTimer);
   if (activeTeam && activeTeam.board_id) {
     apiService.getActiveSprint(activeTeam.board_id).then(function (data) {
       Scope.data.activeSprint = data.values.filter(function (sprint) {
@@ -59,20 +59,30 @@ function getBoardConfiguration(activeTeam) {
 getSprintIssues.watch = ['data.activeSprint'];
 
 function getSprintIssues(activeSprint) {
+  clearTimeout(updateBoardTimer);
   if (activeSprint && activeSprint.id) {
+    console.info('request issues for current active sprint', new Date());
     apiService.getSprintIssues(activeSprint.id).then(function (data) {
       Scope.data.issues = data.issues;
       Scope.data.columns = columns;
 
-      updateBoard = setInterval(function () {
-        if (Scope.data.activeSprint.id) {
-          getSprintIssues(Scope.data.activeSprint);
-        }
-      }, (60 * 1000) * 15);
-
+      // update the sprint issues again after 15 min
+      updateBoardTimer = setTimeout(updateBoard, (60 * 1000) * 15);
+    }).catch(function () {
+      // In the case where request is unsuccessful, then try again again 10 seconds
+      updateBoardTimer = setTimeout(updateBoard, (10 * 1000));
     });
   } else {
     Scope.data.issues = [];
+  }
+}
+
+/**
+ * Get the sprint issues for current active sprint.
+ */
+function updateBoard() {
+  if (Scope.data.activeSprint.id) {
+    getSprintIssues(Scope.data.activeSprint);
   }
 }
 
