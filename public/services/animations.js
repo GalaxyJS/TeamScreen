@@ -12,7 +12,7 @@ Scope.exports = {
   widgetLeave: {
     sequence: 'widgets-enter-and-leave-sequence',
     from: {
-      width: function(w,node){
+      width: function (w, node) {
         return node.offsetWidth;
       },
       position: 'absolute'
@@ -26,6 +26,7 @@ Scope.exports = {
     duration: .3
   },
   formEnter: {
+    // parent: true,
     sequence: 'overlay-form',
     from: {
       scale: .8,
@@ -38,7 +39,8 @@ Scope.exports = {
     to: {
       y: -50,
       opacity: 0,
-      display: 'none'
+      display: 'none',
+      clearProps: 'all'
     },
     duration: .3
   },

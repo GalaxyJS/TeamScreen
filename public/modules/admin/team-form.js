@@ -7,7 +7,8 @@ const animations = Scope.import('services/animations.js');
 
 Scope.data.form = {
   name: null,
-  board_id: null
+  board_id: null,
+  board_name: null
 };
 
 if (inputs.data.params && inputs.data.params.id) {

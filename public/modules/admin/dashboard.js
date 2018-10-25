@@ -146,7 +146,7 @@ view.init([
             class: {
               'content': true,
               'container-row': true,
-              'loaded': [
+              '@loaded': [
                 'data.members.length',
                 function (length) {
                   return length > 0;
@@ -154,7 +154,7 @@ view.init([
               ]
             },
             animations: {
-              '.loaded': Object.assign({},
+              '@loaded': Object.assign({},
                 animations.cascadeAnimation,
                 {
                   sequence: 'members',
@@ -404,6 +404,7 @@ view.init([
     $if: '<>data.activeModule',
     animations: {
       enter: {
+        sequence:'asdasd',
         from: {
           opacity: 0
         },
