@@ -14,7 +14,6 @@ Scope.data.issues = [];
 
 Scope.data.activeSprint = {};
 
-console.log(Scope.data);
 
 let updateBoardTimer = null;
 
@@ -69,7 +68,7 @@ function getSprintIssues(activeSprint) {
       Scope.data.columns = columns;
 
       // update the sprint issues again after 15 min
-      updateBoardTimer = setTimeout(updateBoard, (10 * 1000));
+      updateBoardTimer = setTimeout(updateBoard, (60 * 1000) * 15);
     }).catch(function () {
       // In the case where request is unsuccessful, then try again again 10 seconds
       updateBoardTimer = setTimeout(updateBoard, (10 * 1000));
