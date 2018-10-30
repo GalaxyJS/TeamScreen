@@ -404,7 +404,7 @@ view.init([
     $if: '<>data.activeModule',
     animations: {
       enter: {
-        sequence:'asdasd',
+        sequence:'popup',
         from: {
           opacity: 0
         },

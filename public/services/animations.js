@@ -26,7 +26,6 @@ Scope.exports = {
     duration: .3
   },
   formEnter: {
-    // parent: true,
     sequence: 'overlay-form',
     from: {
       scale: .8,
