@@ -41,6 +41,6 @@
 <script src="assets/gsap/easing/EasePack.min.js" defer></script>
 <script src="assets/gsap/plugins/CSSPlugin.min.js" defer></script>
 
-<script src="assets/galaxyjs/galaxy.js" defer></script>
+<script src="assets/galaxyjs/galaxy.js?ts=<?php echo time() ?>" defer></script>
 </body>
 </html>
