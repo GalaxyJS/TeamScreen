@@ -59,6 +59,48 @@ table {
   box-sizing: border-box;
 }
 
+/*-------------------------- Scrollbar --------------------------*/
+::-webkit-scrollbar-button {
+  display: none;
+  height: 13px;
+  border-radius: 0;
+  background-color: #aaa;
+}
+
+::-webkit-scrollbar-button:hover {
+  background-color: #aaa;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, .2);
+  border-radius: 5px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, .3);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(100, 215, 255, .5);
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  margin: 0;
+}
+
+::-webkit-scrollbar-track:hover {
+}
+
+::-webkit-scrollbar {
+  width: 18px;
+  margin: 2px 0;
+}
+
+/*-------------------------- End of Scrollbar --------------------------*/
+
 h1, h2, h3, h4 {
   font-weight: bold;
 }
@@ -306,6 +348,45 @@ button, input, textarea, select {
   padding: 10px 15px;
 }
 
+.scrum-board .sprint-goal {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 300;
+  position: relative;
+}
+
+.scrum-board .sprint-goal > * {
+  display: block;
+  padding: 5px 0;
+}
+
+.scrum-board .sprint-goal > .count-down {
+  position: absolute;
+  padding: 0;
+  height: 56px;
+  width: 56px;
+  top: 0;
+  right: 0;
+  text-align: center;
+  font-size: .9em;
+  font-weight: bold;
+  color: orange;
+  line-height: 56px;
+}
+
+.count-down > svg {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  top: 0;
+  left: 0;
+}
+
+.count-down > svg .ring {
+  stroke: #00dd1c;
+  stroke-width: 2px;
+}
+
 .scrum-board > h2 {
   margin-bottom: 15px;
   padding: 10px 0;
@@ -376,13 +457,13 @@ button, input, textarea, select {
 }
 
 .task > .icon {
-  border-radius: 14px;
+  border-radius: 50%;
   display: inline-block;
-  height: 30px;
-  margin: 0 -2px 0 12px;
+  height: 36px;
+  margin: -15px -10px 0 8px;
   overflow: hidden;
   vertical-align: top;
-  width: 30px;
+  width: 36px;
 }
 
 .module {

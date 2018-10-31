@@ -11,9 +11,9 @@ const statusesTypes = {};
 Scope.data.appService = appService;
 Scope.data.columns = [];
 Scope.data.issues = [];
+Scope.data.timerCountDown = 0;
 
 Scope.data.activeSprint = {};
-
 
 let updateBoardTimer = null;
 
@@ -68,9 +68,11 @@ function getSprintIssues(activeSprint) {
       Scope.data.columns = columns;
 
       // update the sprint issues again after 15 min
+      setCountDownValue(60 * 15);
       updateBoardTimer = setTimeout(updateBoard, (60 * 1000) * 15);
     }).catch(function () {
       // In the case where request is unsuccessful, then try again again 10 seconds
+      setCountDownValue(10);
       updateBoardTimer = setTimeout(updateBoard, (10 * 1000));
     });
   } else {
@@ -85,6 +87,20 @@ function updateBoard() {
   if (Scope.data.activeSprint.id) {
     getSprintIssues(Scope.data.activeSprint);
   }
+}
+
+let counterInterval;
+
+function setCountDownValue(value) {
+  clearInterval(counterInterval);
+  counterInterval = setInterval(function () {
+    if (Scope.data.timerCountDown <= 0) {
+      return clearInterval(counterInterval);
+    }
+
+    Scope.data.timerCountDown--;
+  }, 1000);
+  Scope.data.timerCountDown = value;
 }
 
 const toDoClasses = ['to do', 'To Do', 'ToDo', 'Todo'];
@@ -184,15 +200,38 @@ view.init({
 
   children: [
     {
-      tag: 'h2',
-      html: [
-        'data.activeSprint',
-        function (sprint) {
-          if (sprint.name) {
-            return 'Scrumboard ' + sprint.name + ': <span>' + (sprint.goal || '') + '</span>';
-          } else {
-            return 'No board found';
-          }
+      tag: 'p',
+      class: 'sprint-goal',
+
+      children: [
+        {
+          tag: 'strong',
+          text: '<>data.activeSprint.name'
+        },
+        {
+          tag: 'span',
+          text: '<>data.activeSprint.goal'
+        },
+        {
+          class: 'count-down',
+          text: '<>data.timerCountDown',
+          children: [
+            {
+              tag: 'svg',
+              width: '56',
+              height: '56',
+              children: [
+                '<circle\n' +
+                '    class="ring"\n' +
+                '    stroke="white"\n' +
+                '    stroke-width="4"\n' +
+                '    fill="transparent"\n' +
+                '    r="22"\n' +
+                '    cx="28"\n' +
+                '    cy="28"/>'
+              ]
+            }
+          ]
         }
       ]
     },
