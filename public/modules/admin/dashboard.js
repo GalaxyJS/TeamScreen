@@ -217,7 +217,7 @@ view.init([
                           class: 'avatar',
                           src: [
                             'member.username',
-                            utility.avatarURLGenerator
+                            utility.avatarURL.medium
                           ]
                         }
                       },

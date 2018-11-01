@@ -3,6 +3,7 @@ const view = Scope.import('galaxy/view');
 const router = Scope.import('galaxy/router');
 const apiService = Scope.import('services/api.js');
 const appService = Scope.import('services/app.js');
+const utility = Scope.import('services/utility.js');
 
 const animations = Scope.import('services/animations.js');
 
@@ -11,6 +12,7 @@ const statusesTypes = {};
 Scope.data.appService = appService;
 Scope.data.columns = [];
 Scope.data.issues = [];
+Scope.data.boardRefreshInterval = 10 * 60;
 Scope.data.timerCountDown = 0;
 
 Scope.data.activeSprint = {};
@@ -68,8 +70,8 @@ function getSprintIssues(activeSprint) {
       Scope.data.columns = columns;
 
       // update the sprint issues again after 15 min
-      setCountDownValue(60 * 15);
-      updateBoardTimer = setTimeout(updateBoard, (60 * 1000) * 15);
+      setCountDownValue(Scope.data.boardRefreshInterval);
+      updateBoardTimer = setTimeout(updateBoard, Scope.data.boardRefreshInterval * 1000);
     }).catch(function () {
       // In the case where request is unsuccessful, then try again again 10 seconds
       setCountDownValue(10);
@@ -150,7 +152,7 @@ function getColumnIssues(issuesArrayChange, column) {
   if (issuesArrayChange.params.length) {
     issuesArrayChange.params = issuesArrayChange.original.filter(function (issue) {
       return typeIds.indexOf(issue.fields.status.id) !== -1;
-    })
+    });
   }
 
   return issuesArrayChange;
@@ -158,7 +160,7 @@ function getColumnIssues(issuesArrayChange, column) {
 
 router.init({
   '/': function () {
-    console.info('You can pass the team id in the URL');
+    // console.info('You can pass the team id in the URL');
   },
   '/:id': function (params) {
     console.log('Team ID: %s', params.id);
@@ -221,14 +223,34 @@ view.init({
               width: '56',
               height: '56',
               children: [
-                '<circle\n' +
-                '    class="ring"\n' +
-                '    stroke="white"\n' +
-                '    stroke-width="4"\n' +
-                '    fill="transparent"\n' +
-                '    r="22"\n' +
-                '    cx="28"\n' +
-                '    cy="28"/>'
+                {
+                  tag: 'circle',
+                  class: 'ring',
+                  'stroke-width': 4,
+                  fill: 'transparent',
+                  style: {
+                    strokeDasharray: [
+                      'data.timerCountDown',
+                      function () {
+                        const circumference = this.node.r.baseVal.value * 2 * Math.PI;
+                        return circumference + ' ' + circumference;
+                      }
+                    ],
+                    strokeDashoffset: [
+                      'data.timerCountDown',
+                      function (counter) {
+                        const circumference = this.node.r.baseVal.value * 2 * Math.PI;
+                        const full = Scope.data.boardRefreshInterval;
+                        const passed = Scope.data.boardRefreshInterval - counter;
+                        const offset = (passed / full) * circumference;
+                        return offset;
+                      }
+                    ]
+                  },
+                  r: 22,
+                  cx: 28,
+                  cy: 28
+                }
               ]
             }
           ]
@@ -320,7 +342,10 @@ view.init({
                 class: 'icon',
                 tag: 'img',
                 $if: '<>issue.fields.assignee',
-                src: '<>issue.fields.assignee.avatarUrls.48x48'
+                src: [
+                  'issue.fields.assignee.key',
+                  utility.avatarURL.x48
+                ]
               }
             ]
           }

@@ -85,7 +85,7 @@ view.init({
                 class: 'avatar',
                 src: [
                   'data.waiter.username',
-                  utility.bigAvatarURLGenerator
+                  utility.avatarURL.big
                 ]
               },
               {
@@ -102,7 +102,7 @@ view.init({
           {
             animations: {
               enter: Object.assign({}, animations.itemEnter, {
-                parent: animations.widgetEnter.sequence,
+                parent: true,
                 sequence: 'time-for-drink'
               })
             },
@@ -132,7 +132,7 @@ view.init({
                 class: 'avatar',
                 src: [
                   'member.username',
-                  utility.avatarURLGenerator
+                  utility.avatarURL.medium
                 ]
               },
               {

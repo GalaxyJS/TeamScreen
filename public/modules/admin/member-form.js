@@ -67,12 +67,34 @@ view.init({
           $if: '<>data.form.username',
           children: [
             {
-              class: 'avatar big',
+              animations: {
+                '@loaded': {
+                  parent: true,
+                  sequence: 'icon',
+                  from: {
+                    scale: 0
+                  },
+                  to: {
+                    scale: 1
+                  },
+                  duration: .2
+                }
+              },
+              class: {
+                avatar: true,
+                big: true,
+                '@loaded': '<>this.loaded'
+              },
               tag: 'img',
               src: [
                 'data.form.username',
-                utility.bigAvatarURLGenerator
-              ]
+                utility.avatarURL.big
+              ],
+              on: {
+                load: function () {
+                  this.data.loaded = true;
+                }
+              }
             },
             {
               tag: 'strong',

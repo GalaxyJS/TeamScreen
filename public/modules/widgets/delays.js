@@ -63,7 +63,7 @@ view.init({
 
             animations: {
               enter: Object.assign({}, animations.itemEnter, {
-                parent: animations.widgetEnter.sequence,
+                parent: true,
                 sequence: 'delays'
               })
             },
@@ -78,7 +78,7 @@ view.init({
                 class: 'avatar',
                 src: [
                   'member.username',
-                  utility.avatarURLGenerator
+                  utility.avatarURL.medium
                 ]
               },
               {

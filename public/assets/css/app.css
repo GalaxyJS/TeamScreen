@@ -296,7 +296,8 @@ button, input, textarea, select {
   display: block;
   padding: 10px 15px;
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
+  height: 84px;
 }
 
 .form > .content > .info > * {
@@ -368,7 +369,7 @@ button, input, textarea, select {
   top: 0;
   right: 0;
   text-align: center;
-  font-size: .9em;
+  font-size: .86em;
   font-weight: bold;
   color: orange;
   line-height: 56px;
@@ -382,9 +383,11 @@ button, input, textarea, select {
   left: 0;
 }
 
-.count-down > svg .ring {
-  stroke: #00dd1c;
-  stroke-width: 2px;
+.count-down > svg > .ring {
+  stroke: orange;
+  stroke-width: 4px;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
 }
 
 .scrum-board > h2 {

@@ -42,6 +42,12 @@ view.init({
           children: {
             tag: 'div',
             class: 'person-item',
+            animations: {
+              enter: Object.assign({}, animations.itemEnter, {
+                parent: true,
+                sequence: 'time-for-drink'
+              })
+            },
 
             $for: {
               data: '<>data.agendas.changes',
@@ -56,7 +62,7 @@ view.init({
                     class: 'avatar',
                     src: [
                       'date.member.username',
-                      utility.avatarURLGenerator
+                      utility.avatarURL.medium
                     ]
                   }
 
