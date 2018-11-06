@@ -1,6 +1,8 @@
 const view = Scope.import('galaxy/view');
 const appService = Scope.import('services/app.js');
 
+Scope.data.appService = appService;
+
 Scope.data.mods = [
   {
     module: {
@@ -20,10 +22,43 @@ Scope.data.mods = [
   }
 ];
 
-Scope.data.appService = appService;
+
 view.init({
   class: 'container-row overview',
   children: [
+    {
+      tag: 'p',
+      class: 'sprint-goal',
+      children: [
+        {
+          tag: 'strong',
+          text: '<>data.activeSprint.name'
+        },
+        {
+          tag: 'span',
+          text: '<>data.activeSprint.goal'
+        },
+        {
+          class: 'count-down',
+          text: '<>inputs.timerCountDown',
+          children:
+            {
+              tag: 'div',
+              style: {
+                width: [
+                  'data.timerCountDown',
+                  function (counter) {
+                    const parentWidth = this.parent.node.offsetWidth;
+                    const full = Scope.inputs.slideInterval;
+                    return ((counter * parentWidth) / full) + 'px';
+                  }
+                ],
+              }
+            }
+
+        }
+      ]
+    },
     {
       class: 'module width-s',
 

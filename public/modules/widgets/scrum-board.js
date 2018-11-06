@@ -12,7 +12,7 @@ const statusesTypes = {};
 Scope.data.appService = appService;
 Scope.data.columns = [];
 Scope.data.issues = [];
-Scope.data.boardRefreshInterval = 10 * 60;
+// Scope.data.boardRefreshInterval = 10 * 60;
 Scope.data.timerCountDown = 0;
 
 Scope.data.activeSprint = {};
@@ -70,8 +70,8 @@ function getSprintIssues(activeSprint) {
       Scope.data.columns = columns;
 
       // update the sprint issues again after 15 min
-      setCountDownValue(Scope.data.boardRefreshInterval);
-      updateBoardTimer = setTimeout(updateBoard, Scope.data.boardRefreshInterval * 1000);
+      setCountDownValue(Scope.inputs.slideInterval);
+      updateBoardTimer = setTimeout(updateBoard, Scope.inputs.slideInterval * 1000);
     }).catch(function () {
       // In the case where request is unsuccessful, then try again again 10 seconds
       setCountDownValue(10);
@@ -204,7 +204,6 @@ view.init({
     {
       tag: 'p',
       class: 'sprint-goal',
-
       children: [
         {
           tag: 'strong',
@@ -219,40 +218,53 @@ view.init({
           text: '<>data.timerCountDown',
           children: [
             {
-              tag: 'svg',
-              width: '56',
-              height: '56',
-              children: [
-                {
-                  tag: 'circle',
-                  class: 'ring',
-                  'stroke-width': 4,
-                  fill: 'transparent',
-                  style: {
-                    strokeDasharray: [
-                      'data.timerCountDown',
-                      function () {
-                        const circumference = this.node.r.baseVal.value * 2 * Math.PI;
-                        return circumference + ' ' + circumference;
-                      }
-                    ],
-                    strokeDashoffset: [
-                      'data.timerCountDown',
-                      function (counter) {
-                        const circumference = this.node.r.baseVal.value * 2 * Math.PI;
-                        const full = Scope.data.boardRefreshInterval;
-                        const passed = Scope.data.boardRefreshInterval - counter;
-                        const offset = (passed / full) * circumference;
-                        return offset;
-                      }
-                    ]
-                  },
-                  r: 22,
-                  cx: 28,
-                  cy: 28
-                }
-              ]
+              tag: 'div',
+              style: {
+                width: [
+                  'data.timerCountDown',
+                  function (counter) {
+                    const parentWidth = this.parent.node.offsetWidth;
+                    const full = Scope.inputs.slideInterval;
+                    return ((counter * parentWidth) / full) + 'px';
+                  }
+                ],
+              }
             }
+            // {
+            //   tag: 'svg',
+            //   width: '56',
+            //   height: '56',
+            //   children: [
+            //     {
+            //       tag: 'circle',
+            //       class: 'ring',
+            //       'stroke-width': 4,
+            //       fill: 'transparent',
+            //       style: {
+            //         strokeDasharray: [
+            //           'data.timerCountDown',
+            //           function () {
+            //             const circumference = this.node.r.baseVal.value * 2 * Math.PI;
+            //             return circumference + ' ' + circumference;
+            //           }
+            //         ],
+            //         strokeDashoffset: [
+            //           'data.timerCountDown',
+            //           function (counter) {
+            //             const circumference = this.node.r.baseVal.value * 2 * Math.PI;
+            //             const full = Scope.data.boardRefreshInterval;
+            //             const passed = Scope.data.boardRefreshInterval - counter;
+            //             const offset = (passed / full) * circumference;
+            //             return offset;
+            //           }
+            //         ]
+            //       },
+            //       r: 22,
+            //       cx: 28,
+            //       cy: 28
+            //     }
+            //   ]
+            // }
           ]
         }
       ]

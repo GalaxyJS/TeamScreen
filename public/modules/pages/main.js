@@ -6,7 +6,8 @@ const apiService = Scope.import('services/api.js');
 const appService = Scope.import('services/app.js');
 
 Scope.data.appService = appService;
-Scope.data.slideshow = false;
+Scope.data.slideShow = true;
+Scope.data.slideInterval = 10 * 60;
 Scope.data.teams = [];
 
 function fetchTeams() {
@@ -20,8 +21,8 @@ fetchTeams();
 
 let slideShowInterval;
 const slides = {
-  '#/scrum-board': '/overview',
-  '#/overview': '/scrum-board'
+  'scrum-board': '/overview',
+  'overview': '/scrum-board'
 };
 
 clearInterval(slideShowInterval);
@@ -29,12 +30,14 @@ clearInterval(slideShowInterval);
 setSlideShow.watch = ['data.slideShow'];
 
 function setSlideShow(flag) {
+  console.log(router);
   if (flag) {
     slideShowInterval = setInterval(function () {
-      if (router.oldURL === '#/scrum-board' || router.oldURL === '#/overview') {
-        router.navigateFromHere(slides[router.oldURL]);
+      const module = router.urlParts[0];
+      if (module === 'scrum-board' || module === 'overview') {
+        router.navigateFromHere(slides[module]);
       }
-    }, (60 * 1000) * 5);
+    }, Scope.data.slideInterval * 1000);
   } else {
     clearInterval(slideShowInterval);
   }
@@ -173,6 +176,9 @@ view.init([
   {
     class: 'main-content',
     module: '<>data.activeModule',
+    inputs: {
+      slideInterval: '<>data.slideInterval'
+    },
     on: {
       'team-add': function (event) {
         fetchTeams();
